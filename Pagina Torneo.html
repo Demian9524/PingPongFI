@@ -1948,11 +1948,15 @@
 <link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
 <link rel="manifest" href="manifest.webmanifest">
 
-<!-- TEMPORAL: ocultar selector de categoría y panel de terceros.
-     Para volver a mostrarlos, elimina este bloque completo. -->
-<style id="temp-hide-category-thirds">
-  #grupos > .catbar { display: none !important; }
-  #reglas { display: none !important; }
+
+<!-- TEMPORAL: ocultar en la portada selector de categoría, lista de participantes y terceros.
+     Para restaurarlos, elimina este bloque completo. -->
+<style id="temp-hide-prephase-blocks">
+  #grupos,
+  #preGroupSection,
+  #reglas {
+    display: none !important;
+  }
 </style>
 
 </head>
