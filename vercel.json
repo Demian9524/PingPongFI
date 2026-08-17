@@ -4,8 +4,18 @@
     {
       "source": "/(.*)\\.jsx",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/qr",
+      "destination": "/Pagina%20Torneo.html",
+      "permanent": false
     }
   ]
 }
