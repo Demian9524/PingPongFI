@@ -1947,6 +1947,14 @@
 <!-- Piel «leaderboard» del bracket (solo estilos; va después del CSS de la página) -->
 <link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
 <link rel="manifest" href="manifest.webmanifest">
+
+<!-- TEMPORAL: ocultar selector de categoría y panel de terceros.
+     Para volver a mostrarlos, elimina este bloque completo. -->
+<style id="temp-hide-category-thirds">
+  #grupos > .catbar { display: none !important; }
+  #reglas { display: none !important; }
+</style>
+
 </head>
 <body data-cat="neutral">
 <svg class="ui-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="ico-x" viewBox="0 0 128 128"><path fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round" transform="matrix(1 0 -.1228 1 7.86 0)" d="M21 26h24l19 26 19-26h24L78 64l29 38H83L64 76l-19 26H21l29-38-29-38Z"></path></symbol><symbol id="ico-i" viewBox="0 0 128 128"><path fill="currentColor" d="M60 18h32l-6 23H54l6-23ZM53 48h32L72 95h19l-4 15H27l4-15h18l9-32H43l4-15h6Z"></path></symbol></defs></svg>
