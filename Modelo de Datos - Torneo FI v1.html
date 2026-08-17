@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Modelo de datos — Torneo de Ping Pong FI (Supabase)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Fuentes de marca (mismas OTF del proyecto) ─────────────────── */
+@font-face{font-family:"Heading Now 6";src:url('assets/fonts/HeadingNow-64Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 6";src:url('assets/fonts/HeadingNow-65Medium.otf') format('opentype');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 6";src:url('assets/fonts/HeadingNow-66Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 6";src:url('assets/fonts/HeadingNow-67Extrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 6";src:url('assets/fonts/HeadingNow-68Heavy.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 7";src:url('assets/fonts/HeadingNow-74Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Heading Now 7";src:url('assets/fonts/HeadingNow-75Medium.otf') format('opentype');font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  --paper:#faf8f4; --card:#ffffff;
+  --ink:#1b1b20; --muted:#5f6069; --faint:#8a8b94;
+  --line:#e7e4dc; --line2:#d8d4ca;
+  --gold:#977616; --gold-soft:#f3ead2;
+  --green:#3c7d5a; --green-soft:#e3efe7;
+  --red:#b0473e; --red-soft:#f4e2df;
+  --blue:#48598f; --blue-soft:#e4e7f1;
+  --disp:"Heading Now 6","Saira Condensed",sans-serif;
+  --body:"Heading Now 7","Inter",system-ui,sans-serif;
+  --mono:"JetBrains Mono",monospace;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-weight:400;font-size:15.5px;line-height:1.65;
+  font-synthesis:none;-webkit-font-smoothing:antialiased}
+
+.doc{box-sizing:border-box;max-width:8.5in;margin:0 auto;background:inherit;
+  padding:64px clamp(24px,5vw,0.85in) 96px}
+.doc-frame{width:100%;border-collapse:collapse;table-layout:fixed}
+.doc-frame td{padding:0}
+.hdr-space,.ftr-space{display:none}
+
+/* ── Tipografía ─────────────────────────────────────────────────── */
+h1,h2,h3,h4{font-family:var(--disp);text-wrap:balance;line-height:1.04;margin:0}
+h1{font-weight:900;font-size:clamp(34px,6vw,52px);letter-spacing:-0.015em;text-transform:uppercase}
+h2{font-weight:800;font-size:26px;letter-spacing:-0.01em;text-transform:uppercase;margin:54px 0 0}
+h3{font-weight:800;font-size:17.5px;letter-spacing:0.01em;margin:30px 0 0}
+h4{font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:22px 0 0}
+p,li{text-wrap:pretty}
+p{margin:13px 0}
+ul,ol{margin:13px 0;padding-left:22px}
+li{margin:6px 0}
+strong,b{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+a{color:var(--blue);text-decoration:none}
+code{font-family:var(--mono);font-size:0.86em;background:#efece5;border:1px solid var(--line2);
+  border-radius:4px;padding:1px 5px;color:#3a3a42;white-space:nowrap}
+
+.kicker{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+.lede{font-size:18px;line-height:1.55;color:var(--muted);margin:18px 0 6px;max-width:62ch}
+
+.sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--gold);
+  letter-spacing:0.04em;display:block;margin-bottom:6px}
+.divider{height:2px;background:var(--ink);border:0;margin:8px 0 0;opacity:0.08}
+
+/* ── Masthead ───────────────────────────────────────────────────── */
+.masthead{border-bottom:3px solid var(--ink);padding-bottom:26px;margin-bottom:8px}
+.mast-row{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.mast-tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--muted);border:1px solid var(--line2);
+  border-radius:30px;padding:5px 12px}
+.mast-tag.db{color:var(--green);border-color:var(--green)}
+.mast-meta{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:22px;
+  font-family:var(--mono);font-size:12px;color:var(--muted)}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+/* ── Tabla de contenido ─────────────────────────────────────────── */
+.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px 26px;margin:34px 0}
+.toc h4{margin:0 0 14px}
+.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc;
+  columns:2;column-gap:36px}
+.toc li{counter-increment:toc;margin:7px 0;break-inside:avoid;font-size:14px}
+.toc li::before{content:counter(toc,decimal-leading-zero);font-family:var(--mono);
+  font-size:11px;color:var(--gold);font-weight:600;margin-right:10px}
+.toc a{color:var(--ink)}
+.toc a:hover{color:var(--blue)}
+
+/* ── Callouts ───────────────────────────────────────────────────── */
+.call{border-radius:11px;padding:16px 20px;margin:20px 0;border:1px solid var(--line2);
+  background:var(--card);break-inside:avoid}
+.call .ct{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.07em;
+  text-transform:uppercase;margin:0 0 7px;display:flex;align-items:center;gap:9px}
+.call p:last-child{margin-bottom:0}
+.call p:first-of-type{margin-top:0}
+.call.rec{background:var(--green-soft);border-color:#bcd9c8}
+.call.rec .ct{color:var(--green)}
+.call.warn{background:var(--red-soft);border-color:#e6c4bf}
+.call.warn .ct{color:var(--red)}
+.call.note{background:var(--gold-soft);border-color:#e6d6ad}
+.call.note .ct{color:var(--gold)}
+.call.key{background:#16161c;border-color:#16161c;color:#e3e3ea}
+.call.key .ct{color:var(--gold)}
+.call.key strong{color:#fff}
+.call.key code{background:#26262e;border-color:#33333c;color:#e9d8aa}
+
+/* ── Bloques de código (SQL) ────────────────────────────────────── */
+pre{background:#16161c;color:#e6e6ee;border-radius:11px;padding:18px 20px;margin:18px 0;
+  overflow-x:auto;min-width:0;font-family:var(--mono);font-size:12.5px;line-height:1.6;
+  border:1px solid #23232b;break-inside:avoid}
+pre code{background:none;border:0;padding:0;color:inherit;white-space:pre;font-size:inherit}
+.cap{font-family:var(--mono);font-size:11px;color:var(--faint);margin:-8px 0 22px;
+  letter-spacing:0.02em}
+.tok-k{color:#c9a2e8}   /* keyword */
+.tok-t{color:#7fb5e8}   /* type */
+.tok-s{color:#9bd6a6}   /* string */
+.tok-c{color:#6f7079;font-style:italic} /* comment */
+.tok-n{color:#e9c87a}   /* number / literal */
+.tok-f{color:#e9b08a}   /* function */
+
+/* ── Tarjetas de tabla (esquema) ────────────────────────────────── */
+.schema{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:22px 0}
+.tbl{background:var(--card);border:1px solid var(--line2);border-radius:11px;
+  overflow:hidden;break-inside:avoid}
+.tbl-h{background:#16161c;color:#fff;padding:11px 15px;display:flex;align-items:center;
+  justify-content:space-between;gap:8px}
+.tbl-h .nm{font-family:var(--mono);font-size:13.5px;font-weight:700;letter-spacing:0.02em}
+.tbl-h .nm::before{content:"▦";color:var(--gold);margin-right:7px;font-size:11px;vertical-align:1px}
+.tbl-h .rl{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;color:#9a9aa6}
+.tbl ul{margin:0;padding:6px 0;list-style:none}
+.tbl li{display:flex;align-items:baseline;gap:8px;padding:5px 15px;margin:0;
+  font-family:var(--mono);font-size:11.5px;border-bottom:1px solid #f1eee8}
+.tbl li:last-child{border-bottom:0}
+.tbl .col{color:var(--ink);font-weight:600}
+.tbl .ty{color:var(--faint);margin-left:auto;font-size:10.5px;white-space:nowrap}
+.badge{font-family:var(--disp);font-size:8.5px;font-weight:800;letter-spacing:0.05em;
+  padding:1px 5px;border-radius:4px;text-transform:uppercase;line-height:1.4}
+.b-pk{background:var(--gold);color:#fff}
+.b-fk{background:var(--blue-soft);color:var(--blue)}
+.b-uq{background:var(--green-soft);color:var(--green)}
+
+.relmap{background:#16161c;color:#cfcfd8;border-radius:11px;padding:18px 22px;margin:18px 0;
+  font-family:var(--mono);font-size:12.5px;line-height:1.75;break-inside:avoid;white-space:pre;overflow-x:auto;min-width:0}
+.relmap .e{color:#e9c87a}
+.relmap .a{color:#7fb5e8}
+
+/* ── Tablas de datos ────────────────────────────────────────────── */
+.tw{overflow-x:auto;min-width:0;margin:20px 0}
+table.data{width:100%;border-collapse:collapse;font-size:13px}
+table.data th,table.data td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.data thead th{font-family:var(--disp);font-weight:800;font-size:11px;letter-spacing:0.05em;
+  text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink)}
+table.data tbody tr:nth-child(even){background:#f4f1ea}
+table.data td code{font-size:11.5px;white-space:nowrap}
+table.data .mono{font-family:var(--mono);font-size:12px}
+
+/* ── Pots / bombos ──────────────────────────────────────────────── */
+.pots{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.pot{background:var(--card);border:1px solid var(--line2);border-radius:11px;padding:14px;break-inside:avoid}
+.pot h5{margin:0 0 4px;font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.04em;text-transform:uppercase}
+.pot .rng{font-family:var(--mono);font-size:10.5px;color:var(--gold);font-weight:600}
+.pot ul{margin:10px 0 0;padding:0;list-style:none}
+.pot li{font-family:var(--mono);font-size:11px;padding:3px 0;border-bottom:1px dashed var(--line);
+  display:flex;justify-content:space-between;gap:6px;color:var(--muted)}
+.pot li:last-child{border:0}
+.pot li b{color:var(--ink);font-weight:600}
+
+/* ── Stat tiles ─────────────────────────────────────────────────── */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.tile{background:var(--card);border:1px solid var(--line2);border-radius:11px;padding:16px 18px;break-inside:avoid}
+.tile .n{font-family:var(--disp);font-weight:900;font-size:30px;line-height:1;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.tile .l{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:7px;letter-spacing:0.02em}
+.tile .n .u{font-size:16px;color:var(--gold);margin-left:2px}
+
+/* ── Flujo numerado ─────────────────────────────────────────────── */
+.flow{counter-reset:flow;list-style:none;padding:0;margin:20px 0}
+.flow>li{counter-increment:flow;position:relative;padding:2px 0 16px 46px;margin:0;break-inside:avoid}
+.flow>li::before{content:counter(flow);position:absolute;left:0;top:0;
+  width:30px;height:30px;border-radius:8px;background:var(--ink);color:#fff;
+  font-family:var(--disp);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.flow>li:not(:last-child)::after{content:"";position:absolute;left:14px;top:34px;bottom:2px;
+  width:2px;background:var(--line2)}
+.flow li b{font-weight:600}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.muted{color:var(--muted)}
+
+@media (max-width:680px){
+  .schema,.pots,.tiles,.two{grid-template-columns:1fr}
+  .toc ol{columns:1}
+}
+
+/* ── Print ──────────────────────────────────────────────────────── */
+@page{size:letter;margin:0}
+@media print{
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{margin:0;padding:0;background:#fff}
+  .doc{max-width:none!important;margin:0!important;padding:0 0.7in!important;box-shadow:none!important}
+  .hdr-space,.ftr-space{display:table-cell;height:0.7in}
+  h1,h2,h3,h4{break-after:avoid}
+  figure,pre,blockquote,.call,.tbl,.relmap,.pot,.tile,table tr{break-inside:avoid}
+  p,li{orphans:3;widows:3}
+  .schema,.pots,.tiles{display:grid}
+  .screen-only{display:none!important}
+}
+</style>
+</head>
+<body>
+<main class="doc">
+<table class="doc-frame" role="presentation">
+<thead><tr><td class="hdr-space"></td></tr></thead>
+<tbody><tr><td>
+
+<!-- ═══════════ MASTHEAD ═══════════ -->
+<header class="masthead">
+  <div class="mast-row">
+    <span class="mast-tag db">PostgreSQL · Supabase</span>
+    <span class="mast-tag">Documento de diseño</span>
+    <span class="mast-tag">v1 · borrador</span>
+  </div>
+  <p class="kicker">Torneo de Ping Pong · Facultad de Ingeniería</p>
+  <h1>Modelo de datos, historial y power ranking</h1>
+  <p class="lede">Cómo guardar jugadores, partidos y cuestionarios; vincular el historial del torneo pasado con quien se registra hoy; y calcular un <strong>ranking de puntos estáticos</strong> para sembrar los bombos del sorteo.</p>
+  <div class="mast-meta">
+    <span><b>Base de datos:</b> Supabase (Postgres 15)</span>
+    <span><b>Llave de identidad:</b> teléfono (E.164)</span>
+    <span><b>Ranking:</b> puntos estáticos por evento</span>
+  </div>
+</header>
+
+<!-- ═══════════ TOC ═══════════ -->
+<nav class="toc">
+  <h4>Contenido</h4>
+  <ol>
+    <li><a href="#s0">Decisiones clave (TL;DR)</a></li>
+    <li><a href="#s1">Identidad: el teléfono como llave</a></li>
+    <li><a href="#s2">El esquema relacional</a></li>
+    <li><a href="#s3">Importar el historial (Sheets → BD)</a></li>
+    <li><a href="#s4">El cuestionario: cómo guardarlo</a></li>
+    <li><a href="#s5">Disponibilidad: ¿matriz?</a></li>
+    <li><a href="#s6">Power ranking: puntos estáticos</a></li>
+    <li><a href="#s7">Bombos y algoritmo de sorteo</a></li>
+    <li><a href="#s8">Fotos por facultad y carrera</a></li>
+    <li><a href="#s9">Perfil del jugador (consultas)</a></li>
+    <li><a href="#s10">Orden de implementación</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════ 0 · TL;DR ═══════════ -->
+<section id="s0">
+<h2><span class="sec-num">00</span>Decisiones clave</h2>
+<hr class="divider" />
+<p>Si solo lees una página, que sea esta. Cada punto se desarrolla más adelante.</p>
+
+<div class="call key">
+  <p class="ct">▸ Lo que recomiendo</p>
+  <ul>
+    <li><strong>Tres tablas centrales:</strong> <code>players</code> (una fila por persona, para siempre), <code>registrations</code> (una fila por persona <em>por edición</em>) y <code>matches</code> (una fila por partido). El historial real <strong>no</strong> son los puntos: son los partidos.</li>
+    <li><strong>El teléfono es la llave natural,</strong> normalizado a formato internacional (<code>+52…</code>). Es lo único estable que tienes de cada persona.</li>
+    <li><strong>El ranking es un puntaje estático por evento:</strong> cada partido y cada logro suma (o resta) una cantidad <em>fija</em> que nunca se recalcula. No depende de contra quién ganaste en el futuro — se cierra en el momento.</li>
+    <li><strong>Cada categoría arranca en una base distinta</strong> (Principiante 100, Intermedio 250, Avanzado 450) y los puntos <strong>se acumulan entre ediciones</strong>.</li>
+    <li><strong>Los bombos salen de ordenar esos puntos</strong> por categoría y cortarlos en bandas.</li>
+    <li><strong>El cuestionario se guarda en columnas tipadas con <code>enum</code></strong>, no en texto libre ni en un JSON gigante.</li>
+    <li><strong>La disponibilidad se guarda normalizada</strong> (una fila por bloque elegido), no como matriz. Conceptualmente es una matriz; para consultar conviene en filas.</li>
+    <li><strong>Las 14 fotos de facultad y 15 de carrera NO van en la base de datos.</strong> Guardas el <code>enum</code> y el front resuelve la imagen.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ═══════════ 1 · IDENTIDAD ═══════════ -->
+<section id="s1">
+<h2><span class="sec-num">01</span>Identidad: el teléfono como llave</h2>
+<hr class="divider" />
+<p>Solo tienes <strong>nombre y teléfono</strong> de cada persona. El nombre/apodo cambia, se repite y se escribe de mil formas; el teléfono es único y estable. Por eso el teléfono es tu <em>llave natural</em> para vincular el pasado con el presente.</p>
+
+<h3>Normaliza a un solo formato (E.164)</h3>
+<p>Antes de guardar cualquier teléfono, conviértelo a un formato único e internacional. Así <code>55 1234 5678</code>, <code>5512345678</code> y <code>+52 55 1234 5678</code> se vuelven la misma cadena y no creas duplicados.</p>
+<pre><code><span class="tok-c">-- guarda SIEMPRE así: '+52' + 10 dígitos, sin espacios</span>
+<span class="tok-c">-- '55 1234 5678'  ->  '+525512345678'</span>
+<span class="tok-k">create function</span> <span class="tok-f">normalize_phone</span>(raw <span class="tok-t">text</span>) <span class="tok-k">returns</span> <span class="tok-t">text</span> <span class="tok-k">as</span> $$
+  <span class="tok-k">select</span> <span class="tok-s">'+52'</span> || <span class="tok-f">right</span>(<span class="tok-f">regexp_replace</span>(raw, <span class="tok-s">'\D'</span>, <span class="tok-s">''</span>, <span class="tok-s">'g'</span>), <span class="tok-n">10</span>);
+$$ <span class="tok-k">language</span> sql <span class="tok-k">immutable</span>;</code></pre>
+<p class="cap">El teléfono entra normalizado a <code>players.phone</code>, que es <code>unique</code>.</p>
+
+<h3>Una persona = una fila, para siempre</h3>
+<p>La tabla <code>players</code> es la maestra. Cada persona vive ahí una sola vez (su <code>phone</code> es único). Todo lo demás —inscripciones, partidos, puntos— cuelga de ella.</p>
+
+<div class="call rec">
+  <p class="ct">✓ El merge al registrarse, en una línea</p>
+  <p>Cuando alguien llena el formulario, haces un <strong>upsert por teléfono</strong>: si el número ya existe, actualizas su apodo/facultad y <em>recuperas todo su historial automáticamente</em>; si no existe, se crea. Esto es lo que ya tenías pensado con "autocompletar apodo/facultad y su historial al instante".</p>
+</div>
+<pre><code><span class="tok-c">-- al enviar el formulario: crea o actualiza la persona</span>
+<span class="tok-k">insert into</span> players (phone, nickname, faculty, career)
+<span class="tok-k">values</span> (<span class="tok-f">normalize_phone</span>(<span class="tok-s">'55 1234 5678'</span>), <span class="tok-s">'El Tornado'</span>, <span class="tok-s">'INGENIERIA'</span>, <span class="tok-s">'MECATRONICA'</span>)
+<span class="tok-k">on conflict</span> (phone) <span class="tok-k">do update set</span>
+  nickname = <span class="tok-k">excluded</span>.nickname,
+  faculty  = <span class="tok-k">excluded</span>.faculty,
+  career   = <span class="tok-k">excluded</span>.career
+<span class="tok-k">returning</span> id;  <span class="tok-c">-- este id ya trae su historial colgado</span></code></pre>
+
+<h3>Anti-suplantación: el teléfono ES la verificación</h3>
+<p>Coincide con lo que ya documentaste y para ~40–80 personas que se conocen es suficiente: no necesitas contraseñas ni OTP. El registro nace como <code>PRE_REGISTERED</code>/<code>PENDING</code>; tú confirmas por WhatsApp cuando coordinas el pago. Si alguien usa el número de otro, el mensaje le llega al dueño real y se delata solo. Si el troleo se vuelve problema, un código de 4 dígitos por WhatsApp cierra el tema — pero arranca sin eso.</p>
+</section>
+
+<!-- ═══════════ 2 · ESQUEMA ═══════════ -->
+<section id="s2">
+<h2><span class="sec-num">02</span>El esquema relacional</h2>
+<hr class="divider" />
+<p>Siete tablas. Las tres primeras son el corazón; el resto da soporte. Primero el mapa, luego el SQL.</p>
+
+<div class="relmap"><span class="e">editions</span>          1 ──< <span class="e">registrations</span> >── 1  <span class="e">players</span>   <span class="a">(llave = phone)</span>
+   │                       │                    │
+   │                       │ 1                  │ 1
+   │                       v                    v
+   │                  <span class="e">availability</span>          <span class="e">matches</span>  <span class="a">(player_a / player_b)</span>
+   │                                            ^
+   └──< <span class="e">groups</span> ──< <span class="e">registrations</span>         │ cada partido = 1 fila
+            (bombos / fase de grupos) ─────────┘</div>
+
+<h3>Las tarjetas, de un vistazo</h3>
+<div class="schema">
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">players</span><span class="rl">maestra · 1 fila/persona</span></div>
+    <ul>
+      <li><span class="col">id</span> <span class="badge b-pk">pk</span><span class="ty">uuid</span></li>
+      <li><span class="col">phone</span> <span class="badge b-uq">uq</span><span class="ty">text · E.164</span></li>
+      <li><span class="col">nickname</span><span class="ty">text · apodo</span></li>
+      <li><span class="col">faculty</span><span class="ty">enum</span></li>
+      <li><span class="col">career</span><span class="ty">enum · null</span></li>
+      <li><span class="col">points</span><span class="ty">int · ranking</span></li>
+      <li><span class="col">category</span><span class="ty">enum · banda</span></li>
+      <li><span class="col">matches_played</span><span class="ty">int</span></li>
+    </ul>
+  </div>
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">registrations</span><span class="rl">1 fila/persona/edición</span></div>
+    <ul>
+      <li><span class="col">id</span> <span class="badge b-pk">pk</span><span class="ty">uuid</span></li>
+      <li><span class="col">player_id</span> <span class="badge b-fk">fk</span><span class="ty">→ players</span></li>
+      <li><span class="col">edition_id</span> <span class="badge b-fk">fk</span><span class="ty">→ editions</span></li>
+      <li><span class="col">experience</span><span class="ty">enum</span></li>
+      <li><span class="col">frequency</span><span class="ty">enum</span></li>
+      <li><span class="col">techniques</span><span class="ty">text[]</span></li>
+      <li><span class="col">category_prov</span><span class="ty">enum</span></li>
+      <li><span class="col">category_final</span><span class="ty">enum</span></li>
+      <li><span class="col">seed_pot</span><span class="ty">int · bombo</span></li>
+      <li><span class="col">group_id</span> <span class="badge b-fk">fk</span><span class="ty">→ groups</span></li>
+    </ul>
+  </div>
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">matches</span><span class="rl">1 fila/partido · el historial</span></div>
+    <ul>
+      <li><span class="col">id</span> <span class="badge b-pk">pk</span><span class="ty">uuid</span></li>
+      <li><span class="col">edition_id</span> <span class="badge b-fk">fk</span><span class="ty">→ editions</span></li>
+      <li><span class="col">stage</span><span class="ty">enum · grupo/repechaje/QF…</span></li>
+      <li><span class="col">player_a</span> <span class="badge b-fk">fk</span><span class="ty">→ players</span></li>
+      <li><span class="col">player_b</span> <span class="badge b-fk">fk</span><span class="ty">→ players</span></li>
+      <li><span class="col">format</span><span class="ty">sets | puntos</span></li>
+      <li><span class="col">sets_a / sets_b</span><span class="ty">int · canónico</span></li>
+      <li><span class="col">points_a / points_b</span><span class="ty">int · original</span></li>
+      <li><span class="col">set_scores</span><span class="ty">jsonb</span></li>
+      <li><span class="col">winner</span> <span class="badge b-fk">fk</span><span class="ty">→ players</span></li>
+      <li><span class="col">by_default</span><span class="ty">bool · walkover</span></li>
+      <li><span class="col">pts_a_delta / pts_b_delta</span><span class="ty">int · ledger</span></li>
+    </ul>
+  </div>
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">editions</span><span class="rl">cada torneo</span></div>
+    <ul>
+      <li><span class="col">id</span> <span class="badge b-pk">pk</span><span class="ty">int</span></li>
+      <li><span class="col">name</span><span class="ty">text</span></li>
+      <li><span class="col">slug</span> <span class="badge b-uq">uq</span><span class="ty">text</span></li>
+      <li><span class="col">starts_on / ends_on</span><span class="ty">date</span></li>
+      <li><span class="col">scoring</span><span class="ty">sets | points</span></li>
+    </ul>
+  </div>
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">groups</span><span class="rl">grupos del sorteo</span></div>
+    <ul>
+      <li><span class="col">id</span> <span class="badge b-pk">pk</span><span class="ty">uuid</span></li>
+      <li><span class="col">edition_id</span> <span class="badge b-fk">fk</span><span class="ty">→ editions</span></li>
+      <li><span class="col">category</span><span class="ty">enum</span></li>
+      <li><span class="col">label</span><span class="ty">text · A,B,C…</span></li>
+    </ul>
+  </div>
+  <div class="tbl">
+    <div class="tbl-h"><span class="nm">availability_slots</span><span class="rl">disponibilidad</span></div>
+    <ul>
+      <li><span class="col">registration_id</span> <span class="badge b-fk">fk</span><span class="ty">→ registrations</span></li>
+      <li><span class="col">day</span><span class="ty">date</span></li>
+      <li><span class="col">block_start</span><span class="ty">time</span></li>
+      <li class="muted"><span class="col">pk = (registration_id, day, block_start)</span></li>
+    </ul>
+  </div>
+</div>
+
+<h3>Los tipos (enums) — copia y pega</h3>
+<p>Los <code>enum</code> de Postgres validan que solo entren valores válidos. Usa <strong>exactamente</strong> los códigos que ya manda tu formulario.</p>
+<pre><code><span class="tok-k">create type</span> <span class="tok-t">faculty_code</span> <span class="tok-k">as enum</span> (
+  <span class="tok-s">'ARQUITECTURA'</span>,<span class="tok-s">'CIENCIAS'</span>,<span class="tok-s">'POLITICAS'</span>,<span class="tok-s">'FCA'</span>,<span class="tok-s">'DERECHO'</span>,<span class="tok-s">'ECONOMIA'</span>,
+  <span class="tok-s">'FILOSOFIA'</span>,<span class="tok-s">'INGENIERIA'</span>,<span class="tok-s">'MEDICINA'</span>,<span class="tok-s">'VETERINARIA'</span>,<span class="tok-s">'ODONTOLOGIA'</span>,
+  <span class="tok-s">'PSICOLOGIA'</span>,<span class="tok-s">'QUIMICA'</span>,<span class="tok-s">'OTRA'</span>);          <span class="tok-c">-- 14 = tus 14 fotos</span>
+
+<span class="tok-k">create type</span> <span class="tok-t">career_code</span> <span class="tok-k">as enum</span> (
+  <span class="tok-s">'AEROESPACIAL'</span>,<span class="tok-s">'AMBIENTAL'</span>,<span class="tok-s">'CIVIL'</span>,<span class="tok-s">'MINAS'</span>,<span class="tok-s">'ELECTRICA'</span>,<span class="tok-s">'COMPUTACION'</span>,
+  <span class="tok-s">'BIOMEDICA'</span>,<span class="tok-s">'TELECOM'</span>,<span class="tok-s">'GEOFISICA'</span>,<span class="tok-s">'GEOLOGICA'</span>,<span class="tok-s">'GEOMATICA'</span>,
+  <span class="tok-s">'INDUSTRIAL'</span>,<span class="tok-s">'MECANICA'</span>,<span class="tok-s">'MECATRONICA'</span>,<span class="tok-s">'PETROLERA'</span>);  <span class="tok-c">-- 15 carreras FI</span>
+
+<span class="tok-k">create type</span> <span class="tok-t">category_code</span>     <span class="tok-k">as enum</span> (<span class="tok-s">'BEGINNER'</span>,<span class="tok-s">'PRINCIPIANTE'</span>,<span class="tok-s">'INTERMEDIO'</span>,<span class="tok-s">'AVANZADO'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">experience_code</span>   <span class="tok-k">as enum</span> (<span class="tok-s">'NUNCA'</span>,<span class="tok-s">'LT6M'</span>,<span class="tok-s">'M6_2Y'</span>,<span class="tok-s">'GT2Y'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">frequency_code</span>    <span class="tok-k">as enum</span> (<span class="tok-s">'NUNCA'</span>,<span class="tok-s">'MONTHLY'</span>,<span class="tok-s">'WEEKLY'</span>,<span class="tok-s">'FREQUENT'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">training_code</span>     <span class="tok-k">as enum</span> (<span class="tok-s">'NONE'</span>,<span class="tok-s">'LT1M'</span>,<span class="tok-s">'GE1M'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">prev_result_code</span>  <span class="tok-k">as enum</span> (<span class="tok-s">'NO_GROUP_PASS'</span>,<span class="tok-s">'GROUP_PASS'</span>,<span class="tok-s">'QF'</span>,<span class="tok-s">'SEMIFINAL'</span>,<span class="tok-s">'FINALIST'</span>,<span class="tok-s">'CHAMPION'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">reg_status</span>        <span class="tok-k">as enum</span> (<span class="tok-s">'PRE_REGISTERED'</span>,<span class="tok-s">'PENDING'</span>,<span class="tok-s">'CONFIRMED'</span>,<span class="tok-s">'CANCELLED'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">match_stage</span>       <span class="tok-k">as enum</span> (<span class="tok-s">'GROUP'</span>,<span class="tok-s">'REPECHAJE'</span>,<span class="tok-s">'R32'</span>,<span class="tok-s">'R16'</span>,<span class="tok-s">'QF'</span>,<span class="tok-s">'SF'</span>,<span class="tok-s">'FINAL'</span>,<span class="tok-s">'THIRD'</span>,<span class="tok-s">'TIEBREAK'</span>);
+<span class="tok-k">create type</span> <span class="tok-t">match_format</span>      <span class="tok-k">as enum</span> (<span class="tok-s">'SETS'</span>,<span class="tok-s">'POINTS_12'</span>,<span class="tok-s">'POINTS_14'</span>);  <span class="tok-c">-- formato real del marcador</span>
+<span class="tok-k">create type</span> <span class="tok-t">point_event_type</span>  <span class="tok-k">as enum</span> (<span class="tok-s">'BASE'</span>,<span class="tok-s">'WIN'</span>,<span class="tok-s">'WIN_DEFAULT'</span>,<span class="tok-s">'LOSS'</span>,<span class="tok-s">'LOSS_DEFAULT'</span>,<span class="tok-s">'BYE'</span>,
+  <span class="tok-s">'GROUP_PASS'</span>,<span class="tok-s">'REPECHAJE_WIN'</span>,<span class="tok-s">'THIRD_TIEBREAK_WIN'</span>,<span class="tok-s">'R16_WIN'</span>,<span class="tok-s">'QF_WIN'</span>,<span class="tok-s">'FINALIST'</span>,<span class="tok-s">'CHAMPION'</span>,<span class="tok-s">'ADJUST'</span>);  <span class="tok-c">-- cada cambio de puntos = 1 tipo</span></code></pre>
+
+<h3>Las tablas</h3>
+<pre><code><span class="tok-k">create table</span> <span class="tok-t">players</span> (
+  id            <span class="tok-t">uuid</span> <span class="tok-k">primary key default</span> <span class="tok-f">gen_random_uuid</span>(),
+  phone         <span class="tok-t">text</span> <span class="tok-k">unique not null</span>,        <span class="tok-c">-- la llave: conoces el de todos, hoy e histórico</span>
+  nickname      <span class="tok-t">text</span> <span class="tok-k">not null</span>,             <span class="tok-c">-- un solo nombre/apodo; no se pide nombre completo</span>
+  faculty       <span class="tok-t">faculty_code</span>,
+  career        <span class="tok-t">career_code</span>,
+  email         <span class="tok-t">text</span>,
+  category      <span class="tok-t">category_code</span>,                 <span class="tok-c">-- banda actual del jugador</span>
+  points        <span class="tok-t">int</span> <span class="tok-k">default</span> <span class="tok-n">0</span>,            <span class="tok-c">-- ranking = base + Σ point_events (cache)</span>
+  matches_played <span class="tok-t">int</span> <span class="tok-k">default</span> <span class="tok-n">0</span>,
+  created_at    <span class="tok-t">timestamptz</span> <span class="tok-k">default</span> <span class="tok-f">now</span>(),
+  <span class="tok-k">constraint</span> career_solo_fi <span class="tok-k">check</span> (faculty = <span class="tok-s">'INGENIERIA'</span> <span class="tok-k">or</span> career <span class="tok-k">is null</span>)
+);
+
+<span class="tok-k">create table</span> <span class="tok-t">editions</span> (
+  id         <span class="tok-t">int</span> <span class="tok-k">primary key generated always as identity</span>,
+  name       <span class="tok-t">text</span> <span class="tok-k">not null</span>,
+  slug       <span class="tok-t">text</span> <span class="tok-k">unique</span>,                    <span class="tok-c">-- 'fi-2025-1', 'fi-2026-2'</span>
+  starts_on  <span class="tok-t">date</span>,  ends_on <span class="tok-t">date</span>,
+  scoring    <span class="tok-t">text</span> <span class="tok-k">default</span> <span class="tok-s">'sets'</span>           <span class="tok-c">-- sólo default; el formato REAL es por categoría → matches.format</span>
+);
+
+<span class="tok-k">create table</span> <span class="tok-t">groups</span> (
+  id          <span class="tok-t">uuid</span> <span class="tok-k">primary key default</span> <span class="tok-f">gen_random_uuid</span>(),
+  edition_id  <span class="tok-t">int</span> <span class="tok-k">references</span> editions(id),
+  category    <span class="tok-t">category_code</span>,
+  label       <span class="tok-t">text</span>,                            <span class="tok-c">-- 'A','B','C'</span>
+  <span class="tok-k">unique</span> (edition_id, category, label)
+);
+
+<span class="tok-k">create table</span> <span class="tok-t">registrations</span> (
+  id            <span class="tok-t">uuid</span> <span class="tok-k">primary key default</span> <span class="tok-f">gen_random_uuid</span>(),
+  player_id     <span class="tok-t">uuid</span> <span class="tok-k">not null references</span> players(id) <span class="tok-k">on delete cascade</span>,
+  edition_id    <span class="tok-t">int</span>  <span class="tok-k">not null references</span> editions(id),
+  <span class="tok-c">-- snapshot de identidad al momento de inscribirse</span>
+  nickname      <span class="tok-t">text</span>,  faculty <span class="tok-t">faculty_code</span>,  career <span class="tok-t">career_code</span>,
+  <span class="tok-c">-- cuestionario CRUDO (tal cual lo respondió)</span>
+  representative   <span class="tok-t">boolean</span>,
+  private_training <span class="tok-t">training_code</span>,
+  experience       <span class="tok-t">experience_code</span>,
+  frequency        <span class="tok-t">frequency_code</span>,
+  techniques       <span class="tok-t">text[]</span> <span class="tok-k">default</span> <span class="tok-s">'{}'</span>,        <span class="tok-c">-- {'SERVE','TOPSPIN'}; "Ninguna" = {}</span>
+  participated_previously <span class="tok-t">boolean</span>,
+  prev_category    <span class="tok-t">category_code</span>,
+  prev_result      <span class="tok-t">prev_result_code</span>,
+  <span class="tok-c">-- DERIVADOS (los calcula tu scoring; se guardan para auditoría)</span>
+  category_prov    <span class="tok-t">category_code</span>,                  <span class="tok-c">-- categoría provisional automática</span>
+  category_final   <span class="tok-t">category_code</span>,                  <span class="tok-c">-- ajuste manual de la organización</span>
+  requires_review  <span class="tok-t">boolean</span> <span class="tok-k">default</span> <span class="tok-k">false</span>,
+  wood_paddle      <span class="tok-t">boolean</span> <span class="tok-k">default</span> <span class="tok-k">false</span>,
+  <span class="tok-c">-- administrativo</span>
+  status        <span class="tok-t">reg_status</span> <span class="tok-k">default</span> <span class="tok-s">'PRE_REGISTERED'</span>,
+  paid          <span class="tok-t">boolean</span> <span class="tok-k">default</span> <span class="tok-k">false</span>,
+  seed_pot      <span class="tok-t">int</span>,                            <span class="tok-c">-- bombo asignado para el sorteo</span>
+  group_id      <span class="tok-t">uuid</span> <span class="tok-k">references</span> groups(id),
+  created_at    <span class="tok-t">timestamptz</span> <span class="tok-k">default</span> <span class="tok-f">now</span>(),
+  <span class="tok-k">unique</span> (player_id, edition_id),            <span class="tok-c">-- bloquea doble inscripción por edición</span>
+  <span class="tok-k">constraint</span> tech_validas <span class="tok-k">check</span>
+    (techniques <@ <span class="tok-k">array</span>[<span class="tok-s">'SERVE'</span>,<span class="tok-s">'CHOP'</span>,<span class="tok-s">'BACKSPIN'</span>,<span class="tok-s">'TOPSPIN'</span>])
+);
+
+<span class="tok-k">create table</span> <span class="tok-t">matches</span> (
+  id          <span class="tok-t">uuid</span> <span class="tok-k">primary key default</span> <span class="tok-f">gen_random_uuid</span>(),
+  edition_id  <span class="tok-t">int</span> <span class="tok-k">not null references</span> editions(id),
+  stage       <span class="tok-t">match_stage</span> <span class="tok-k">not null default</span> <span class="tok-s">'GROUP'</span>,
+  group_id    <span class="tok-t">uuid</span> <span class="tok-k">references</span> groups(id),
+  category    <span class="tok-t">category_code</span>,
+  played_on   <span class="tok-t">date</span>,
+  player_a    <span class="tok-t">uuid</span> <span class="tok-k">not null references</span> players(id),
+  player_b    <span class="tok-t">uuid</span> <span class="tok-k">not null references</span> players(id),
+  format      <span class="tok-t">match_format</span> <span class="tok-k">not null default</span> <span class="tok-s">'SETS'</span>,  <span class="tok-c">-- cómo se jugó realmente</span>
+  sets_a      <span class="tok-t">int</span>,  sets_b <span class="tok-t">int</span>,                <span class="tok-c">-- marcador CANÓNICO en sets (derivado si vino en puntos)</span>
+  points_a    <span class="tok-t">int</span>,  points_b <span class="tok-t">int</span>,              <span class="tok-c">-- juego único a 12/14 ORIGINAL (histórico en puntos)</span>
+  set_scores  <span class="tok-t">jsonb</span>,                          <span class="tok-c">-- [[14,9],[12,14],[14,10]] cuando hubo sets reales</span>
+  winner      <span class="tok-t">uuid</span> <span class="tok-k">references</span> players(id),
+  by_default  <span class="tok-t">boolean</span> <span class="tok-k">default</span> <span class="tok-k">false</span>,        <span class="tok-c">-- ¿se ganó por incomparecencia?</span>
+  pts_a_delta <span class="tok-t">int</span>, pts_b_delta <span class="tok-t">int</span>,        <span class="tok-c">-- puntos que generó este partido (auditoría)</span>
+  created_at  <span class="tok-t">timestamptz</span> <span class="tok-k">default</span> <span class="tok-f">now</span>(),
+  <span class="tok-k">constraint</span> distintos <span class="tok-k">check</span> (player_a <> player_b)
+);
+
+<span class="tok-k">create table</span> <span class="tok-t">availability_slots</span> (
+  registration_id <span class="tok-t">uuid</span> <span class="tok-k">references</span> registrations(id) <span class="tok-k">on delete cascade</span>,
+  day         <span class="tok-t">date</span> <span class="tok-k">not null</span>,
+  block_start <span class="tok-t">time</span> <span class="tok-k">not null</span>,             <span class="tok-c">-- 07:00, 09:00, …</span>
+  <span class="tok-k">primary key</span> (registration_id, day, block_start)
+);</code></pre>
+
+<h3>El libro mayor de puntos (<code>point_events</code>)</h3>
+<p>El corazón del ranking estático: <strong>una fila por cada cosa que da o quita puntos</strong> (un partido, pasar de grupos, ser campeón, un ajuste manual). Cada fila guarda una cantidad <em>fija</em> que no se vuelve a tocar. El ranking de una persona es, literalmente, <code>base de su categoría + suma de sus eventos</code> — nunca un recálculo relativo a rivales. Esto es lo que hace al modelo "estático" y, de paso, 100% auditable: ves de dónde salió cada punto.</p>
+<pre><code><span class="tok-k">create table</span> <span class="tok-t">point_events</span> (
+  id          <span class="tok-t">uuid</span> <span class="tok-k">primary key default</span> <span class="tok-f">gen_random_uuid</span>(),
+  player_id   <span class="tok-t">uuid</span> <span class="tok-k">not null references</span> players(id) <span class="tok-k">on delete cascade</span>,
+  edition_id  <span class="tok-t">int</span>  <span class="tok-k">references</span> editions(id),
+  match_id    <span class="tok-t">uuid</span> <span class="tok-k">references</span> matches(id),       <span class="tok-c">-- null si es logro o ajuste manual</span>
+  type        <span class="tok-t">point_event_type</span> <span class="tok-k">not null</span>,
+  points      <span class="tok-t">int</span>  <span class="tok-k">not null</span>,                     <span class="tok-c">-- FIJO; + o -, nunca se recalcula</span>
+  note        <span class="tok-t">text</span>,
+  created_at  <span class="tok-t">timestamptz</span> <span class="tok-k">default</span> <span class="tok-f">now</span>()
+);
+<span class="tok-c">-- Ranking = base de categoría + Σ(points). Nada se recalcula hacia atrás.</span></code></pre>
+
+<div class="call note">
+  <p class="ct">◆ Por qué dos niveles (player + registration)</p>
+  <p>El <strong>player</strong> es quién eres (estable). La <strong>registration</strong> es quién fuiste <em>en esa edición</em>: tu categoría, tu cuestionario, tu bombo, tu grupo. Guardar un <em>snapshot</em> del apodo y la facultad en la inscripción te deja ver el historial tal como ocurrió, aunque la persona cambie de apodo o de carrera después.</p>
+</div>
+
+<div class="call note">
+  <p class="ct">◆ Activa RLS en Supabase</p>
+  <p>Estas tablas son escribibles desde el cliente. Activa <em>Row Level Security</em> y deja escritura solo vía función/servicio (o políticas estrictas). Para el formulario público, expón una función <code>rpc</code> que valide e inserte, en lugar de dar <code>insert</code> directo a <code>anon</code>.</p>
+</div>
+</section>
+
+<!-- ═══════════ 3 · IMPORTAR HISTORIAL ═══════════ -->
+<section id="s3">
+<h2><span class="sec-num">03</span>Importar el historial (Sheets → BD)</h2>
+<hr class="divider" />
+<p>Tus hojas de cálculo ya contienen el dato más valioso: <strong>cada celda de la tabla "Marcadores" es un partido</strong>. La fila de "Clasificación" (Puntos, Diferencia, a favor/en contra) se puede <em>recalcular</em> desde los partidos, así que no la importas: importas los partidos y la clasificación sale sola.</p>
+
+<div class="call note">
+  <p class="ct">◆ Cómo estuvo armado el torneo pasado</p>
+  <p>Hubo <strong>3 categorías</strong> —Principiantes, Intermedios y Avanzados— y cada una tuvo <strong>fase de grupos + fase de llaves</strong> (eliminatorias). Avanzados además tuvo un <strong>repechaje "todo o nada"</strong> para la gente que entró después de los grupos: ganas y avanzas, pierdes y quedas fuera. Eso es una fila <code>matches</code> con <code>stage = 'REPECHAJE'</code>.</p>
+  <p style="margin-bottom:0"><strong>Formato distinto por categoría:</strong> sólo <strong>Avanzados se jugó a sets</strong> (<code>2-1</code>). Principiantes e Intermedios fueron <strong>juego único a puntos</strong> (Principiantes a 12, Intermedios a 14). Desde el nuevo torneo las tres serán a sets — por eso conviene traducir el histórico de puntos a sets (siguiente bloque).</p>
+</div>
+
+<div class="two">
+  <div>
+    <h4>Lo que ves en la hoja</h4>
+    <p>La cuadrícula "Marcadores" es una matriz round-robin. En <strong>Avanzados</strong> la celda ya es sets: <code>2-0</code>, <code>2-1</code>. En <strong>Principiantes / Intermedios</strong> es un juego único a puntos: <code>12-9</code>, <code>14-8</code>. Las llaves se leen igual, partido por partido.</p>
+  </div>
+  <div>
+    <h4>Lo que guardas</h4>
+    <p>Una fila en <code>matches</code> por cada celda de la mitad superior de la matriz (la espejo es el mismo partido). Guardas <code>format</code>, el marcador <em>original</em> (en <code>points_a/b</code> o en sets), el <code>winner</code> y el <code>stage</code>.</p>
+  </div>
+</div>
+
+<h3>Traducir puntos → sets (para que el historial sea homogéneo)</h3>
+<p>Como ahora todo se juega a sets, los juegos viejos a puntos de Principiantes e Intermedios necesitan un <strong>marcador de sets equivalente</strong> para que el ranking de puntos y el historial sean comparables entre categorías y ediciones.</p>
+
+<div class="call warn">
+  <p class="ct">⚠ Nunca borres el marcador real</p>
+  <p>Guarda los puntos originales en <code>points_a/points_b</code> y <em>deriva</em> <code>sets_a/sets_b</code>. El juego a puntos es la verdad histórica; el marcador de sets es una <strong>proyección</strong> para homogeneizar. Si mañana cambias la regla, recalculas los sets sin haber perdido nada.</p>
+</div>
+
+<h4>La regla: el margen decide 2–0 ó 2–1</h4>
+<p>Ganar el juego ya es ganar el partido, así que el ganador siempre lleva <strong>2 sets</strong>. Lo apretado decide si el perdedor se llevó <strong>0</strong> (paliza) o <strong>1</strong> (cerrado), según el margen relativo al objetivo del juego:</p>
+<ul>
+  <li><strong>Juego a 14 (Intermedios):</strong> margen ≥ 4 ⇒ <code>2–0</code>; margen ≤ 3 ⇒ <code>2–1</code>.</li>
+  <li><strong>Juego a 12 (Principiantes):</strong> margen ≥ 3 ⇒ <code>2–0</code>; margen ≤ 2 ⇒ <code>2–1</code>.</li>
+  <li>Todo juego que se fue a <em>deuce</em> (16–14, 15–13, 18–16) tiene margen 2 ⇒ <code>2–1</code>, lo más cerrado posible.</li>
+</ul>
+<p>Conserva la señal de dominancia, que es justo lo que los puntos por partido (sección 6) aprovechan: una paliza <code>14–4</code> se traduce a <code>2–0</code> (+12) y un <code>14–12</code> a <code>2–1</code> (+10), igual que si se hubiera jugado a sets de verdad.</p>
+
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Juego original</th><th>Categoría</th><th>Objetivo</th><th>Margen</th><th>Sets equiv.</th></tr></thead>
+  <tbody>
+    <tr><td class="mono">15–13</td><td>Intermedio</td><td>14</td><td>2</td><td class="mono">2–1</td></tr>
+    <tr><td class="mono">14–8</td><td>Intermedio</td><td>14</td><td>6</td><td class="mono">2–0</td></tr>
+    <tr><td class="mono">16–18 (pierde)</td><td>Intermedio</td><td>14</td><td>2</td><td class="mono">0–2</td></tr>
+    <tr><td class="mono">14–4</td><td>Intermedio</td><td>14</td><td>10</td><td class="mono">2–0</td></tr>
+    <tr><td class="mono">12–9</td><td>Principiante</td><td>12</td><td>3</td><td class="mono">2–0</td></tr>
+    <tr><td class="mono">13–11</td><td>Principiante</td><td>12</td><td>2</td><td class="mono">2–1</td></tr>
+    <tr><td class="mono">12–2</td><td>Principiante</td><td>12</td><td>10</td><td class="mono">2–0</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>En código, una función pura:</p>
+<pre><code><span class="tok-c">// Traduce un juego único a puntos -> [sets de A, sets de B].</span>
+<span class="tok-c">// target: 12 (Principiantes) o 14 (Intermedios)</span>
+<span class="tok-k">function</span> <span class="tok-f">juegoASets</span>(puntosA, puntosB, target){
+  <span class="tok-k">const</span> margen = <span class="tok-f">Math</span>.<span class="tok-f">abs</span>(puntosA - puntosB);
+  <span class="tok-k">const</span> comodo = target === <span class="tok-n">14</span> ? margen >= <span class="tok-n">4</span> : margen >= <span class="tok-n">3</span>;
+  <span class="tok-k">const</span> perdedor = comodo ? <span class="tok-n">0</span> : <span class="tok-n">1</span>;          <span class="tok-c">// 0 = paliza, 1 = cerrado</span>
+  <span class="tok-k">return</span> puntosA > puntosB ? [<span class="tok-n">2</span>, perdedor] : [perdedor, <span class="tok-n">2</span>];
+}
+<span class="tok-c">// juegoASets(15,13,14) -> [2,1]    juegoASets(14,8,14) -> [2,0]</span></code></pre>
+
+<p>Y el <em>backfill</em> en SQL sobre los partidos ya importados en puntos:</p>
+<pre><code><span class="tok-c">-- Deriva sets_a/sets_b para los partidos históricos jugados a puntos</span>
+<span class="tok-k">update</span> matches <span class="tok-k">set</span>
+  sets_a = <span class="tok-k">case when</span> points_a > points_b <span class="tok-k">then</span> <span class="tok-n">2</span>
+                <span class="tok-k">when</span> <span class="tok-f">abs</span>(points_a-points_b) >= (<span class="tok-k">case when</span> format=<span class="tok-s">'POINTS_14'</span> <span class="tok-k">then</span> <span class="tok-n">4</span> <span class="tok-k">else</span> <span class="tok-n">3</span> <span class="tok-k">end</span>) <span class="tok-k">then</span> <span class="tok-n">0</span>
+                <span class="tok-k">else</span> <span class="tok-n">1</span> <span class="tok-k">end</span>,
+  sets_b = <span class="tok-k">case when</span> points_b > points_a <span class="tok-k">then</span> <span class="tok-n">2</span>
+                <span class="tok-k">when</span> <span class="tok-f">abs</span>(points_a-points_b) >= (<span class="tok-k">case when</span> format=<span class="tok-s">'POINTS_14'</span> <span class="tok-k">then</span> <span class="tok-n">4</span> <span class="tok-k">else</span> <span class="tok-n">3</span> <span class="tok-k">end</span>) <span class="tok-k">then</span> <span class="tok-n">0</span>
+                <span class="tok-k">else</span> <span class="tok-n">1</span> <span class="tok-k">end</span>
+<span class="tok-k">where</span> format <span class="tok-k">in</span> (<span class="tok-s">'POINTS_12'</span>,<span class="tok-s">'POINTS_14'</span>) <span class="tok-k">and</span> points_a <span class="tok-k">is not null</span>;</code></pre>
+
+<div class="call note">
+  <p class="ct">◆ Las llaves que ya estaban en sets entran tal cual</p>
+  <p>Aplica la regla <strong>sólo</strong> a celdas que son un juego único a puntos. Donde el bracket ya muestra sets (<code>2–0</code>, o <code>3–2</code> en una final al mejor de 5), impórtalo como <code>format='SETS'</code> sin convertir. El campo <code>format</code> por partido te deja mezclar ambos en la misma edición sin ambigüedad.</p>
+</div>
+
+<h3>Vincular el histórico: el teléfono ya lo tienes</h3>
+<p>Aquí está tu ventaja real: del torneo pasado conoces <strong>nombre, teléfono, categoría y hasta dónde llegó</strong> cada quien. No hay nombres sueltos que adivinar — el teléfono enlaza pasado y presente desde el día uno, y es <em>justo por el teléfono</em> que los resultados históricos se conectan con el historial y con los puntos de ranking del nuevo torneo. La carga es directa:</p>
+<ol class="flow">
+  <li><b>Crea la edición pasada.</b> <code>insert into editions … 'fi-2025-1'</code>.</li>
+  <li><b>Carga un player por persona con su teléfono normalizado</b> y su apodo. Como <code>phone</code> es la llave única, si esa persona vuelve no se duplica: cae sobre la misma fila.</li>
+  <li><b>Inserta los partidos</b> leyendo la matriz de marcadores: guarda <code>format</code> y el marcador original. En Principiantes/Intermedios <strong>deriva los sets</strong> (bloque anterior); en Avanzados entran tal cual. Calcula <code>winner</code> y, por cada partido y logro, escribe sus filas en <code>point_events</code> (sección 6) para dejar <code>players.points</code> al día.</li>
+  <li><b>Al registrarse de nuevo, el enlace es automático.</b> El <code>upsert</code> por teléfono (sección 1) encuentra a la persona; su historial, sus puntos y su categoría previa ya cuelgan de su <code>player_id</code>. No hay que "reclamar" ni reconciliar nada.</li>
+</ol>
+
+<pre><code><span class="tok-c">-- Cargar un jugador histórico CON su teléfono (es la llave)</span>
+<span class="tok-k">insert into</span> players (phone, nickname, faculty, category, points)
+<span class="tok-k">values</span> (<span class="tok-f">normalize_phone</span>(<span class="tok-s">'55 1234 5678'</span>), <span class="tok-s">'Luis Arturo "Fitch"'</span>, <span class="tok-s">'INGENIERIA'</span>, <span class="tok-s">'AVANZADO'</span>, <span class="tok-n">0</span>)
+<span class="tok-k">on conflict</span> (phone) <span class="tok-k">do nothing</span>;     <span class="tok-c">-- si ya existe, no lo dupliques</span>
+<span class="tok-c">-- Sus matches y point_events se ligan por player_id; al re-registrarse, todo aparece solo.</span></code></pre>
+
+<div class="call rec">
+  <p class="ct">✓ Por qué ya no hace falta "reconciliar"</p>
+  <p>El teléfono es único en <code>players</code>. Cargas el histórico con teléfono y, cuando esa persona llena el formulario del nuevo torneo, el <strong>upsert por teléfono</strong> cae sobre la misma fila: recupera apodo, categoría anterior, historial de partidos y puntos de ranking al instante. La pregunta "¿jugaste antes?" pasa a ser informativa, no un disparador de búsqueda por nombre.</p>
+</div>
+
+<div class="call warn">
+  <p class="ct">⚠ El único caso de fusión: una persona con dos teléfonos</p>
+  <p>Con el teléfono como llave los homónimos dejan de ser problema: dos "Luis" son dos números distintos. El único duplicado posible es que <em>la misma persona</em> aparezca con dos números (cambió de teléfono). Para eso dejas una fusión manual: reasignas sus <code>matches</code> y <code>point_events</code> al registro bueno y borras el vacío.</p>
+</div>
+
+<pre><code><span class="tok-c">-- Fusionar dos jugadores (misma persona, dos teléfonos)</span>
+<span class="tok-k">update</span> matches      <span class="tok-k">set</span> player_a = :keep <span class="tok-k">where</span> player_a = :dup;
+<span class="tok-k">update</span> matches      <span class="tok-k">set</span> player_b = :keep <span class="tok-k">where</span> player_b = :dup;
+<span class="tok-k">update</span> matches      <span class="tok-k">set</span> winner   = :keep <span class="tok-k">where</span> winner   = :dup;
+<span class="tok-k">update</span> point_events <span class="tok-k">set</span> player_id = :keep <span class="tok-k">where</span> player_id = :dup;
+<span class="tok-k">delete from</span> players <span class="tok-k">where</span> id = :dup;</code></pre>
+</section>
+
+<!-- ═══════════ 4 · CUESTIONARIO ═══════════ -->
+<section id="s4">
+<h2><span class="sec-num">04</span>El cuestionario: cómo guardarlo</h2>
+<hr class="divider" />
+<p>Regla de oro: <strong>guarda lo cerrado en columnas tipadas (enum), no en texto libre ni en un JSON.</strong> Tu formulario ya manda códigos limpios (<code>GT2Y</code>, <code>WEEKLY</code>…); respétalos como <code>enum</code> y la base de datos te protege de basura. Guarda <em>siempre</em> la respuesta cruda <em>y</em> la categoría derivada — la cruda es la verdad, la derivada es una opinión que la organización puede sobrescribir.</p>
+
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Pregunta (form)</th><th>Columna</th><th>Tipo</th><th>Para qué sirve</th></tr></thead>
+  <tbody>
+    <tr><td>Nombre o apodo</td><td class="mono">nickname</td><td>text</td><td>Identidad · se muestra en bracket</td></tr>
+    <tr><td>Teléfono</td><td class="mono">phone</td><td>text E.164</td><td><b>Llave</b> · contacto · anti-dup</td></tr>
+    <tr><td>Facultad</td><td class="mono">faculty</td><td>enum (14)</td><td>Foto de perfil · sorteo</td></tr>
+    <tr><td>Carrera (si FI)</td><td class="mono">career</td><td>enum (15)</td><td>Logo extra · sorteo</td></tr>
+    <tr><td>¿Representativo?</td><td class="mono">representative</td><td>boolean</td><td>→ Avanzado forzoso + pala madera</td></tr>
+    <tr><td>Entrenamiento particular</td><td class="mono">private_training</td><td>enum</td><td>≥1 mes → Avanzado</td></tr>
+    <tr><td>Tiempo jugando</td><td class="mono">experience</td><td>enum</td><td>Señal de categoría · base inicial</td></tr>
+    <tr><td>Frecuencia actual</td><td class="mono">frequency</td><td>enum</td><td>Señal de categoría</td></tr>
+    <tr><td>Técnicas que dominas</td><td class="mono">techniques</td><td>text[]</td><td>Señal de categoría (cuenta cuántas)</td></tr>
+    <tr><td>¿Jugaste el torneo pasado?</td><td class="mono">participated_previously</td><td>boolean</td><td>Informativo; el enlace real lo hace el teléfono</td></tr>
+    <tr><td>¿En qué categoría?</td><td class="mono">prev_category</td><td>enum</td><td>Respaldo si no se importó su historial</td></tr>
+    <tr><td>¿Hasta dónde llegaste?</td><td class="mono">prev_result</td><td>enum</td><td>Respaldo si no se importó su historial</td></tr>
+    <tr><td><em>(derivado)</em> categoría auto</td><td class="mono">category_prov</td><td>enum</td><td>Salida de tu <code>scoring.js</code></td></tr>
+    <tr><td><em>(derivado)</em> categoría final</td><td class="mono">category_final</td><td>enum</td><td>Lo que decide la organización</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Técnicas: arreglo, no cinco columnas</h3>
+<p>Como es selección múltiple (Saque, Chop, Backspin, Topspin), un <code>text[]</code> es lo natural. <em>"Ninguna"</em> se guarda como arreglo vacío <code>'{}'</code> — no como un valor más. Para tu scoring solo importa el <strong>conteo</strong>: <code>array_length(techniques,1)</code>.</p>
+
+<div class="call rec">
+  <p class="ct">✓ Cruda + derivada, siempre las dos</p>
+  <p>Guardas <code>experience</code>, <code>frequency</code>, <code>techniques</code>… (lo que dijo) <strong>y también</strong> <code>category_prov</code> (lo que tu fórmula calculó) y <code>category_final</code> (lo que la organización ajustó). Si mañana cambias la fórmula, puedes recalcular todo desde lo crudo. Si solo guardas la categoría, perdiste la materia prima para siempre.</p>
+</div>
+</section>
+
+<!-- ═══════════ 5 · DISPONIBILIDAD ═══════════ -->
+<section id="s5">
+<h2><span class="sec-num">05</span>Disponibilidad: ¿matriz?</h2>
+<hr class="divider" />
+<p>Conceptualmente <strong>sí es una matriz</strong>: días (5) × bloques (7) = 35 casillas, cada una sí/no. La pregunta no es si <em>se piensa</em> como matriz, sino cómo <em>se guarda</em>. Tres opciones:</p>
+
+<div class="tw">
+  <div>
+    <h4>A · JSON / matriz 2D</h4>
+    <p class="muted">Una columna <code>jsonb</code> con la rejilla.</p>
+    <p><b>Bien:</b> simple de escribir.<br/><b>Mal:</b> no puedes preguntar fácil <em>"¿quién puede el martes 9–11?"</em> sin desempacar todo.</p>
+  </div>
+  <div>
+    <h4>B · Bitmask (entero)</h4>
+    <p class="muted">35 casillas → 35 bits en un <code>bigint</code>.</p>
+    <p><b>Bien:</b> intersección de horarios = un <code>AND</code> bit a bit, ultrarrápido para el sorteo.<br/><b>Mal:</b> ilegible a ojo; rígido si cambian los bloques.</p>
+  </div>
+</div>
+<h4>C · Tabla normalizada — <span style="color:var(--green)">recomendada</span></h4>
+<p>Una fila por bloque elegido en <code>availability_slots</code>. Es la opción flexible: consultas con SQL normal, soporta días/bloques variables, e índices la hacen rápida.</p>
+
+<pre><code><span class="tok-c">-- ¿Quiénes pueden el martes 19-ago a las 09:00?</span>
+<span class="tok-k">select</span> p.nickname
+<span class="tok-k">from</span> availability_slots a
+<span class="tok-k">join</span> registrations r <span class="tok-k">on</span> r.id = a.registration_id
+<span class="tok-k">join</span> players p <span class="tok-k">on</span> p.id = r.player_id
+<span class="tok-k">where</span> a.day = <span class="tok-s">'2026-08-19'</span> <span class="tok-k">and</span> a.block_start = <span class="tok-s">'09:00'</span>;
+
+<span class="tok-c">-- ¿Cuántos bloques comparten dos jugadores? (clave para armar grupos)</span>
+<span class="tok-k">select</span> <span class="tok-f">count</span>(*) <span class="tok-k">as</span> bloques_en_comun
+<span class="tok-k">from</span> availability_slots x
+<span class="tok-k">join</span> availability_slots y
+  <span class="tok-k">on</span> x.day = y.day <span class="tok-k">and</span> x.block_start = y.block_start
+<span class="tok-k">where</span> x.registration_id = :jugador1
+  <span class="tok-k">and</span> y.registration_id = :jugador2;</code></pre>
+
+<div class="call note">
+  <p class="ct">◆ Lo mejor de los dos mundos</p>
+  <p>Guarda en <strong>filas normalizadas (C)</strong> como fuente de verdad, y cuando corras el algoritmo de sorteo, <em>derivas</em> un <strong>bitmask (B)</strong> en memoria para que la intersección de horarios sea instantánea. No los guardas ambos en disco; el bitmask es un caché de cálculo.</p>
+</div>
+</section>
+
+<!-- ═══════════ 6 · PUNTOS ESTÁTICOS ═══════════ -->
+<section id="s6">
+<h2><span class="sec-num">06</span>Power ranking: puntos estáticos</h2>
+<hr class="divider" />
+<p>Tu decisión: un <strong>puntaje estático</strong>, no un ranking relativo (tipo Elo). Cada partido y cada logro suma o resta una cantidad <em>fija</em>, que se cierra en el momento y <strong>nunca se recalcula</strong> según contra quién ganaste o perdiste después. A cambio de no "premiar la sorpresa" automáticamente, ganas tres cosas que para tu torneo importan más: reglas <strong>claras y visibles</strong> que cualquiera entiende, fáciles de explicar, y triviales de auditar.</p>
+
+<div class="call key">
+  <p class="ct">▸ El modelo en una caja</p>
+  <p><strong>Ranking de un jugador = base de su categoría + Σ de todos sus eventos de puntos.</strong> Cada partido genera puntos por resultado (victoria / derrota, con o sin default); cada avance genera puntos por logro (pasar de grupos, ganar una llave, ser finalista, campeón…). Todo queda como filas en <code>point_events</code>. El número solo cambia con eventos nuevos: el pasado queda congelado.</p>
+</div>
+
+<h3>¿Con cuántos puntos arranca cada categoría?</h3>
+<p>Recomendación: <strong>una sola escala para todos</strong>, pero con <strong>bases distintas por categoría</strong>. Así un avanzado siempre arranca por encima de un intermedio, y este por encima de un principiante, sin escalas separadas que comparar. Las bases están espaciadas para que cada categoría ocupe una <em>banda</em>: lo que ganas dentro de un torneo (decenas de puntos) no suele alcanzar para saltar de banda… salvo que arrases, que es justo la señal que quieres detectar.</p>
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Categoría</th><th>Base inicial</th><th>Banda típica</th><th>Por qué ese número</th></tr></thead>
+  <tbody>
+    <tr><td>Principiante</td><td class="mono">100</td><td class="mono">100–300</td><td>Piso del ranking; el primer torneo los ordena</td></tr>
+    <tr><td>Intermedio</td><td class="mono">250</td><td class="mono">250–500</td><td>Arranca 150 sobre principiante</td></tr>
+    <tr><td>Avanzado</td><td class="mono">450</td><td class="mono">450+</td><td>Arranca 200 sobre intermedio; techo abierto</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="call rec">
+  <p class="ct">✓ Bases escalonadas, no "límites duros"</p>
+  <p>Pensaste en topes (≤100 principiantes, ≤200 intermedios…). El choque: si los puntos <strong>se acumulan entre ediciones</strong> —y deben, para que sean historial— un tope fijo pelea contra esa acumulación. Mejor: <strong>bases separadas + acumulación libre + una regla de ascenso</strong>. El "tope" no lo pone un número congelado, lo pone que <em>al cruzar la base de la categoría de arriba, asciendes</em>. Mismo efecto que querías, sin frenar el progreso.</p>
+</div>
+
+<h3>Puntos por partido (cualquier fase)</h3>
+<p>Lo que da o quita cada partido por sí solo, sin contar el avance. El margen pesa <em>poco</em> a propósito: así <strong>inventar un marcador apenas sirve</strong> —uno de tus dolores del torneo pasado.</p>
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Resultado</th><th>Puntos</th><th>Nota</th></tr></thead>
+  <tbody>
+    <tr><td>Victoria 2–0 (sin ceder set)</td><td class="mono">+12</td><td>Domina</td></tr>
+    <tr><td>Victoria 2–1</td><td class="mono">+10</td><td>Gana cerrado</td></tr>
+    <tr><td>Derrota 1–2</td><td class="mono">+4</td><td>Compite y casi gana</td></tr>
+    <tr><td>Derrota 0–2</td><td class="mono">+2</td><td>Se presentó y jugó</td></tr>
+    <tr><td>Victoria por <em>default</em> (W.O.)</td><td class="mono">+6</td><td>Avanza, pero no lo ganó en la mesa</td></tr>
+    <tr><td>Derrota por <em>default</em> (no se presenta)</td><td class="mono">−8</td><td><b>Penaliza el no-show</b></td></tr>
+    <tr><td>Descanso / bye (pase sin jugar)</td><td class="mono">0</td><td>P. ej. campeón defensor sembrado</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="muted">Perder siempre da algo (premia presentarse y competir); <strong>faltar resta</strong>. Es justo lo que necesitabas para desincentivar las incomparecencias de último momento.</p>
+
+<h3>Puntos por logro (progresión)</h3>
+<p>Se suman <strong>una sola vez</strong> al alcanzar el hito, <em>además</em> de los puntos del partido que lo produjo. Aquí aplico un <strong>multiplicador ligero por categoría</strong> (Principiante ×1.0, Intermedio ×1.15, Avanzado ×1.30) para "beneficiar ligeramente a las categorías superiores", igual que tu reparto del premio. La tabla ya viene multiplicada y redondeada:</p>
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Logro</th><th>Base</th><th>Princ.</th><th>Interm.</th><th>Avanz.</th></tr></thead>
+  <tbody>
+    <tr><td>Clasificar de fase de grupos</td><td class="mono">15</td><td class="mono">15</td><td class="mono">17</td><td class="mono">20</td></tr>
+    <tr><td>Ganar repechaje (por victoria)</td><td class="mono">10</td><td class="mono">10</td><td class="mono">12</td><td class="mono">13</td></tr>
+    <tr><td>Ganar desempate de 3.º</td><td class="mono">10</td><td class="mono">—</td><td class="mono">—</td><td class="mono">13</td></tr>
+    <tr><td>Ganar octavos (R16)</td><td class="mono">15</td><td class="mono">15</td><td class="mono">17</td><td class="mono">20</td></tr>
+    <tr><td>Ganar cuartos (QF)</td><td class="mono">20</td><td class="mono">20</td><td class="mono">23</td><td class="mono">26</td></tr>
+    <tr><td>Finalista (ganar semifinal)</td><td class="mono">35</td><td class="mono">35</td><td class="mono">40</td><td class="mono">46</td></tr>
+    <tr><td>Campeón (ganar la final)</td><td class="mono">60</td><td class="mono">60</td><td class="mono">69</td><td class="mono">78</td></tr>
+  </tbody>
+</table>
+</div>
+<p>El <strong>repechaje</strong> y el <strong>desempate de terceros</strong> sí pagan: son partidos a matar-o-morir, así que cuentan como logro propio <em>además</em> del +10/+12 por ganar el partido. Quien entra por la puerta de atrás y avanza, lo tiene merecido; quien recibió bye no cobra logro hasta ganar en la mesa.</p>
+
+<h3>El libro mayor, en código</h3>
+<p>Cerrar un partido = escribir las filas de <code>point_events</code> (una por jugador por resultado, más las de logro de quien avanzó) y refrescar el cache <code>players.points</code>.</p>
+<pre><code><span class="tok-c">-- Cerrar un partido de grupo: 1 fila por jugador</span>
+<span class="tok-k">insert into</span> point_events (player_id, edition_id, match_id, type, points) <span class="tok-k">values</span>
+  (:ganador,  :ed, :m, <span class="tok-s">'WIN'</span>,  <span class="tok-n">12</span>),    <span class="tok-c">-- victoria 2-0</span>
+  (:perdedor, :ed, :m, <span class="tok-s">'LOSS'</span>,  <span class="tok-n">2</span>);    <span class="tok-c">-- derrota 0-2</span>
+
+<span class="tok-c">-- Logro al clasificar 1.º en Avanzado (multiplicador ya aplicado)</span>
+<span class="tok-k">insert into</span> point_events (player_id, edition_id, type, points)
+<span class="tok-k">values</span> (:ganador, :ed, <span class="tok-s">'GROUP_PASS'</span>, <span class="tok-n">20</span>);
+
+<span class="tok-c">-- Refresca el ranking (cache). El número SIEMPRE es una suma, nunca un recálculo.</span>
+<span class="tok-k">update</span> players p <span class="tok-k">set</span> points = (
+  <span class="tok-k">select</span> <span class="tok-f">coalesce</span>(<span class="tok-f">sum</span>(points),<span class="tok-n">0</span>) <span class="tok-k">from</span> point_events e <span class="tok-k">where</span> e.player_id = p.id
+) <span class="tok-k">where</span> p.id = :ganador;</code></pre>
+
+<h3>Ejemplo con tu data real: el campeón de Avanzados</h3>
+<p>Alberto ganó Avanzados: 1.º de su grupo, y en llaves venció a César (2–0), a Santiago Zepeda (3–0 en semifinal) y a Diego Ailton Ortega (3–2 en la final). Así se arma su ranking partiendo de la base 450:</p>
+<div class="tiles">
+  <div class="tile"><div class="n">450</div><div class="l">Base de Avanzado<br/>(punto de partida)</div></div>
+  <div class="tile"><div class="n">+228</div><div class="l">Ganados en el torneo<br/>(partidos + logros)</div></div>
+  <div class="tile"><div class="n">678</div><div class="l">Ranking final<br/>de Alberto</div></div>
+</div>
+<div class="tw">
+<table class="data">
+  <thead><tr><th>Evento</th><th>Tipo</th><th>Puntos</th><th>Acum.</th></tr></thead>
+  <tbody>
+    <tr><td>Base de categoría (Avanzado)</td><td class="mono">BASE</td><td class="mono">+450</td><td class="mono">450</td></tr>
+    <tr><td>Grupo C · victoria 2–0</td><td class="mono">WIN</td><td class="mono">+12</td><td class="mono">462</td></tr>
+    <tr><td>Grupo C · victoria 2–1</td><td class="mono">WIN</td><td class="mono">+10</td><td class="mono">472</td></tr>
+    <tr><td>Grupo C · derrota 0–2</td><td class="mono">LOSS</td><td class="mono">+2</td><td class="mono">474</td></tr>
+    <tr><td>Clasifica 1.º de grupo</td><td class="mono">GROUP_PASS</td><td class="mono">+20</td><td class="mono">494</td></tr>
+    <tr><td>Cuartos vs César · 2–0</td><td class="mono">WIN</td><td class="mono">+12</td><td class="mono">506</td></tr>
+    <tr><td>Gana cuartos</td><td class="mono">QF_WIN</td><td class="mono">+26</td><td class="mono">532</td></tr>
+    <tr><td>Semifinal vs Santiago · 3–0</td><td class="mono">WIN</td><td class="mono">+12</td><td class="mono">544</td></tr>
+    <tr><td>Finalista (gana semifinal)</td><td class="mono">FINALIST</td><td class="mono">+46</td><td class="mono">590</td></tr>
+    <tr><td>Final vs Diego · 3–2</td><td class="mono">WIN</td><td class="mono">+10</td><td class="mono">600</td></tr>
+    <tr><td>Campeón (gana la final)</td><td class="mono">CHAMPION</td><td class="mono">+78</td><td class="mono">678</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="muted">Compara: Erin Azdruval, que perdió sus tres partidos de grupo en la misma categoría, termina cerca de <strong>458</strong> —pegado a la base. La distancia entre 678 y 458 es exactamente lo que siembra los bombos del próximo torneo.</p>
+
+<h3>Ascensos y descensos: tu filtro anti-<em>sandbagger</em></h3>
+<p>El problema que más te dolió —el "novato" que arrasó Principiantes siendo de nivel muy superior— el puntaje estático lo detecta solo. Regla:</p>
+<ul>
+  <li><strong>Ascenso sugerido:</strong> si al cerrar la edición el total de un jugador <strong>alcanza o supera la base de la categoría de arriba</strong>, queda marcado para subir. Tu sandbagger de Principiantes terminaría arriba de 250 (base de Intermedio) tras un torneo ganado → señal clara y automática.</li>
+  <li><strong>Descenso sugerido:</strong> quien lleva ediciones muy por debajo de su base (perdió casi todo) puede bajar, para que compita parejo.</li>
+  <li><strong>Tú decides:</strong> es una <em>sugerencia</em>, no un cambio forzado. Se marca <code>requires_review = true</code> y ajustas <code>category_final</code> a mano, como ya hacías por WhatsApp.</li>
+</ul>
+<pre><code><span class="tok-c">-- Marca para revisión a quien cruzó la base de la categoría superior</span>
+<span class="tok-k">update</span> registrations r <span class="tok-k">set</span> requires_review = <span class="tok-k">true</span>
+  <span class="tok-k">from</span> players p
+ <span class="tok-k">where</span> p.id = r.player_id <span class="tok-k">and</span> r.edition_id = :edicion
+   <span class="tok-k">and</span> p.points >= <span class="tok-k">case</span> r.category_final
+                     <span class="tok-k">when</span> <span class="tok-s">'PRINCIPIANTE'</span> <span class="tok-k">then</span> <span class="tok-n">250</span>   <span class="tok-c">-- base Intermedio</span>
+                     <span class="tok-k">when</span> <span class="tok-s">'INTERMEDIO'</span>   <span class="tok-k">then</span> <span class="tok-n">450</span>   <span class="tok-c">-- base Avanzado</span>
+                     <span class="tok-k">else</span> <span class="tok-n">99999</span> <span class="tok-k">end</span>;</code></pre>
+
+<h3>Jugadores nuevos sin historial</h3>
+<p>No tienen partidos, así que arrancan en la <strong>base de la categoría que les asignó el cuestionario</strong> —y ya. Sin números provisionales raros: si el formulario los pone en Intermedio, empiezan en 250 y el primer torneo los mueve desde ahí. Esa fila inicial se guarda como un evento <code>BASE</code>, para que el ledger cuadre desde el día uno.</p>
+<pre><code><span class="tok-c">-- Alta de un jugador nuevo: su base de categoría es el primer evento</span>
+<span class="tok-k">insert into</span> point_events (player_id, edition_id, type, points)
+<span class="tok-k">values</span> (:nuevo, :ed, <span class="tok-s">'BASE'</span>,
+  <span class="tok-k">case</span> :categoria <span class="tok-k">when</span> <span class="tok-s">'PRINCIPIANTE'</span> <span class="tok-k">then</span> <span class="tok-n">100</span>
+                  <span class="tok-k">when</span> <span class="tok-s">'INTERMEDIO'</span>   <span class="tok-k">then</span> <span class="tok-n">250</span>
+                  <span class="tok-k">when</span> <span class="tok-s">'AVANZADO'</span>     <span class="tok-k">then</span> <span class="tok-n">450</span> <span class="tok-k">end</span>);</code></pre>
+<p class="muted">Si una persona cambia de categoría entre ediciones, <strong>no se le re-acredita la base</strong>: conserva sus puntos acumulados. La base solo entra una vez, al darse de alta.</p>
+</section>
+
+<!-- ═══════════ 7 · BOMBOS ═══════════ -->
+<section id="s7">
+<h2><span class="sec-num">07</span>Bombos y algoritmo de sorteo</h2>
+<hr class="divider" />
+<p>Con un puntaje por jugador, los bombos son un corte por bandas <strong>dentro de cada categoría</strong>. Ordenas por <code>points</code> descendente y partes en tantos bombos como tamaño tengan los grupos.</p>
+
+<p>Ejemplo: categoría Avanzado, 16 jugadores, grupos de 4 → 4 bombos de 4. El Bombo 1 son los 4 de más puntos; nunca caen dos en el mismo grupo.</p>
+<div class="pots">
+  <div class="pot"><h5>Bombo 1</h5><span class="rng">600+ pts</span><ul><li><b>Alberto</b><span>678</span></li><li><b>Diego A.</b><span>624</span></li><li><b>Adrián</b><span>612</span></li><li><b>Demian</b><span>604</span></li></ul></div>
+  <div class="pot"><h5>Bombo 2</h5><span class="rng">520–599</span><ul><li><b>Santiago Z.</b><span>560</span></li><li><b>Fitch</b><span>548</span></li><li><b>Lau Á.</b><span>534</span></li><li><b>Arturo C.</b><span>522</span></li></ul></div>
+  <div class="pot"><h5>Bombo 3</h5><span class="rng">480–519</span><ul><li><b>César</b><span>504</span></li><li><b>Alexis RO</b><span>498</span></li><li><b>Brian SK</b><span>486</span></li><li><b>Ulises</b><span>482</span></li></ul></div>
+  <div class="pot"><h5>Bombo 4</h5><span class="rng">&lt; 480</span><ul><li><b>Wos</b><span>472</span></li><li><b>Erin</b><span>466</span></li><li><b>Daniel</b><span>460</span></li><li><b>Colo</b><span>454</span></li></ul></div>
+</div>
+
+<h3>El sorteo, paso a paso</h3>
+<ol class="flow">
+  <li><b>Ordena por puntos y corta en bombos</b> dentro de cada categoría. Guarda el número en <code>registrations.seed_pot</code>.</li>
+  <li><b>Reparte un jugador de cada bombo por grupo.</b> Cada grupo recibe exactamente uno del Bombo 1, uno del 2, etc.</li>
+  <li><b>Aplica restricciones suaves</b> al elegir cuál de cada bombo va a cuál grupo:
+    <ul>
+      <li>Evita dos de la <strong>misma carrera/facultad</strong> en un grupo (le da sabor "facultad vs facultad").</li>
+      <li>Exige que los del grupo <strong>compartan al menos un bloque</strong> de disponibilidad (sección 5), o el grupo no se puede jugar.</li>
+    </ul>
+  </li>
+  <li><b>Los nuevos sin historial</b> entran con la base de su categoría. Como casi no se han movido del piso, márcalos para que la organización pueda reubicarlos tras ver sus primeros partidos.</li>
+</ol>
+<p class="muted">Para 4–6 grupos esto se resuelve con una asignación tipo serpentina + un par de intercambios manuales. No necesitas un solver complejo; un heurístico con tus restricciones basta.</p>
+</section>
+
+<!-- ═══════════ 8 · FOTOS ═══════════ -->
+<section id="s8">
+<h2><span class="sec-num">08</span>Fotos por facultad y carrera</h2>
+<hr class="divider" />
+<p>Quieres 14 imágenes (una por facultad) y, solo si es Ingeniería, además el logo de su carrera (15 carreras). La clave: <strong>la base de datos no guarda imágenes, guarda códigos.</strong> La imagen se resuelve por convención de nombres en el front.</p>
+
+<pre><code><span class="tok-c">// El perfil ya tiene faculty (enum) y career (enum). El front mapea:</span>
+<span class="tok-k">const</span> facultyLogo = <span class="tok-s">`/assets/facultades/</span>${player.faculty}<span class="tok-s">.png`</span>;
+<span class="tok-c">// /assets/facultades/INGENIERIA.png , /assets/facultades/MEDICINA.png …</span>
+
+<span class="tok-c">// Logo extra de carrera SOLO si estudia en la FI</span>
+<span class="tok-k">const</span> careerLogo = player.faculty === <span class="tok-s">'INGENIERIA'</span> && player.career
+  ? <span class="tok-s">`/assets/carreras/</span>${player.career}<span class="tok-s">.png`</span>   <span class="tok-c">// MECATRONICA.png, CIVIL.png…</span>
+  : <span class="tok-k">null</span>;</code></pre>
+
+<div class="call note">
+  <p class="ct">◆ Si quieres editarlo sin tocar código</p>
+  <p>Crea tablas catálogo <code>faculty_assets(code, name, logo_path)</code> y <code>career_assets(code, name, logo_path)</code>. Así cambias una ruta o un nombre desde la base de datos. Sube las imágenes a <strong>Supabase Storage</strong> (bucket público <code>logos/</code>) y guarda solo la ruta. La regla "carrera solo para FI" ya la fuerza el <code>check</code> de <code>players</code>.</p>
+</div>
+
+<pre><code><span class="tok-k">create table</span> <span class="tok-t">faculty_assets</span> (
+  code      <span class="tok-t">faculty_code</span> <span class="tok-k">primary key</span>,
+  name      <span class="tok-t">text</span> <span class="tok-k">not null</span>,       <span class="tok-c">-- 'Facultad de Ingeniería'</span>
+  logo_path <span class="tok-t">text</span> <span class="tok-k">not null</span>        <span class="tok-c">-- 'logos/facultades/INGENIERIA.png'</span>
+);
+<span class="tok-c">-- 14 filas. career_assets es idéntica con career_code (15 filas).</span></code></pre>
+</section>
+
+<!-- ═══════════ 9 · PERFIL ═══════════ -->
+<section id="s9">
+<h2><span class="sec-num">09</span>Perfil del jugador (consultas)</h2>
+<hr class="divider" />
+<p>Con este modelo, la página de perfil sale de unos cuantos joins.</p>
+
+<pre><code><span class="tok-c">-- Récord histórico (ganados / perdidos) de un jugador</span>
+<span class="tok-k">select</span>
+  <span class="tok-f">count</span>(*) <span class="tok-f">filter</span> (<span class="tok-k">where</span> winner = :pid)                       <span class="tok-k">as</span> ganados,
+  <span class="tok-f">count</span>(*) <span class="tok-f">filter</span> (<span class="tok-k">where</span> winner <> :pid)                      <span class="tok-k">as</span> perdidos,
+  <span class="tok-f">count</span>(*)                                                     <span class="tok-k">as</span> total
+<span class="tok-k">from</span> matches
+<span class="tok-k">where</span> player_a = :pid <span class="tok-k">or</span> player_b = :pid;
+
+<span class="tok-c">-- Línea de tiempo de sus puntos (suma acumulada para una gráfica)</span>
+<span class="tok-k">select</span> created_at, type, points,
+       <span class="tok-f">sum</span>(points) <span class="tok-k">over</span> (<span class="tok-k">order by</span> created_at) <span class="tok-k">as</span> puntos_acum
+<span class="tok-k">from</span> point_events
+<span class="tok-k">where</span> player_id = :pid
+<span class="tok-k">order by</span> created_at;
+
+<span class="tok-c">-- Todas las ediciones que jugó, con categoría y bombo</span>
+<span class="tok-k">select</span> e.name, r.category_final, r.seed_pot, g.label <span class="tok-k">as</span> grupo
+<span class="tok-k">from</span> registrations r
+<span class="tok-k">join</span> editions e <span class="tok-k">on</span> e.id = r.edition_id
+<span class="tok-k">left join</span> groups g <span class="tok-k">on</span> g.id = r.group_id
+<span class="tok-k">where</span> r.player_id = :pid
+<span class="tok-k">order by</span> e.starts_on;</code></pre>
+</section>
+
+<!-- ═══════════ 10 · ROADMAP ═══════════ -->
+<section id="s10">
+<h2><span class="sec-num">10</span>Orden de implementación</h2>
+<hr class="divider" />
+<ol class="flow">
+  <li><b>Crea los <code>enum</code> y las tablas</b> en Supabase (SQL de la sección 2). Activa RLS.</li>
+  <li><b>Carga el histórico:</b> edición pasada → players <strong>con su teléfono</strong> → matches desde las hojas.</li>
+  <li><b>Aplica el reglamento de puntos</b> sobre los matches en orden cronológico: escribe las filas de <code>point_events</code> que pueblan <code>players.points</code>.</li>
+  <li><b>Conecta el formulario:</b> al enviar, <code>upsert</code> por teléfono en <code>players</code> + insert en <code>registrations</code> + filas en <code>availability_slots</code>. Tu <code>scoring.js</code> llena <code>category_prov</code>.</li>
+  <li><b>Enlace automático:</b> al registrarse, el <code>upsert</code> por teléfono cae sobre el mismo player y recupera historial, puntos y categoría previa — sin pasos extra.</li>
+  <li><b>Sorteo:</b> corta bombos por <code>points</code>, asigna grupos con tus restricciones, guarda <code>seed_pot</code> y <code>group_id</code>.</li>
+  <li><b>Cierre del torneo:</b> captura resultados en <code>matches</code>, escribe sus <code>point_events</code>, aplica ascensos/descensos sugeridos y marca <code>category_final</code>. La siguiente edición arranca leyendo todo esto.</li>
+</ol>
+
+<div class="call key">
+  <p class="ct">▸ En una frase</p>
+  <p>Guarda <strong>partidos y eventos de puntos</strong>, no puntajes finales; usa el <strong>teléfono</strong> para enlazar a la persona a través del tiempo; el ranking es una <strong>suma estática</strong> (base de categoría + eventos) y de ahí salen los bombos; y deja que el <strong>front</strong> resuelva las fotos a partir de los códigos de facultad y carrera.</p>
+</div>
+
+<p class="muted" style="margin-top:34px;font-size:13px">Documento de diseño · Torneo de Ping Pong FI · Modelo para Supabase. Los resultados de los ejemplos provienen del torneo real; los totales de puntos se calcularon con el reglamento de la sección 6 para ilustrar el método.</p>
+</section>
+
+</td></tr></tbody>
+<tfoot><tr><td class="ftr-space"></td></tr></tfoot>
+</table>
+</main>
+</body>
+</html>

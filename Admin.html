@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel de organizadores · Torneo de Ping Pong FI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css?v=5">
+<style>
+  .who{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  /* Anuncio: historial de pagos contradictorio (la vista dice una cosa, el
+     pago vigente otra). Antes esto no se avisaba en ningún lado. */
+  .paywarn{border:1.5px solid var(--err);border-radius:10px;background:rgba(221,59,44,.09);padding:13px 16px;margin:0 0 16px}
+  .paywarn-h b{font-family:var(--disp);font-weight:800;font-style:italic;font-size:16px;letter-spacing:.02em;text-transform:uppercase;color:var(--err)}
+  .paywarn p{font-size:12.5px;color:var(--muted);margin:6px 0 0;max-width:76ch;text-wrap:pretty}
+  .paywarn-l{list-style:none;display:flex;flex-direction:column;gap:5px;margin:10px 0 0;font-size:12.5px}
+  .paywarn-l li{border-left:2px solid var(--err);padding-left:10px;color:var(--muted)}
+  .paywarn-l b{color:var(--text);font-weight:700}
+  .paycell{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .payflag{cursor:help;font-size:9px}
+  .pwd-wrap{position:relative}
+  .pwd-wrap input{padding-right:52px}
+  .pwd-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);min-width:44px;min-height:40px;
+    color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.5px;text-transform:uppercase;border-radius:7px}
+  .pwd-toggle:hover{color:var(--text);background:var(--raise)}
+  .caps{display:none;color:var(--amber);font-size:12px;margin-top:5px}
+  .caps.on{display:block}
+  .lnk{background:none;border:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer;padding:6px 0}
+  .lnk:hover{color:var(--text)}
+  th.sortable{cursor:pointer;user-select:none}
+  th.sortable:hover{color:var(--text)}
+  th.sortable[aria-sort]:not([aria-sort="none"])::after{content:' ↕';color:var(--gold)}
+
+  /* ── Tabla principal: evita que "Ver ficha" quede cortado en 1366/1440 ── */
+  #regTable{min-width:0;table-layout:auto;width:100%}
+  #regTable td, #regTable th{padding:11px 8px}
+  #regTable th:nth-child(1), #regTable td:nth-child(1){width:20%;max-width:180px}
+  #regTable th:nth-child(2), #regTable td:nth-child(2){width:8%;white-space:nowrap}
+  #regTable th:nth-child(3), #regTable td:nth-child(3){width:7%}
+  #regTable th:nth-child(4), #regTable td:nth-child(4),
+  #regTable th:nth-child(5), #regTable td:nth-child(5),
+  #regTable th:nth-child(6), #regTable td:nth-child(6),
+  #regTable th:nth-child(7), #regTable td:nth-child(7){width:8%}
+  #regTable th:nth-child(8), #regTable td:nth-child(8){width:7%;white-space:nowrap}
+  #regTable th:nth-child(9), #regTable td:nth-child(9){width:6%;white-space:nowrap}
+  #regTable th:nth-child(10), #regTable td:nth-child(10){width:1%;white-space:nowrap;text-align:right;padding-right:16px}
+  #regTable .part-name .sub2{max-width:180px;display:block}
+  #regTable .badge{font-size:9.5px;padding:3px 7px;gap:4px;letter-spacing:0.4px;white-space:normal;line-height:1.3;text-align:center}
+  #regTable .badge::before{width:5px;height:5px}
+  .tablewrap{padding-right:2px}
+  @media (min-width:900px){
+    #regTable{min-width:0}
+  }
+  /* móvil: tarjetas en vez de tabla — más simples de leer */
+  @media (max-width:720px){
+    .tablewrap table.sb{min-width:0}
+    table.sb thead{display:none}
+    table.sb tr{display:block;border:1px solid var(--line2);border-radius:14px;margin-bottom:14px;
+      padding:14px 16px;background:linear-gradient(180deg,var(--panel),var(--bg2));box-shadow:0 4px 14px -8px rgba(0,0,0,0.5)}
+    table.sb tr:hover td{background:none}
+    table.sb td{border:none;padding:0;font-size:13.5px}
+    table.sb td::before{display:none}
+    #regTable td, #regTable th{width:auto !important;max-width:none !important;white-space:normal !important;text-align:left !important;padding:0}
+
+    /* participante: cabecera de la tarjeta */
+    table.sb td[data-th="Participante"]{margin-bottom:10px}
+    /* teléfono y categoría: línea compacta bajo el nombre */
+    table.sb td[data-th="Teléfono"], table.sb td[data-th="Categoría"]{
+      display:inline;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+    table.sb td[data-th="Teléfono"]::after{content:' · '}
+    /* badges de estado: fila única, envolvente, sin etiquetas repetidas */
+    table.sb td[data-th="Inscripción"], table.sb td[data-th="Entrada"],
+    table.sb td[data-th="Pago"], table.sb td[data-th="Revisión"]{
+      display:inline-block;margin:8px 6px 0 0}
+    /* folio y creado: pie discreto */
+    table.sb td[data-th="Folio"], table.sb td[data-th="Creado"]{
+      display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--dim);margin:10px 10px 0 0}
+    table.sb td[data-th="Folio"]::before{content:'Folio ';color:var(--dim)}
+    /* acciones: botón de ancho completo, propia línea */
+    table.sb td[data-th="Acciones"]{display:block;margin-top:12px}
+    table.sb .btn-view{width:100%;justify-content:center;min-height:48px;font-size:13.5px}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top" data-site-nav data-active="admin" data-admin="off" aria-label="Principal">
+  <template data-nav-right>
+    <span class="who" id="whoami"></span>
+    <a class="btn btn-ghost" id="lnkControl" href="ControlTorneo.html" style="display:none">Centro de control</a>
+    <button class="btn btn-ghost" id="btnLogout" style="display:none" type="button">Cerrar sesión</button>
+  </template>
+</nav>
+
+<main class="wrap" id="contenido">
+
+  <!-- LOGIN -->
+  <div class="hud center" id="loginView" style="display:none">
+    <h1>Panel de <span style="color:var(--red2)">organizadores</span></h1>
+    <p class="sub">Acceso exclusivo del staff. Inicia sesión con tu correo de organizador.</p>
+    <form id="loginForm" novalidate>
+      <div class="field" id="fEmail">
+        <label for="lgEmail">Correo</label>
+        <input type="email" id="lgEmail" autocomplete="username" required aria-describedby="fEmailErr" />
+        <span class="ferr" id="fEmailErr" aria-live="polite">Escribe un correo válido.</span>
+      </div>
+      <div class="field" id="fPass">
+        <label for="lgPass">Contraseña</label>
+        <div class="pwd-wrap">
+          <input type="password" id="lgPass" autocomplete="current-password" required aria-describedby="capsWarn" />
+          <button type="button" class="pwd-toggle" id="pwdToggle" aria-label="Mostrar contraseña" aria-pressed="false">Ver</button>
+        </div>
+        <span class="caps" id="capsWarn" aria-live="polite">⇪ Bloq Mayús activado</span>
+      </div>
+      <button class="btn btn-main" id="btnLogin" type="submit" style="width:100%;justify-content:center">Iniciar sesión</button>
+      <p class="msg" id="loginMsg" aria-live="assertive"></p>
+      <button type="button" class="lnk" id="btnForgot">¿Olvidaste tu contraseña?</button>
+    </form>
+  </div>
+
+  <!-- SIN PERMISOS -->
+  <div class="hud center" id="deniedView" style="display:none">
+    <h1 style="color:var(--err)">Sin permisos</h1>
+    <p class="sub">Tu cuenta está autenticada pero <b>no tienes permisos de organizador</b>. Pide a un administrador que te agregue al staff.</p>
+    <button class="btn btn-ghost" id="btnDeniedLogout" style="width:100%;justify-content:center" type="button">Salir</button>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panelView" style="display:none">
+    <div class="head">
+      <div>
+        <h1>Inscripciones <span class="r" id="edName">—</span></h1>
+        <p id="edMeta">—</p>
+      </div>
+      <div class="nav-right" style="margin-left:auto;gap:10px;flex-wrap:wrap">
+        <span class="metaline" id="lastUpdate" aria-live="polite"></span>
+        <button class="btn btn-ghost" id="btnReload" type="button">Actualizar</button>
+        <button class="btn btn-ghost" id="btnLogoutAll" type="button" title="Cierra la sesión en todos los dispositivos donde hayas iniciado">Cerrar todas las sesiones</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        <input type="text" id="admSearch" placeholder="Buscar apodo, teléfono o folio…" autocomplete="off" aria-label="Buscar inscripción" />
+      </div>
+      <select class="filter" id="admEdition" aria-label="Elegir edición" title="Elige una edición para ver y editar sus participantes (incluye ediciones pasadas)"></select>
+      <select class="filter" id="admStatus" aria-label="Filtrar por estado de inscripción"><option value="">Toda inscripción</option></select>
+      <select class="filter" id="admEntry" aria-label="Filtrar por entrada"><option value="">Toda entrada</option></select>
+      <select class="filter" id="admCat" aria-label="Filtrar por categoría"><option value="">Toda categoría</option></select>
+    </div>
+    <p class="metaline" id="admEditionNote" style="margin:-10px 0 14px" hidden>Estás viendo una edición pasada. Puedes abrir la ficha de cada jugador para completar su facultad/carrera aunque no haya jugado partidos en esta edición.</p>
+
+    <div class="stats" id="statsRow"></div>
+
+    <div id="payWarnBox" aria-live="polite"></div>
+
+    <div class="state" id="panelState" style="display:none" aria-live="polite"></div>
+    <div class="hud tablewrap"><table class="sb" id="regTable">
+      <thead><tr>
+        <th class="sortable" data-sort="nickname_snapshot" scope="col">Participante</th>
+        <th scope="col">Teléfono</th>
+        <th class="sortable" data-sort="_cat" scope="col">Categoría</th>
+        <th class="sortable" data-sort="registration_status" scope="col">Inscripción</th>
+        <th class="sortable" data-sort="entry_status" scope="col">Entrada</th>
+        <th scope="col">Pago</th>
+        <th scope="col">Revisión</th>
+        <th scope="col">Folio</th>
+        <th class="sortable" data-sort="created_at" scope="col">Creado</th>
+        <th scope="col">Acciones</th>
+      </tr></thead>
+      <tbody id="regBody"></tbody>
+    </table></div>
+  </div>
+
+  <div class="state" id="bootState" aria-live="polite"><span class="spin" aria-hidden="true">◌</span> Comprobando sesión…</div>
+</main>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/auth.js"></script>
+<script src="supabase/admin.js"></script>
+<script src="supabase/admin-actions.js"></script>
+<script src="supabase/category-review.js"></script>
+<script src="supabase/trophies.js"></script>
+<script src="supabase/logo-resolver.js"></script>
+<script src="supabase/ui.js"></script>
+<script src="supabase/nav.js"></script>
+<script src="supabase/debug-panel.js"></script>
+<script src="supabase/payments-status.js?v=1"></script>
+<script src="supabase/admin-page-v2.js?v=8"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de Resultados — Diseño</title>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f12;--panel:#14171c;--panel2:#1a1e25;--line:#262c35;--text:#e8eaee;--muted:#8b93a1;--red:#e4342c;--red2:#ff5a4e;--ok:#3ecf7a;--warn:#f2b544;--disp:'Saira Condensed',sans-serif;--body:'Inter',sans-serif;--mono:'JetBrains Mono',monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6}
+a{color:var(--red2)}a:hover{color:#ff8177}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px}
+h1{font-family:var(--disp);font-size:44px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:0 0 4px}
+h1 .r{color:var(--red2)}
+.kicker{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+h2{font-family:var(--disp);font-size:26px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:56px 0 12px;border-bottom:2px solid var(--red);padding-bottom:6px}
+h3{font-family:var(--disp);font-size:19px;font-weight:700;margin:28px 0 8px;color:var(--red2);text-transform:uppercase}
+p{margin:8px 0}
+.sub{color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:13px}
+code{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+th{font-family:var(--disp);text-transform:uppercase;letter-spacing:.5px;font-size:13px;color:var(--muted);text-align:left}
+th,td{border:1px solid var(--line);padding:8px 12px;vertical-align:top}
+tr:nth-child(even) td{background:var(--panel)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:14px 0}
+.card.warn{border-color:var(--warn)}
+.card.ok{border-color:var(--ok)}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;border:1px solid var(--line);background:var(--panel2);margin-right:6px}
+.tag.g{color:var(--ok);border-color:var(--ok)}
+.tag.y{color:var(--warn);border-color:var(--warn)}
+.tag.r{color:var(--red2);border-color:var(--red2)}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:16px 0}
+.fbox{flex:1 1 150px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:150px}
+.fbox b{font-family:var(--disp);text-transform:uppercase;font-size:14px;letter-spacing:.5px;display:block;margin-bottom:4px;color:var(--red2)}
+.fbox small{color:var(--muted);font-size:12px;line-height:1.45;display:block}
+.arr{align-self:center;color:var(--red2);font-size:20px;font-weight:700}
+ul{margin:8px 0;padding-left:22px}
+li{margin:4px 0}
+.state-d{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0}
+.st{border-radius:8px;padding:10px 16px;font-family:var(--disp);font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:15px;border:2px solid var(--line);background:var(--panel2)}
+.st.sch{border-color:var(--muted)}
+.st.ply{border-color:var(--ok);color:var(--ok)}
+.st.wo{border-color:var(--warn);color:var(--warn)}
+.st.can{border-color:var(--red2);color:var(--red2)}
+.mock{background:#101318;border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}
+.mock .mtitle{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.mrow{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;flex-wrap:wrap}
+.mrow .vs{font-family:var(--disp);font-weight:800;font-size:16px}
+.mrow .who{flex:1 1 180px}
+.mbtn{font-family:var(--disp);text-transform:uppercase;letter-spacing:1px;font-size:13px;font-weight:700;padding:6px 14px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
+.mbtn.main{background:var(--red);border-color:var(--red);color:#fff}
+.mbtn.ghost{color:var(--muted)}
+.scorebox{display:flex;gap:8px;align-items:center}
+.scorebox input{width:44px;text-align:center;font-family:var(--mono);font-size:16px;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--text);padding:6px 0}
+.pill{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:20px}
+.pill.g{background:rgba(62,207,122,.12);color:var(--ok)}
+.pill.y{background:rgba(242,181,68,.12);color:var(--warn)}
+@media(max-width:640px){h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="kicker">Torneo FI · Documento de diseño · v1 — Julio 2026</div>
+<h1>Sistema de <span class="r">resultados</span></h1>
+<p class="sub">Captura de marcadores desde el panel de staff, estados de partido, correcciones, y cómo todo se refleja en la tabla de grupos de la página pública. Basado en las decisiones acordadas y en lo que ya existe en el backend instalado.</p>
+
+<h2>1 · Decisiones acordadas</h2>
+<table>
+<tr><th>Tema</th><th>Decisión</th></tr>
+<tr><td>Quién captura</td><td>Solo organizadores. Los jugadores se ponen de acuerdo, reportan el marcador por WhatsApp y el admin lo registra.</td></tr>
+<tr><td>Granularidad</td><td>Solo sets (2–0, 2–1). No se capturan puntos por juego.</td></tr>
+<tr><td>Estados</td><td><code>PLAYED</code>, <code>WALKOVER</code>, <code>CANCELLED</code> + corrección de un resultado ya capturado.</td></tr>
+<tr><td>Corrección</td><td>Únicamente el admin. Sin ventanas de tiempo ni doble confirmación; todo queda en bitácora.</td></tr>
+<tr><td>Reflejo público</td><td>Tabla de grupos de <code>Pagina Torneo.html</code> (y por la misma vía: Grupos, Resultados, Perfil).</td></tr>
+<tr><td>Actualización</td><td>Al recargar la página. Sin Realtime ni polling — cero costo extra.</td></tr>
+<tr><td>Alcance</td><td>Grupos + eliminatorias. Apuestas fuera de esta fase.</td></tr>
+</table>
+
+<h2>2 · Qué existe ya en el backend</h2>
+<div class="card ok">
+<p><b>Ya instalado y funcional</b> (no hay que construirlo):</p>
+<ul>
+<li><code>record_match_result(p_match, p_score_a, p_score_b, …)</code> — captura por sets: marca <code>PLAYED</code>, calcula ganador, upserta el marcador en <code>match_games</code>. Acepta roles <code>ADMIN / ORGANIZER / SCOREKEEPER</code>. El frontend ya la expone como <code>SB_ADMIN_ACTIONS.recordMatchResult()</code>.</li>
+<li>Triggers de integridad en <code>matches</code> y <code>match_games</code>: PLAYED exige ganador, el ganador debe ser A o B, el marcador debe coincidir con el ganador.</li>
+<li><code>v_public_groups_results</code> — vista pública (anon) con partido, jugadores, ganador, status y marcador. Es la que leen las páginas públicas.</li>
+<li><code>get_group_standings(p_group_id)</code> — tabla de posiciones autoritativa: PJ, G, P, sets a favor/en contra, diferencia, %.</li>
+<li><code>create_group_stage_matches</code> / <code>create_elimination_round</code> — generación de partidos.</li>
+</ul>
+</div>
+<div class="card warn">
+<p><b>Huecos detectados</b> (lo que este diseño resuelve):</p>
+<ul>
+<li><b>Bug de empate:</b> <code>record_match_result</code> con marcador 1–1 declara ganador a B silenciosamente. Hay que rechazar empates y validar 2–0 / 2–1 (o 3–x en best-of-5).</li>
+<li><b>No hay walkover:</b> no existe RPC para registrar W.O. (la función actual siempre exige marcador y pone PLAYED).</li>
+<li><b>No hay cancelación:</b> no existe RPC para marcar un partido <code>CANCELLED</code>.</li>
+<li><b>No hay corrección:</b> una vez PLAYED, no hay vía para deshacer y recapturar.</li>
+<li><b>No hay UI:</b> ninguna página de staff lista partidos pendientes ni captura marcadores.</li>
+</ul>
+</div>
+
+<h2>3 · Modelo de estados del partido</h2>
+<div class="state-d">
+<span class="st sch">Scheduled</span><span class="arr">→</span><span class="st ply">Played</span>
+<span class="st sch">Scheduled</span><span class="arr">→</span><span class="st wo">Walkover</span>
+<span class="st sch">Scheduled</span><span class="arr">→</span><span class="st can">Cancelled</span>
+</div>
+<p>Todo partido nace <code>SCHEDULED</code>. Desde ahí, exactamente una de tres salidas:</p>
+<table>
+<tr><th>Estado</th><th>Significado</th><th>Datos</th><th>Standings</th></tr>
+<tr><td><code>PLAYED</code></td><td>Se jugó; marcador por sets reportado en WhatsApp.</td><td>Ganador + marcador (2–0 / 2–1)</td><td>Cuenta victoria, derrota y sets.</td></tr>
+<tr><td><code>WALKOVER</code></td><td>Un jugador no se presentó.</td><td>Ganador, sin marcador (sin <code>match_games</code>)</td><td>Cuenta victoria/derrota; no suma sets ni puntos de ranking.</td></tr>
+<tr><td><code>CANCELLED</code></td><td>El partido no se jugará (baja, reprogramación imposible).</td><td>Motivo obligatorio, sin ganador</td><td>No cuenta; el frontend lo muestra "Cancelado".</td></tr>
+</table>
+<h3>Corrección = reabrir</h3>
+<p>La corrección no edita el resultado en sitio: la RPC <code>reopen_match(p_match, p_reason)</code> borra marcador y ganador, regresa el partido a <code>SCHEDULED</code> y guarda el resultado anterior en la bitácora. Después el admin captura de nuevo por la vía normal. <b>Una sola puerta de entrada</b> para los datos = imposible dejar un partido en estado incoherente.</p>
+<div class="flow">
+<div class="fbox"><b>Played 2–0</b><small>capturado con error</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>reopen_match</b><small>motivo obligatorio · resultado anterior a bitácora</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>Scheduled</b><small>limpio, sin marcador</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>Recaptura</b><small>record_match_result 2–1</small></div>
+</div>
+
+<h2>4 · Flujo operativo</h2>
+<div class="flow">
+<div class="fbox"><b>1 · Juegan</b><small>Los jugadores acuerdan horario y juegan su partido de grupo.</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>2 · WhatsApp</b><small>El ganador reporta al grupo de staff: “Grupo B: Rata 2–1 Chino”.</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>3 · Captura</b><small>El admin abre Captura de Resultados, encuentra el partido y registra 2–1.</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>4 · Público</b><small>Al recargar, la tabla de grupos de la página del torneo ya refleja W/L y sets.</small></div>
+</div>
+<p class="sub">El paso 3 tarda ~10 segundos por partido: dos taps de marcador + guardar. El diseño de la UI optimiza para captura en ráfaga (varios reportes acumulados en WhatsApp).</p>
+
+<h2>5 · UI de captura — <span class="mono" style="font-size:18px">CapturaResultados.html</span></h2>
+<p>Página nueva de staff (mismo guard de sesión y <code>is_organizer()</code> que ControlTorneo, enlazada desde sus accesos rápidos). Se prefiere página dedicada y no una sección más de ControlTorneo porque la captura es la operación más frecuente durante el torneo y merece pantalla completa, sobre todo en celular.</p>
+<h3>Anatomía</h3>
+<ul>
+<li><b>Filtros arriba:</b> categoría → grupo (o "Eliminatorias") → estado (Pendientes / Capturados / Todos). Default: pendientes de la categoría con más partidos sin jugar.</li>
+<li><b>Lista de partidos</b>, una fila por partido. Los pendientes muestran captura inline; los capturados muestran el resultado + botón corregir.</li>
+<li><b>Marcador como botones, no inputs:</b> con best-of-3 solo hay 4 marcadores posibles (2–0, 2–1, 0–2, 1–2). Un tap selecciona, otro confirma. En semis/finales best-of-5 la botonera crece a 6 opciones. Cero teclado, cero errores de dedo.</li>
+</ul>
+<div class="mock">
+<div class="mtitle">Mockup · fila de partido pendiente</div>
+<div class="mrow">
+<span class="who"><b>La Rata</b> <span class="vs" style="color:var(--muted)">vs</span> <b>El Chino</b><br><small class="sub mono">Grupo B · Avanzado</small></span>
+<span class="scorebox"><button class="mbtn">2–0</button><button class="mbtn main">2–1</button><button class="mbtn">1–2</button><button class="mbtn">0–2</button></span>
+<button class="mbtn main">Guardar</button>
+<button class="mbtn ghost">W.O.</button>
+<button class="mbtn ghost">Cancelar</button>
+</div>
+<div class="mtitle" style="margin-top:16px">Mockup · fila ya capturada</div>
+<div class="mrow">
+<span class="who"><b>La Rata</b> <span class="vs" style="color:var(--ok)">2–1</span> <b>El Chino</b><br><small class="sub mono">Grupo B · registrado hoy 14:32</small></span>
+<span class="pill g">Jugado</span>
+<button class="mbtn ghost">Corregir</button>
+</div>
+<div class="mtitle" style="margin-top:16px">Mockup · walkover</div>
+<div class="mrow">
+<span class="who"><b>Piggy</b> <span class="vs" style="color:var(--warn)">W.O.</span> <b>Fantasma</b><br><small class="sub mono">Grupo C · Fantasma no se presentó</small></span>
+<span class="pill y">Walkover</span>
+<button class="mbtn ghost">Corregir</button>
+</div>
+</div>
+<h3>Reglas de interacción</h3>
+<ul>
+<li><b>Guardar</b> exige marcador seleccionado; confirma con el nombre del ganador ("¿Registrar victoria de La Rata 2–1?") antes de llamar la RPC.</li>
+<li><b>W.O.</b> abre un mini-diálogo: ¿quién SÍ se presentó? (dos botones con los nombres) + motivo opcional.</li>
+<li><b>Cancelar partido</b> exige motivo (texto libre). Queda visible tachado en la lista.</li>
+<li><b>Corregir</b> exige motivo, llama <code>reopen_match</code> y la fila vuelve a modo captura al instante.</li>
+<li>Errores de la RPC se muestran en la fila (no alertas globales); la fila conserva lo tecleado.</li>
+<li>Cada acción refresca los standings del grupo afectado (badge "tabla actualizada").</li>
+</ul>
+
+<h2>6 · Reflejo en el frontend público</h2>
+<div class="flow">
+<div class="fbox"><b>RPC staff</b><small>record_match_result · record_match_walkover · cancel_match · reopen_match</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>Tablas</b><small>matches + match_games (triggers validan)</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>Vistas públicas</b><small>v_public_groups_results · get_group_standings</small></div>
+<span class="arr">→</span>
+<div class="fbox"><b>Páginas</b><small>Pagina Torneo (tabla de grupos) · Grupos · Resultados · Perfil</small></div>
+</div>
+<p>No hay caché ni copia intermedia: el dato vive una sola vez en <code>matches</code>. Al recargar cualquier página pública, la consulta anónima ya ve el resultado. Esto cumple la decisión de "actualizar al recargar" sin trabajo adicional.</p>
+<h3>Tabla de grupos de Pagina Torneo</h3>
+<p>Cada tarjeta de grupo ordena por lo que devuelve <code>get_group_standings</code> (o su equivalente derivado de la vista pública): victorias → diferencia de sets → % de sets. Reglas visuales por estado:</p>
+<table>
+<tr><th>Estado del partido</th><th>En la tabla del grupo</th><th>En la lista de resultados</th></tr>
+<tr><td><code>PLAYED</code></td><td>Suma PJ, G/P y sets a ambos</td><td>Marcador <b>2–1</b></td></tr>
+<tr><td><code>WALKOVER</code></td><td>Suma PJ y G/P; sets no cambian</td><td>Etiqueta <b>W.O.</b></td></tr>
+<tr><td><code>CANCELLED</code></td><td>No cuenta ni resta</td><td>"Cancelado", atenuado</td></tr>
+<tr><td><code>SCHEDULED</code></td><td>No cuenta</td><td>"VS" (pendiente)</td></tr>
+</table>
+<p class="sub">El helper <code>SB_RESULTS.scoreLine()</code> ya implementa exactamente estas reglas visuales — se reutiliza tal cual.</p>
+<h3>Eliminatorias</h3>
+<p>La captura usa las mismas RPC (un partido es un partido, con o sin grupo). Lo único pendiente para VER eliminatorias en público es la vista <code>get_public_bracket</code> (ya documentada en BACKEND_RPC_PENDING.md #13); mientras no exista, los resultados de KO solo son visibles para staff.</p>
+
+<h2>7 · Trabajo de backend propuesto</h2>
+<p>Todo en <a href="sql/PROPUESTA_resultados_estados.sql" class="mono">sql/PROPUESTA_resultados_estados.sql</a> (propuesta, no ejecutada). Resumen del contrato:</p>
+<table>
+<tr><th>RPC</th><th>Hace</th><th>Guardas</th></tr>
+<tr><td><code>record_match_result</code> <span class="tag y">fix</span></td><td>Ya existe; se le añade rechazo de empates y validación 2–0/2–1 según <code>best_of</code>.</td><td>is_organizer · triggers existentes</td></tr>
+<tr><td><code>record_match_walkover</code> <span class="tag r">nueva</span></td><td>SCHEDULED → WALKOVER con ganador explícito, sin marcador.</td><td>ganador ∈ {A,B} · solo desde SCHEDULED · bitácora</td></tr>
+<tr><td><code>cancel_match</code> <span class="tag r">nueva</span></td><td>SCHEDULED → CANCELLED con motivo obligatorio.</td><td>motivo requerido · un PLAYED se reabre antes de cancelarse</td></tr>
+<tr><td><code>reopen_match</code> <span class="tag r">nueva</span></td><td>PLAYED/WALKOVER/CANCELLED → SCHEDULED; borra marcador, archiva el anterior en bitácora.</td><td>motivo requerido · resultado previo auditado · revertir ranking_events si aplica</td></tr>
+</table>
+<p>Las tres nuevas devuelven <code>{ ok, error_code, status }</code> — nunca errores SQL crudos — siguiendo el patrón de BACKEND_RPC_PENDING.md. En <code>supabase/admin-actions.js</code> se agregan los tres wrappers junto al <code>recordMatchResult</code> existente.</p>
+
+<h2>8 · Plan de implementación</h2>
+<table>
+<tr><th>Fase</th><th>Entregable</th><th>Depende de</th></tr>
+<tr><td><b>A</b></td><td>Aplicar SQL propuesto (fix empate + 3 RPC) y probar en staging con los tests del patrón de <code>09_tests.sql</code>.</td><td>Revisión del equipo de backend</td></tr>
+<tr><td><b>B</b></td><td><code>CapturaResultados.html</code> + <code>supabase/captura-resultados.js</code>: guard de sesión, filtros, captura por botones, W.O., cancelar, corregir.</td><td>Fase A (o simulada con la RPC existente solo-PLAYED)</td></tr>
+<tr><td><b>C</b></td><td>Verificar reflejo público: tabla de grupos de Pagina Torneo, Grupos y Resultados ya leen la vista — solo QA de los 4 estados.</td><td>Fase B</td></tr>
+<tr><td><b>D</b></td><td>Eliminatorias en público: <code>get_public_bracket</code> (pendiente #13) + Bracket.html.</td><td>Independiente; puede ir después del arranque de grupos</td></tr>
+</table>
+<div class="card">
+<p><b>Siguiente paso sugerido:</b> construir la Fase B (la página de captura) ya, apuntando a <code>record_match_result</code> que ya existe — los partidos PLAYED se pueden capturar desde hoy. W.O., cancelación y corrección quedan como botones "pendiente de backend" hasta aplicar la Fase A, igual que el patrón usado en el resto del panel.</p>
+</div>
+</div>
+</body>
+</html>

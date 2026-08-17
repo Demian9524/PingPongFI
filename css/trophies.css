@@ -1,0 +1,65 @@
+/* css/trophies.css — presentación de trofeos en PerfilJugador */
+.pjx-trophy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: -8px;
+  margin-left: -30px;
+}
+
+.pjx-trophy-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: clamp(92px, 8vw, 118px);
+  isolation: isolate;
+}
+
+.pjx-trophy-card .cerdito-26-back {
+  pointer-events: none;
+}
+
+.pjx-trophy-card .cerdito-logo-animado {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 86px;
+  height: 86px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.pjx-trophy-card[data-trophy-type="RUNNER_UP"] {
+  filter: saturate(0.76);
+}
+
+.pjx-trophy-card[data-trophy-type="THIRD_PLACE"] {
+  filter: sepia(0.18);
+}
+
+@media (max-width: 640px) {
+  .pjx-trophy-row {
+    gap: 8px;
+  }
+  .pjx-trophy-card {
+    width: 88px;
+  }
+  .pjx-trophy-card .cerdito-logo-animado {
+    width: 72px;
+    height: 72px;
+  }
+  /* El fondo de color debe mantener EXACTAMENTE el mismo ratio que en escritorio.
+     Escritorio: cerdito 86px, back scale 0.92 → móvil: cerdito 72px → 0.92*72/86. */
+  .pjx-trophy-card .cerdito-26-back {
+    transform: scale(0.77);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pjx-trophy-card .cerdito-logo-animado,
+  .pjx-trophy-card .cerdito-26-back {
+    animation: none !important;
+    transition: none !important;
+  }
+}

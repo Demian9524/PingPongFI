@@ -1,0 +1,256 @@
+/* ── Lienzo libre del bracket ────────────────────────────────────────────
+   Chrome del EDITOR (bandeja, barra, cuadrícula, puertos) + posicionamiento
+   del lienzo compartido con la vista pública. No redefine .mbk-* : las
+   tarjetas siguen siendo las del bracket original (css/bracket-final.css). */
+
+/* ── lienzo ── */
+.bkc-host{position:relative}
+.bkc-box{position:relative;overflow:hidden}
+/* Capa que scrollea (la caja se queda quieta pintando fondo y atmósfera) */
+.bkc-scroll{position:absolute;inset:0;z-index:2;overflow:hidden;overscroll-behavior-x:contain}
+.bkc-scroll{scrollbar-width:none}
+.bkc-scroll::-webkit-scrollbar{display:none}
+.bkc-viewport{position:relative;overflow:hidden;margin:0 auto}
+.bkc-stage{position:relative;transform-origin:0 0;background:transparent}
+.bkc-stage.grid{background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:var(--bkc-grid,20px) var(--bkc-grid,20px)}
+.bkc-lines{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:4}
+/* Las esquinas van a escuadra: una llave se dibuja con ángulos rectos, no con
+   codos redondeados. `crispEdges` evita además el difuminado a medio píxel. */
+.bkc-edge .ln{fill:none;stroke:rgba(255,255,255,.72);stroke-width:2;stroke-linejoin:miter;stroke-linecap:butt;shape-rendering:crispEdges}
+.bkc-edge .hit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:pointer}
+.bkc-edge.on .ln{stroke:var(--gold,#edbb52);stroke-width:2.6;filter:drop-shadow(0 0 5px rgba(237,187,82,.5))}
+.bkc-editor .bkc-lines{pointer-events:none}
+.bkc-editor .bkc-lines .hit{pointer-events:stroke}
+
+/* ── nodo ── */
+/* La tarjeta ocupa TODO el nodo: la etiqueta es chrome del editor y flota
+   encima sin ocupar sitio, así el lienzo dibuja la misma tarjeta que el
+   bracket en columnas (fila 56 + banda VS 20 + fila 56 = 132 px). */
+.bkc-node{position:absolute;width:292px;user-select:none}
+.bkc-node .bkc-nlabel{display:none}
+/* El nombre del nodo NO se dibuja en reposo: el lienzo tiene que verse igual
+   que el bracket publicado. Solo aparece al pasar el ratón o con el nodo
+   seleccionado, como ayuda momentánea del editor. */
+.bkc-editor .bkc-node .bkc-nlabel{position:absolute;left:0;bottom:100%;z-index:8;display:flex;align-items:center;gap:6px;max-width:100%;margin:0 0 5px;padding:3px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.14);background:rgba(10,10,12,.82);font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted,#b09a7e);white-space:nowrap;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .12s}
+.bkc-editor .bkc-node:hover .bkc-nlabel,.bkc-editor .bkc-node.sel .bkc-nlabel,.bkc-editor .bkc-node.drag .bkc-nlabel{opacity:1}
+.bkc-node .bkc-nlabel b{font-weight:700;overflow:hidden;text-overflow:ellipsis}
+.bkc-node .bkc-nlabel span{margin-left:auto;color:var(--gold,#edbb52);font-size:9.5px;letter-spacing:.4px}
+.bkc-editor .bkc-node.is-final .bkc-nlabel{left:auto;right:100%;bottom:auto;top:0;margin:0 8px 0 0}
+.bkc-node.is-hidden{opacity:.32}
+.bkc-node.is-hidden .mbk-match{outline:1px dashed rgba(255,255,255,.35)}
+
+/* ── rótulos del cuadro (encabezados de ronda y banda del sistema) ── */
+.bkc-band{position:absolute;z-index:5;display:flex;align-items:center;justify-content:center;min-height:40px;padding:8px 18px 9px 23px;font-family:var(--disp);font-weight:800;font-style:italic;font-size:19px;letter-spacing:.045em;line-height:1.32;text-transform:uppercase;color:#fff;text-align:center;background:var(--category-accent,#dd3b2c);clip-path:polygon(11px 0,100% 0,calc(100% - 11px) 100%,0 100%);text-shadow:0 2px 0 rgba(0,0,0,.5);filter:drop-shadow(3px 3px 0 rgba(0,0,0,.55))}
+.bkc-band i{font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkc-band.flank{background:color-mix(in srgb,var(--category-accent,#dd3b2c) 84%,#fff)}
+.bkc-band.gold{background:linear-gradient(135deg,#5a3d0e 0%,#c9971f 22%,#f6e08a 50%,#c9971f 78%,#5a3d0e 100%);color:#2b1d05;text-shadow:0 1px 0 rgba(255,255,255,.34)}
+.bkc-band.sys{justify-content:flex-start;align-items:baseline;gap:10px;flex-wrap:wrap;min-height:0;width:max-content;max-width:520px;padding:7px 18px 7px 22px;background:rgba(0,0,0,.34);clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);filter:none;text-shadow:none;text-transform:none}
+.bkc-band.sys b{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-style:normal;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:color-mix(in srgb,var(--category-accent,#dd3b2c) 82%,#fff)}
+.bkc-band.sys span{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-style:normal;font-size:10.5px;letter-spacing:.5px;text-transform:none;color:var(--dim,#8b7f6b)}
+.bkc-editor .bkc-band{cursor:grab}
+.bkc-editor .bkc-band.drag{cursor:grabbing}
+.bkc-editor .bkc-band.sel{outline:2px solid var(--gold,#edbb52);outline-offset:3px}
+.bkc-center{position:absolute;width:344px;display:flex;flex-direction:column;align-items:center;gap:13px;z-index:6}
+.bkc-center .lbl{font-family:var(--disp);font-weight:800;font-style:italic;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:#fff;text-align:center}
+.bkc-center .lbl small{display:block;font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.4px;color:var(--gold);font-style:normal;margin-top:2px}
+.bkc-center .mbk-champ-plaque{width:100%;max-width:230px}
+/* hueco donde vive el nodo de la GRAN FINAL: 148 px de tarjeta + carril para
+   el rótulo «LA FINAL», que cuelga por encima de ella. */
+.bkc-center .bkc-finalgap{height:162px;width:100%;flex:0 0 auto}
+.bkc-center .mbk-trophy img{width:170px;height:auto}
+
+/* ── editor: selección, arrastre, puertos ── */
+.bkc-editor .bkc-node{cursor:grab}
+.bkc-editor .bkc-node.drag{cursor:grabbing}
+.bkc-editor .bkc-node.sel .mbk-match{outline:2px solid var(--gold,#edbb52);outline-offset:2px;border-radius:11px}
+.bkc-editor .bkc-node.sel .bkc-nlabel b{color:var(--gold,#edbb52)}
+.bkc-editor .bkc-node.bad .mbk-match{outline:2px solid var(--red2,#dd3b2c);outline-offset:2px}
+.bkc-port{position:absolute;width:13px;height:13px;border-radius:50%;border:2px solid rgba(10,10,12,.9);background:var(--muted,#b09a7e);z-index:9;cursor:crosshair;transition:transform .12s,background .12s}
+/* Zona de agarre invisible: el punto se ve pequeño pero se atina aunque el
+   lienzo esté alejado. Sin esto el anclaje central medía 5 px en pantalla. */
+.bkc-port::after{content:"";position:absolute;top:-7px;bottom:-7px;left:-6px;right:-6px;border-radius:14px}
+.bkc-port:hover,.bkc-port.hot{background:var(--gold,#edbb52);transform:scale(1.35)}
+.bkc-port.out{background:var(--red2,#dd3b2c)}
+.bkc-port[data-side="L"]{left:-7px;right:auto}
+.bkc-port[data-side="R"]{right:-7px;left:auto}
+/* Cada punto cae EXACTAMENTE donde se pega su línea: A y B en el centro de su
+   fila y C en el centro de la tarjeta —el mismo punto que usa el dibujo
+   fusionado—. Piel oficial: fila 56 + banda VS 20 → 28 px y 104 px. La gran
+   final usa las filas grandes del bloque central (64) → 32 px y 116 px. */
+.bkc-port[data-spot="A"]{top:28px;margin-top:-6.5px}
+.bkc-port[data-spot="C"]{top:50%;margin-top:-6.5px}
+.bkc-port[data-spot="B"]{top:104px;margin-top:-6.5px}
+.bkc-node.is-final .bkc-port[data-spot="A"]{top:32px}
+.bkc-node.is-final .bkc-port[data-spot="B"]{top:116px}
+.bkc-port.in.center{background:rgba(255,255,255,.55)}
+.bkc-port.in.center:hover,.bkc-port.in.center.hot{background:var(--gold,#edbb52)}
+.bkc-editor .bkc-node.side-l::before,.bkc-editor .bkc-node.side-r::before{content:"";position:absolute;top:0;bottom:0;width:3px;border-radius:2px;background:var(--gold,#edbb52);box-shadow:0 0 8px rgba(237,187,82,.6)}
+.bkc-editor .bkc-node.side-l::before{left:-4px}
+.bkc-editor .bkc-node.side-r::before{right:-4px}
+.bkc-port.in.linked{background:rgba(255,255,255,.82);cursor:grab}
+.bkc-port.in.linked:hover{background:var(--gold,#edbb52)}
+.bkc-menu{position:fixed;z-index:130;min-width:212px;padding:5px;border-radius:9px;background:#17161c;border:1px solid var(--line2);box-shadow:0 14px 40px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:1px}
+.bkc-menu b{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10px;letter-spacing:.3px;text-transform:uppercase;color:var(--dim);padding:6px 9px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bkc-menu button{display:flex;align-items:center;gap:8px;text-align:left;padding:7px 9px;border-radius:6px;font-family:var(--body);font-size:12.5px;color:var(--text)}
+.bkc-menu button:hover{background:var(--red-soft);color:#fff}
+.bkc-menu button.danger{color:var(--red2)}
+.bkc-menu button:disabled{opacity:.35;cursor:not-allowed}
+.bkc-menu hr{border:none;border-top:1px solid var(--line);margin:3px 0}
+.bkc-drag-line{position:absolute;left:0;top:0;pointer-events:none;z-index:20;overflow:visible}
+.bkc-drag-line polyline{fill:none;stroke:var(--gold,#edbb52);stroke-width:2;stroke-dasharray:5 4}
+.bkc-marquee{position:absolute;border:1px solid var(--gold,#edbb52);background:rgba(237,187,82,.1);z-index:30;pointer-events:none}
+/* ── guías inteligentes (capa temporal, nunca se guarda ni sale en público) ── */
+.bkc-guides{position:absolute;left:0;top:0;z-index:26;pointer-events:none;overflow:visible}
+.bkc-guides line{vector-effect:non-scaling-stroke;shape-rendering:crispEdges}
+.bkc-guides .g-align{stroke:#7fe3ff;stroke-width:1;stroke-dasharray:5 4;opacity:.95}
+.bkc-guides .g-axis{stroke:#7fe3ff;stroke-width:1;stroke-dasharray:2 5;opacity:.6}
+.bkc-guides .g-meas{stroke:#ffab2e;stroke-width:1.2;stroke-dasharray:4 3}
+.bkc-guides .g-bg{fill:rgba(10,10,12,.92);stroke:rgba(255,171,46,.55);stroke-width:1;vector-effect:non-scaling-stroke}
+.bkc-guides .g-txt{fill:#ffc866;font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;letter-spacing:.2px;dominant-baseline:auto}
+.bkc-editor .mbk-chip[data-side]{position:relative;outline:1px dashed transparent;transition:outline-color .12s,background .12s}
+.bkc-rm{position:absolute;z-index:12;right:3px;top:50%;transform:translateY(-50%);width:16px;height:16px;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--line2);background:rgba(10,10,12,.9);color:var(--muted);font-family:var(--body);font-size:13px;padding:0;opacity:0;transition:opacity .12s,color .12s,border-color .12s;z-index:12}
+.bkc-editor .mbk-chip:hover .bkc-rm,.bkc-rm:focus-visible{opacity:1}
+.bkc-rm:hover{color:#fff;border-color:var(--red2);background:var(--red2)}
+.bkc-editor .mbk-chip.drop-ok{outline-color:var(--gold,#edbb52);background:rgba(237,187,82,.14)}
+.bkc-editor .mbk-chip.drop-no{outline-color:var(--red2,#dd3b2c);background:rgba(221,59,44,.12)}
+
+/* ── viewport del editor ── */
+.bkc-wrap{position:relative;border:1px solid var(--line2);border-radius:12px;background:linear-gradient(180deg,#131015,#0d0b10);overflow:hidden}
+.bkc-view{position:relative;height:clamp(460px,62vh,780px);overflow:hidden;cursor:default;touch-action:none}
+.bkc-view.panning{cursor:grabbing}
+.bkc-view .bkc-stage{position:absolute;left:0;top:0}
+.bkc-zoom{position:absolute;right:12px;bottom:12px;z-index:40;display:flex;gap:4px;align-items:center;background:rgba(10,10,12,.86);border:1px solid var(--line2);border-radius:8px;padding:4px}
+.bkc-zoom button{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:12px;color:var(--muted);padding:4px 8px;border-radius:5px;min-width:28px}
+.bkc-zoom button:hover{background:var(--raise);color:var(--text)}
+.bkc-zoom span{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11px;letter-spacing:.3px;color:var(--dim);min-width:42px;text-align:center}
+/* Ayuda del lienzo: pastilla de UNA línea que se despliega al pasar el puntero,
+   para no tapar las tarjetas de la esquina inferior izquierda. */
+.bkc-hint{position:absolute;left:12px;bottom:12px;z-index:40;max-width:min(52ch,calc(100% - 150px));display:flex;flex-direction:column;gap:6px;font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11px;letter-spacing:.2px;line-height:1.6;color:var(--dim);background:rgba(10,10,12,.78);border:1px solid var(--line);border-radius:7px;padding:5px 9px;cursor:help}
+.bkc-hint b{font-weight:700;color:var(--muted,#b09a7e);white-space:nowrap}
+.bkc-hint span{display:none}
+.bkc-hint:hover{color:var(--muted,#b09a7e);border-color:var(--line2)}
+.bkc-hint:hover span{display:block;color:var(--dim)}
+
+/* ── barra de herramientas ── */
+.bkc-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:9px 11px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.28)}
+.bkc-bar .sep{width:1px;height:20px;background:var(--line2);margin:0 3px}
+.bkc-bar .grow{flex:1}
+.bkc-tool{display:inline-flex;align-items:center;gap:5px;font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;padding:6px 9px;border-radius:6px;border:1px solid var(--line2);color:var(--muted);background:transparent;white-space:nowrap}
+.bkc-tool:hover:not(:disabled){color:var(--text);background:var(--raise)}
+.bkc-tool.on{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 50%,transparent);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.bkc-tool.danger:hover:not(:disabled){color:var(--red2);border-color:color-mix(in srgb,var(--red2) 50%,transparent);background:var(--red-soft)}
+.bkc-tool:disabled{opacity:.35;cursor:not-allowed}
+.bkc-count{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11px;letter-spacing:.3px;color:var(--dim);padding:0 4px}
+.bkc-count b{color:var(--text)}
+.bkc-count.dirty b{color:var(--amber)}
+
+/* ── bandeja de participantes ── */
+.bkc-tray{border:1px solid var(--line2);border-radius:12px;background:var(--panel);margin:14px 0}
+.bkc-tray-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}
+.bkc-tray-h h4{font-family:var(--disp);font-weight:800;font-style:italic;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin:0}
+.bkc-tray-h .k{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11px;letter-spacing:.3px;text-transform:uppercase;color:var(--dim);border:1px solid var(--line2);border-radius:6px;padding:4px 8px}
+.bkc-tray-h .k b{color:var(--gold)}
+.bkc-tray-h input,.bkc-tray-h select{padding:6px 9px;border-radius:6px;border:1px solid var(--line2);background:#0d0c10;color:var(--text);font-family:var(--body);font-size:12.5px}
+.bkc-tray-h .grow{flex:1}
+.bkc-rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;padding:11px 12px;max-height:236px;overflow-y:auto}
+.bkc-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#111015;cursor:grab;min-width:0}
+.bkc-row:hover{border-color:color-mix(in srgb,var(--gold) 40%,transparent);background:#16141b}
+.bkc-row.drag{opacity:.45}
+.bkc-row.placed{opacity:.5}
+.bkc-row.placed:hover{opacity:.85}
+.bkc-row img{width:24px;height:24px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.bkc-row .who{display:flex;flex-direction:column;min-width:0;flex:1}
+.bkc-row .who b{font-family:var(--body);font-weight:600;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkc-row .who small{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkc-cat{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.3px;padding:3px 5px;border-radius:4px;border:1px solid var(--line);color:var(--dim);flex:0 0 auto}
+.bkc-pot{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.3px;padding:3px 5px;border-radius:4px;border:1px solid var(--line2);color:var(--muted);flex:0 0 auto}
+.bkc-pot.p1{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 45%,transparent);background:color-mix(in srgb,var(--gold) 10%,transparent)}
+.bkc-pot.p2{color:#7fb6ff;border-color:rgba(127,182,255,.4);background:rgba(127,182,255,.1)}
+.bkc-pot.p3{color:#7ddc9a;border-color:rgba(125,220,154,.4);background:rgba(125,220,154,.1)}
+.bkc-pot.pd{color:var(--red2);border-color:color-mix(in srgb,var(--red2) 45%,transparent);background:var(--red-soft)}
+.bkc-row .st{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.2px;text-transform:uppercase;color:var(--dim);flex:0 0 auto;text-align:right;max-width:15ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkc-row.placed .st{color:var(--gold)}
+.bkc-empty{padding:18px 14px;font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:12px;letter-spacing:.2px;color:var(--dim);text-align:center}
+
+/* ── inspector del nodo seleccionado ── */
+.bkc-insp{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;border-top:1px solid var(--line);background:rgba(0,0,0,.22)}
+.bkc-insp .tag{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.3px;text-transform:uppercase;color:var(--gold)}
+.bkc-insp input{padding:5px 8px;border-radius:6px;border:1px solid var(--line2);background:#0d0c10;color:var(--text);font-family:var(--body);font-size:12.5px;min-width:180px}
+.bkc-insp select{padding:5px 8px;border-radius:6px;border:1px solid var(--line2);background:#0d0c10;color:var(--text);font-family:var(--body);font-size:12.5px}
+
+/* ── resultados de validación ── */
+.bkc-val{margin:12px 0;border:1px solid var(--line2);border-radius:11px;overflow:hidden}
+.bkc-val header{display:flex;align-items:center;gap:9px;padding:10px 13px;background:rgba(0,0,0,.28);font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+.bkc-val header b{color:var(--text)}
+.bkc-val ul{margin:0;padding:8px 13px 12px;list-style:none;display:flex;flex-direction:column;gap:5px}
+.bkc-val li{display:flex;gap:8px;align-items:baseline;font-size:12.5px;line-height:1.5;color:var(--text)}
+.bkc-val li i{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.3px;text-transform:uppercase;padding:2px 5px;border-radius:4px;font-style:normal;flex:0 0 auto}
+.bkc-val li.err i{color:var(--red2);border:1px solid color-mix(in srgb,var(--red2) 45%,transparent);background:var(--red-soft)}
+.bkc-val li.warn i{color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 45%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.bkc-val li button{font-family:'Burbank Regular Bold','HN Display',sans-serif;font-weight:700;font-size:10px;letter-spacing:.3px;text-transform:uppercase;color:var(--dim);border-bottom:1px dotted var(--line2)}
+.bkc-val li button:hover{color:var(--gold)}
+.bkc-val.ok header{color:#7ddc9a}
+
+/* ── aviso flotante ── */
+.bkc-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:120;max-width:min(560px,92vw);padding:11px 16px;border-radius:9px;background:#26262d;border:1px solid var(--line2);color:var(--text);font-size:13px;line-height:1.5;box-shadow:0 14px 34px rgba(0,0,0,.6);opacity:0;transition:opacity .18s,transform .18s;pointer-events:none}
+.bkc-toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+.bkc-toast.err{border-color:color-mix(in srgb,var(--red2) 55%,transparent);background:#2a1414}
+.bkc-toast.ok{border-color:color-mix(in srgb,#7ddc9a 45%,transparent)}
+
+@media(max-width:900px){
+  .bkc-rows{grid-template-columns:1fr 1fr;max-height:200px}
+  .bkc-view{height:56vh}
+}
+@media(max-width:620px){.bkc-rows{grid-template-columns:1fr}}
+
+/* ── barra de guardado dentro del editor ── */
+.bkc-save{position:sticky;bottom:0;z-index:30;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding:10px 12px;border:1px solid var(--line2);border-radius:12px;background:color-mix(in srgb,var(--panel,#141414) 92%,#000);box-shadow:0 -6px 18px rgba(0,0,0,.35)}
+.bkc-save .ba-btn{white-space:nowrap}
+
+/* ── pantalla completa / plegado del editor ── */
+body.bkc-full-on{overflow:hidden}
+#baCanvas.is-full{position:fixed;inset:0;z-index:60;margin:0;padding:12px 14px;border:0;border-radius:0;display:flex;flex-direction:column;gap:8px;overflow:auto;background:var(--bg,#0b0b0d)}
+#baCanvas:fullscreen{background:var(--bg,#0b0b0d)}
+#baCanvas.is-full > h3,#baCanvas.is-full > .ba-note,#baCanvas.is-full .bkc-tray{display:none}
+#baCanvas.is-full .bkc-wrap{flex:1;display:flex;flex-direction:column;min-height:0;margin:0}
+#baCanvas.is-full .bkc-view{flex:1;height:auto;min-height:0}
+#baCanvas.is-full .bkc-save{margin-top:0}
+#baCanvas.is-min .bkc-tray,#baCanvas.is-min .bkc-view,#baCanvas.is-min .bkc-insp,#baCanvas.is-min .bkc-val,#baCanvas.is-min > .ba-note{display:none}
+
+/* ── bandeja DENTRO del editor: cajón inferior, también en pantalla completa ── */
+.bkc-wrap>.bkc-tray{margin:0;border:0;border-top:1px solid var(--line2);border-radius:0;background:rgba(0,0,0,.22)}
+.bkc-wrap>.bkc-tray{display:flex;flex-direction:column;min-height:0}
+.bkc-wrap>.bkc-tray .bkc-rows{max-height:92px;overflow-y:auto;overscroll-behavior:contain;padding:6px 8px;gap:4px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.bkc-wrap>.bkc-tray .bkc-row{padding:3px 6px;gap:6px}
+.bkc-wrap>.bkc-tray .bkc-tray-h{padding:5px 10px;gap:6px}
+.bkc-wrap>.bkc-tray .bkc-tray-h h4{font-size:11.5px}
+.bkc-wrap>.bkc-tray .bkc-tray-h .k{font-size:9.5px;padding:2px 6px}
+.bkc-wrap>.bkc-tray .bkc-tray-h input,.bkc-wrap>.bkc-tray .bkc-tray-h select{padding:3px 7px;font-size:11px}
+.bkc-wrap>.bkc-tray .bkc-tray-f,.bkc-wrap>.bkc-tray .bkc-note{padding:4px 10px;font-size:9.5px}
+.bkc-wrap.tray-off>.bkc-tray{display:none}
+#baCanvas.is-full .bkc-wrap>.bkc-tray{display:block;overflow:hidden;flex:0 0 auto}
+#baCanvas.is-full .bkc-wrap>.bkc-tray .bkc-rows{max-height:19vh;overflow-y:auto;overscroll-behavior:contain}
+#baCanvas.is-full .bkc-view{min-height:200px}
+/* en pantalla completa nada se sale: la barra de guardar siempre a la vista */
+#baCanvas.is-full{overflow:hidden}
+#baCanvas.is-full>.bkc-save,#baCanvas.is-full .bkc-save{flex:0 0 auto}
+#baCanvas.is-full .bkc-bar,#baCanvas.is-full .bkc-insp{flex:0 0 auto}
+#baCanvas.is-full .bkc-wrap.tray-off>.bkc-tray{display:none}
+#baCanvas.is-min .bkc-wrap>.bkc-tray{display:none}
+
+/* fila tomada de la bandeja (clic para sembrar) */
+.bkc-row.picked{outline:2px solid var(--gold);outline-offset:-1px;background:#1b1710}
+.bkc-row.picked .st{color:var(--gold)}
+
+/* ── Captura de imagen (.bkc-shoot, temporal) ────────────────────────────
+   Mientras se genera el PNG para compartir, el lienzo tiene que verse como
+   el cuadro publicado: sin puertos, rótulos de nodo, guías, marquesina ni
+   contornos de selección. */
+.bkc-shoot .bkc-port,.bkc-shoot .bkc-nlabel,.bkc-shoot .bkc-guides,
+.bkc-shoot .bkc-marquee,.bkc-shoot .bkc-drag-line{display:none!important}
+.bkc-shoot .bkc-node.sel .mbk-match,.bkc-shoot .bkc-node.bad .mbk-match{outline:none!important}
+.bkc-shoot .bkc-node.side-l::before,.bkc-shoot .bkc-node.side-r::before{display:none!important}
+.bkc-shoot .bkc-node.is-hidden{display:none!important}
+.bkc-shoot .bkc-stage.grid{background-image:none!important}
+/* Íconos de facultad congelados en su pose base (sin bob ni giro) al exportar */
+.bkc-shoot .fac-wrap,.bkc-shoot .fac-flip{animation:none!important;transform:none!important}

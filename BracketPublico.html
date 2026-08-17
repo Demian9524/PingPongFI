@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bracket publicado · vista pública</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/bracket-final.css">
+<link rel="stylesheet" href="css/bracket-canvas.css?v=213">
+<link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.4;padding:16px 20px 40px;background-image:radial-gradient(130% 70% at 50% -8%,var(--page-tint) 0%,var(--bg) 52%)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--gold)}a:hover{color:var(--red2)}
+.bp-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bp-h b{font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+.bp-h b .r{color:var(--red2)}
+.bp-h .n{font-family:var(--mono);font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.bp-cats{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.bp-cats button{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:7px 14px;border-radius:7px;color:var(--muted);border:1px solid var(--line2);background:var(--panel)}
+.bp-cats button.on{background:var(--red-soft);color:var(--red2);border-color:color-mix(in srgb,var(--red2) 45%,transparent)}
+#bracket{margin-bottom:20px}
+@media(max-width:640px){body{padding:12px 10px 30px}.bp-cats{margin-left:0;width:100%}.bp-cats button{flex:1}}
+</style>
+<script>if(location.search.indexOf('embed=1')>=0)document.documentElement.classList.add('embed');</script>
+</head>
+<body data-cat="intermedio">
+<div class="bp-h">
+  <b>Bracket <span class="r">publicado</span></b>
+  <span class="n" id="bpNote">Exactamente lo que ve el público</span>
+  <div class="bp-cats" id="bpCats">
+    <button data-cat="principiante">Principiante</button>
+    <button data-cat="intermedio" class="on">Intermedio</button>
+    <button data-cat="avanzado">Avanzado / Open</button>
+  </div>
+</div>
+<section id="bracket"><div class="hud"><div class="bkt" id="bracket-cols"></div><div class="gloria" id="bpGloria">« ¡La gloria te espera! »</div></div></section>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/logo-resolver.js"></script>
+<script src="supabase/format-engine.js"></script>
+<script src="supabase/bracket-topology.js?v=178"></script>
+<script src="supabase/bracket-canvas.js?v=229"></script>
+<script src="supabase/bracket-config.js?v=192"></script>
+<script src="torneo-bracket-render.js?v=197"></script>
+<script src="torneo-bracket-dust.js?v=227"></script>
+<script src="torneo-bracket-canvas.js?v=229"></script>
+<script>
+(function(){
+  'use strict';
+  var LABEL = { principiante:'PRINCIPIANTE', intermedio:'INTERMEDIO', avanzado:'AVANZADO / OPEN' };
+  var host = document.getElementById('bracket-cols');
+  function show(key){
+    document.body.setAttribute('data-cat', key);
+    Array.prototype.forEach.call(document.querySelectorAll('#bpCats button'), function(b){
+      b.classList.toggle('on', b.dataset.cat === key);
+    });
+    document.getElementById('bpNote').textContent = 'Solo lectura · versión publicada de ' + LABEL[key];
+    window.SB_BRACKETCFG.invalidate();
+    window.TORNEO_BKT.mount(host, { key: key, label: LABEL[key] });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#bpCats button'), function(b){
+    b.onclick = function(){ show(b.dataset.cat); };
+  });
+  var q = (location.hash || '').replace('#', '');
+  show(LABEL[q] ? q : 'intermedio');
+})();
+</script>
+</body>
+</html>

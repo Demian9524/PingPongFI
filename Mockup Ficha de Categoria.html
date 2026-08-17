@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="design_doc_mode" content="canvas">
+<title>Mockup · Ficha de categoría</title>
+<style>
+@font-face{font-family:'HN Display';src:url('assets/fonts/HeadingNow-86BoldItalic.otf') format('opentype');font-weight:600 900;font-style:normal;font-display:swap}
+@font-face{font-family:'HN Text';src:url('assets/fonts/HeadingNow-74Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'HN Text';src:url('assets/fonts/HeadingNow-75Medium.otf') format('opentype');font-weight:500 700;font-style:normal;font-display:swap}
+@font-face{font-family:'Burbank Leaderboard';src:url('assets/fonts/BurbankBigRegular-Black.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:'Burbank Regular Bold';src:url('assets/fonts/BurbankBigRegular-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Burbank Small';src:url('assets/fonts/BurbankSmall-BoldItalic.otf') format('opentype');font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:'Burbank Small Black';src:url('assets/fonts/BurbankSmall-BlackItalic.otf') format('opentype');font-weight:900;font-style:italic;font-display:swap}
+:root{
+  --bg:#15100b;--bg2:#1a140d;--panel:#221a11;--panel2:#291f15;--raise:#2f2418;
+  --line:rgba(255,240,220,0.09);--line2:rgba(255,240,220,0.16);
+  --text:#f6efe2;--muted:#b09a7e;--dim:#71614b;
+  --red:#c4332a;--red2:#dd3b2c;--red-dk:#8e2018;--red-soft:rgba(221,59,44,0.13);--red-glow:rgba(221,59,44,0.5);
+  --page-tint:#2a1d12;--ap-g1:#a8322a;--ap-g2:#8a271f;--ap-g3:#671c16;--ap-p1:#6e2119;--ap-p2:#48140f;
+  --tone:#ff9a6b;--tone-dk:#c33f16;
+  --disp:'HN Display',sans-serif;--body:'HN Text',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  --cut:cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);color:var(--text);background:#3a3a3e}
+a{color:var(--tone);text-decoration:none}a:hover{color:#fff}
+.lbl{position:absolute;width:390px;font-family:var(--mono);font-size:15px;letter-spacing:0.12em;text-transform:uppercase;color:#e6e2da}
+.lbl b{font-family:var(--disp);font-style:italic;font-size:20px;letter-spacing:0.03em;color:#fff;display:block;margin-bottom:3px}
+.lbl i{font-style:normal;color:#a8a49c;letter-spacing:0.06em;text-transform:none;font-size:13px}
+.frame{position:absolute;overflow:hidden;background:var(--bg);
+  background-image:radial-gradient(130% 70% at 50% -8%,var(--page-tint) 0%,var(--bg) 52%);
+  box-shadow:0 24px 60px -20px rgba(0,0,0,0.7)}
+.hud{position:relative;background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+.hud-red{border-color:color-mix(in srgb,var(--red2) 30%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--red2) 8%,transparent),inset 0 0 30px -18px var(--red-glow)}
+/* ── nav simulada ── */
+.nav{display:flex;align-items:center;gap:12px;height:76px;padding:0 26px;border-bottom:1px solid var(--line);background:rgba(10,8,6,0.6)}
+.nav .brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-style:italic;font-weight:800;font-size:19px;letter-spacing:0.04em;text-transform:uppercase}
+.nav .brand img{height:38px;width:auto;display:block}
+.nav .links{display:flex;gap:6px;margin-left:34px}
+.nav .links a{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);padding:9px 15px;border-radius:7px}
+.nav .links a.on{color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--red2) 90%,transparent),var(--red-dk))}
+.nav .right{margin-left:auto;display:flex;gap:10px}
+.nav .right .btn{font-family:var(--disp);font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;padding:10px 16px;border-radius:7px;background:linear-gradient(180deg,var(--red2),var(--red-dk));color:#fff}
+.wrap{padding:22px 26px;display:flex;flex-direction:column;gap:16px}
+/* ── barra de categoría (existente) ── */
+.catbar{display:flex;align-items:center;gap:16px;padding:13px 16px}
+.catbar .clbl{display:flex;align-items:center;gap:10px}
+.catbar .clbl .ic{width:34px;height:34px;border-radius:8px;background:var(--red-soft);color:var(--red2);display:flex;align-items:center;justify-content:center}
+.catbar .clbl b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:0.04em;text-transform:uppercase}
+.catbar .clbl small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1px;color:var(--muted)}
+.seg{display:flex;gap:5px;background:#0a0a0c;border:1px solid var(--line);border-radius:9px;padding:5px}
+.seg button{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:0.04em;text-transform:uppercase;padding:9px 20px;border-radius:6px;color:var(--muted);border:0;background:none;cursor:pointer}
+.seg button.on{background:linear-gradient(180deg,var(--red2),var(--red-dk));color:#fff;box-shadow:0 5px 14px -6px var(--red-glow)}
+.catmeta{margin-left:auto;display:flex;gap:20px}
+.catmeta .m{display:flex;align-items:center;gap:5px}
+.catmeta .m b{font-family:var(--disp);font-weight:800;font-size:22px;line-height:1}
+.catmeta .m small{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+/* ── NUEVO · tira de KPI ── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{position:relative;padding:14px 16px 15px;cursor:pointer;display:flex;flex-direction:column;gap:9px;
+  background:linear-gradient(180deg,var(--panel2),var(--bg2));border:1px solid var(--line);
+  border-left:3px solid var(--tone);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.kpi .k-top{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted)}
+.kpi .k-top .dot{width:6px;height:6px;background:var(--tone);border-radius:50%}
+.kpi .k-body{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.kpi .k-name{font-family:'Burbank Regular Bold',sans-serif;font-size:19px;letter-spacing:0.01em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .k-val{font-family:'Burbank Leaderboard',sans-serif;font-size:30px;line-height:1;color:var(--tone);white-space:nowrap}
+.kpi .k-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim)}
+.kpi-head{display:flex;align-items:center;gap:12px}
+.kpi-head h3{font-family:var(--disp);font-weight:800;font-style:italic;font-size:16px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text)}
+.kpi-head .line{flex:1;height:1px;background:var(--line)}
+.kpi-head .cta{display:flex;align-items:center;gap:7px;font-family:var(--disp);font-weight:700;font-size:12.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--tone);cursor:pointer}
+/* ── sección siguiente (para dar contexto de scroll) ── */
+.sec-head{display:flex;align-items:center;gap:12px}
+.sec-head .ic{width:30px;height:30px;border-radius:7px;background:var(--red-soft);color:var(--red2);display:flex;align-items:center;justify-content:center;font-size:14px}
+.sec-head h2{font-family:var(--disp);font-weight:800;font-style:italic;font-size:21px;letter-spacing:0.03em;text-transform:uppercase}
+.ghost-card{height:150px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.ghost-row{height:15px;background:rgba(255,240,220,0.07);border-radius:3px}
+.ghost-row.w1{width:62%}.ghost-row.w2{width:88%}.ghost-row.w3{width:74%}.ghost-row.w4{width:52%}
+/* ══ FICHA DE CATEGORÍA (overlay) ══ */
+.ficha{position:absolute;inset:0;display:flex;color:#f5f0e6;
+  background:linear-gradient(160deg,var(--ap-g1) 0%,var(--ap-g2) 48%,var(--ap-g3) 100%)}
+.ficha::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(23,19,13,0) 0%,rgba(23,19,13,0.18) 46%,rgba(23,19,13,0.54) 100%)}
+.f-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 45%;width:100%}
+.f-left{display:flex;flex-direction:column;min-height:0;padding:24px 18px 20px 26px}
+.f-title{display:flex;align-items:center;font-family:'HN Display',sans-serif;font-weight:800;font-style:italic;
+  font-size:43px;line-height:0.92;letter-spacing:0.005em;text-transform:uppercase;color:#f5f0e6;white-space:nowrap;margin-bottom:8px}
+.f-info{display:inline-flex;align-items:center;justify-content:center;margin-left:22px;width:38px;height:38px;border-radius:50%;
+  border:2px solid rgba(245,240,230,0.4);background:rgba(245,240,230,0.1);color:rgba(245,240,230,0.85);
+  font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:20px;translate:0 -0.15em}
+.f-kicker{font-family:'Burbank Regular Bold',sans-serif;font-size:19px;letter-spacing:0.14em;text-transform:uppercase;color:var(--tone);margin-bottom:16px}
+.f-tabs{display:flex;gap:6px;padding:5px;background:rgba(10,8,6,0.38);border:1px solid rgba(245,240,230,0.14);border-radius:10px;margin-bottom:14px}
+.f-tabs button{flex:1;font-family:var(--disp);font-weight:700;font-style:italic;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
+  padding:10px 8px;border:0;border-radius:7px;background:none;color:rgba(245,240,230,0.66);cursor:pointer;white-space:nowrap}
+.f-tabs button.on{background:rgba(245,240,230,0.94);color:#5c1a12}
+.f-head{display:grid;grid-template-columns:52px minmax(0,1fr) 92px 74px;gap:8px;padding:0 12px 8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,240,230,0.6)}
+.f-head span:nth-child(3),.f-head span:nth-child(4){text-align:right}
+.f-list{display:flex;flex-direction:column;overflow:hidden}
+.f-row{display:grid;grid-template-columns:52px minmax(0,1fr) 92px 74px;gap:8px;align-items:center;padding:10px 12px}
+.f-row.is-odd{background:color-mix(in oklab,var(--tone) 20%,rgba(23,19,13,0.34))}
+.f-row.is-even{background:color-mix(in oklab,var(--tone) 10%,rgba(23,19,13,0.34))}
+.f-row.is-sel{background:#f5f0e6;box-shadow:inset 5px 0 0 var(--tone-dk),0 6px 18px -12px rgba(23,19,13,0.8)}
+.f-pos{font-family:'Burbank Leaderboard',sans-serif;font-size:24px;line-height:1;color:var(--tone);text-align:center}
+.f-row.is-sel .f-pos{color:var(--tone-dk)}
+.f-name{font-family:'Burbank Regular Bold',sans-serif;font-size:22px;color:#f5f0e6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-row.is-sel .f-name{color:#17130d}
+.f-num{font-family:'Burbank Leaderboard',sans-serif;font-size:22px;text-align:right;color:rgba(245,240,230,0.86)}
+.f-row.is-sel .f-num{color:#17130d}
+.f-num.hl{color:var(--tone)}
+.f-row.is-sel .f-num.hl{color:var(--tone-dk)}
+.f-right{position:relative;padding:24px 62px 34px 78px;display:flex;flex-direction:column}
+.f-right::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,var(--ap-p1) 0%,var(--ap-p2) 100%);
+  clip-path:polygon(9% 0,100% 0,100% 100%,0 100%)}
+.f-right>*{position:relative;z-index:1}
+.f-rhead{margin:auto 0 12px;padding-left:38px;transform:translateY(34px)}
+.f-rtag{font-family:'HN Display',sans-serif;font-weight:800;font-style:italic;font-size:39px;line-height:1.05;letter-spacing:0.02em;text-transform:uppercase}
+.f-stats{margin:56px 26px 0 22px;display:flex;flex-direction:column;row-gap:9px}
+.f-statrow{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:0 2px}
+.f-statrow span{font-family:'Burbank Small',sans-serif;font-style:italic;font-size:23px;letter-spacing:0.02em;color:#f5f0e6}
+.f-statrow b{font-family:'Burbank Small Black',sans-serif;font-style:italic;font-size:34px;line-height:1;color:#f5f0e6}
+.f-chipwrap{margin:auto 0 0;display:flex;flex-direction:column;gap:10px;padding:0 8px 6px 22px}
+.f-chip{padding:12px 18px;font-family:'Burbank Regular Bold',sans-serif;font-size:19px;letter-spacing:0.02em;text-align:center}
+.f-chip.dark{background:#191512;color:#f5f0e6}
+.f-chip.tone{background:var(--tone);color:#4a1408;text-transform:uppercase;letter-spacing:0.06em}
+.f-close{position:absolute;top:6px;right:14px;z-index:3;width:78px;height:78px;display:flex;align-items:center;justify-content:center;color:#f5f0e6}
+.f-close svg{width:56px;height:56px;fill:currentColor;filter:drop-shadow(2px 3px 0 rgba(23,19,13,0.55))}
+/* ══ MÓVIL ══ */
+.m-nav{display:flex;align-items:center;gap:10px;height:58px;padding:0 14px;border-bottom:1px solid var(--line);background:rgba(10,8,6,0.6)}
+.m-nav .brand{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-style:italic;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:0.04em}
+.m-nav .brand img{height:28px;width:auto;display:block}
+.m-nav .burger{margin-left:auto;display:flex;flex-direction:column;gap:4px}
+.m-nav .burger i{display:block;width:22px;height:2px;background:var(--text)}
+.m-wrap{padding:14px 12px;display:flex;flex-direction:column;gap:12px}
+.m-catbar{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.m-seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;background:#0a0a0c;border:1px solid var(--line);border-radius:9px;padding:4px}
+.m-seg button{font-family:var(--disp);font-weight:700;font-size:10.5px;letter-spacing:0.02em;text-transform:uppercase;padding:9px 4px;border:0;border-radius:6px;background:none;color:var(--muted)}
+.m-seg button.on{background:linear-gradient(180deg,var(--red2),var(--red-dk));color:#fff}
+.m-kpis{display:flex;gap:10px;overflow:hidden;padding-bottom:2px}
+.m-kpi{flex:0 0 148px;padding:11px 12px 12px;display:flex;flex-direction:column;gap:7px;
+  background:linear-gradient(180deg,var(--panel2),var(--bg2));border:1px solid var(--line);border-left:3px solid var(--tone);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.m-kpi .k-top{font-family:var(--mono);font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.m-kpi .k-val{font-family:'Burbank Leaderboard',sans-serif;font-size:26px;line-height:1;color:var(--tone)}
+.m-kpi .k-name{font-family:'Burbank Regular Bold',sans-serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-cta{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:1px solid color-mix(in srgb,var(--tone) 46%,transparent);
+  background:color-mix(in srgb,var(--tone) 12%,transparent);color:var(--tone);
+  font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:0.07em;text-transform:uppercase}
+/* ficha móvil */
+.mf{position:absolute;inset:0;display:flex;flex-direction:column;color:#f5f0e6;
+  background:linear-gradient(160deg,var(--ap-g1) 0%,var(--ap-g2) 48%,var(--ap-g3) 100%)}
+.mf::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(23,19,13,0) 0%,rgba(23,19,13,0.18) 46%,rgba(23,19,13,0.56) 100%)}
+.mf-top{position:relative;z-index:1;padding:16px 14px 0}
+.mf-title{display:flex;align-items:center;font-family:'HN Display',sans-serif;font-weight:800;font-style:italic;font-size:27px;line-height:0.95;text-transform:uppercase;margin-bottom:5px}
+.mf-title .f-info{width:26px;height:26px;margin-left:11px;font-size:14px;border-width:1.5px}
+.mf-kicker{font-family:'Burbank Regular Bold',sans-serif;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--tone);margin-bottom:12px}
+.mf-tabs{display:flex;gap:5px;padding:4px;background:rgba(10,8,6,0.4);border:1px solid rgba(245,240,230,0.14);border-radius:9px;overflow:hidden}
+.mf-tabs button{flex:1 1 auto;font-family:var(--disp);font-weight:700;font-style:italic;font-size:11px;letter-spacing:0.02em;text-transform:uppercase;padding:9px 6px;text-align:center;border:0;border-radius:6px;background:none;color:rgba(245,240,230,0.66);white-space:nowrap}
+.mf-tabs button.on{background:rgba(245,240,230,0.94);color:#5c1a12}
+.mf-head{position:relative;z-index:1;display:grid;grid-template-columns:40px minmax(0,1fr) 62px;gap:6px;padding:12px 14px 6px;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,230,0.6)}
+.mf-head span:last-child{text-align:right}
+.mf-list{position:relative;z-index:1;display:flex;flex-direction:column;padding:0 10px;overflow:hidden}
+.mf-row{display:grid;grid-template-columns:40px minmax(0,1fr) 62px;gap:6px;align-items:center;padding:11px 8px}
+.mf-row.is-odd{background:color-mix(in oklab,var(--tone) 20%,rgba(23,19,13,0.34))}
+.mf-row.is-even{background:color-mix(in oklab,var(--tone) 10%,rgba(23,19,13,0.34))}
+.mf-pos{font-family:'Burbank Leaderboard',sans-serif;font-size:19px;color:var(--tone);text-align:center}
+.mf-name{font-family:'Burbank Regular Bold',sans-serif;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mf-num{font-family:'Burbank Leaderboard',sans-serif;font-size:18px;text-align:right;color:rgba(245,240,230,0.9)}
+.mf-band{display:flex;align-items:center;gap:10px;margin:8px 0 2px;padding:9px 12px;background:rgba(23,19,13,0.5);border-left:4px solid var(--tone)}
+.mf-band b{font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:0.03em;text-transform:uppercase}
+.mf-close{position:absolute;top:8px;right:12px;z-index:3;display:flex;color:#f5f0e6}
+.mf-close svg{width:30px;height:30px;fill:currentColor;filter:drop-shadow(2px 2px 0 rgba(23,19,13,0.55))}
+.mf-sheet{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:16px 16px 22px;background:#1d1410;border-top:2px solid var(--tone);
+  box-shadow:0 -20px 40px -18px rgba(0,0,0,0.9)}
+.mf-sheet .grab{width:44px;height:4px;border-radius:2px;background:rgba(245,240,230,0.3);margin:0 auto 14px}
+.mf-sheet h4{font-family:'HN Display',sans-serif;font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase;margin-bottom:12px}
+.mf-sheet .row{display:flex;align-items:baseline;justify-content:space-between;padding:5px 0}
+.mf-sheet .row span{font-family:'Burbank Small',sans-serif;font-style:italic;font-size:16px}
+.mf-sheet .row b{font-family:'Burbank Small Black',sans-serif;font-style:italic;font-size:24px}
+.note{position:absolute;width:300px;font-family:var(--mono);font-size:12px;line-height:1.65;color:#d8d4cc;letter-spacing:0.02em}
+.note b{display:block;font-family:var(--disp);font-style:italic;font-size:15px;letter-spacing:0.05em;text-transform:uppercase;color:#fff;margin-bottom:6px}
+</style>
+</head>
+<body>
+<svg class="ui-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="ico-x" viewBox="0 0 128 128"><path fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round" transform="matrix(1 0 -.1228 1 7.86 0)" d="M21 26h24l19 26 19-26h24L78 64l29 38H83L64 76l-19 26H21l29-38-29-38Z"></path></symbol></defs></svg>
+
+<div class="lbl" style="left:0;top:26px;width:1000px"><b>1 · Escritorio — Home con la tira de KPI</b><i>La barra de categoría que ya existe + 4 tarjetas nuevas. No agrega una sección: son ~110 px.</i></div>
+<div class="frame" style="left:0;top:96px;width:1440px;height:760px">
+  <div class="nav">
+    <div class="brand"><img src="assets/escudo-fi.svg" alt="Facultad de Ingeniería">Ping Pong-FI</div>
+    <div class="links"><a href="#">Inicio</a><a href="#" class="on">Grupos</a><a href="#">Reglas del Torneo</a><a href="#">Directorio</a></div>
+    <div class="right"><div class="btn">Registro</div></div>
+  </div>
+  <div class="wrap">
+    <div class="hud hud-red catbar">
+      <div class="clbl">
+        <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></div>
+        <div><b>Categoría</b><small>Elige el nivel</small></div>
+      </div>
+      <div class="seg"><button type="button">Principiantes</button><button type="button">Intermedios</button><button type="button" class="on">Avanzados</button></div>
+      <div class="catmeta"><div class="m"><b>4</b><small>Grupos</small></div><div class="m"><b>19</b><small>Jugadores</small></div></div>
+    </div>
+    <div class="kpi-head"><h3>Avanzados · 27-1</h3><div class="line"></div><div class="cta">Ver estadísticas de la categoría »</div></div>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="k-top"><span class="dot"></span>Líder actual</div>
+        <div class="k-body"><div class="k-name">Pepito de Prueba</div><div class="k-val">100%</div></div>
+        <div class="k-sub">3 PJ · +4 dif. sets</div>
+      </div>
+      <div class="kpi">
+        <div class="k-top"><span class="dot"></span>Mejor racha</div>
+        <div class="k-body"><div class="k-name">Julieta Chopper</div><div class="k-val">7</div></div>
+        <div class="k-sub">Victorias seguidas · activa</div>
+      </div>
+      <div class="kpi">
+        <div class="k-top"><span class="dot"></span>Mejor ataque</div>
+        <div class="k-body"><div class="k-name">Brenda Cortada</div><div class="k-val">2.6</div></div>
+        <div class="k-sub">Sets ganados por partido</div>
+      </div>
+      <div class="kpi">
+        <div class="k-top"><span class="dot"></span>Mejor defensa</div>
+        <div class="k-body"><div class="k-name">Fernanda Revés</div><div class="k-val">0.4</div></div>
+        <div class="k-sub">Sets concedidos por partido</div>
+      </div>
+    </div>
+    <div class="sec-head"><div class="ic">▦</div><h2>Fase de Grupos</h2></div>
+    <div class="hud ghost-card"><div class="ghost-row w2"></div><div class="ghost-row w1"></div><div class="ghost-row w3"></div><div class="ghost-row w4"></div></div>
+  </div>
+</div>
+
+<div class="note" style="left:1500px;top:190px"><b>Por qué aquí</b>La tira vive dentro del bloque de categoría, arriba de Grupos. Da valor inmediato sin obligar a abrir nada, y cada tarjeta es la entrada directa a su pestaña dentro de la ficha.</div>
+
+<div class="lbl" style="left:0;top:920px;width:1000px"><b>2 · Escritorio — Ficha de categoría (overlay)</b><i>Mismo shell que «Bombos al momento»: título, botón i, cruz, degradado global y panel derecho.</i></div>
+<div class="frame" style="left:0;top:990px;width:1440px;height:810px">
+  <div class="ficha">
+    <div class="f-close"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></div>
+    <div class="f-inner">
+      <div class="f-left">
+        <div class="f-title">Avanzados <span class="f-info">i</span></div>
+        <div class="f-kicker">Edición 27-1 · 19 participantes · en curso</div>
+        <div class="f-tabs">
+          <button type="button" class="on">Ranking actual</button>
+          <button type="button">Ranking global</button>
+          <button type="button">Rachas</button>
+          <button type="button">Ataque / Defensa</button>
+        </div>
+        <div class="f-head"><span>#</span><span>Jugador</span><span>Dif. sets</span><span>% Vict.</span></div>
+        <div class="f-list">
+          <div class="f-row is-sel"><div class="f-pos">#1</div><div class="f-name">Pepito de Prueba</div><div class="f-num">+4</div><div class="f-num hl">100%</div></div>
+          <div class="f-row is-even"><div class="f-pos">#2</div><div class="f-name">Fake Avanzado 6</div><div class="f-num">+4</div><div class="f-num hl">100%</div></div>
+          <div class="f-row is-odd"><div class="f-pos">#3</div><div class="f-name">Brenda Cortada</div><div class="f-num">+3</div><div class="f-num hl">100%</div></div>
+          <div class="f-row is-even"><div class="f-pos">#4</div><div class="f-name">Fernanda Revés</div><div class="f-num">+3</div><div class="f-num hl">100%</div></div>
+          <div class="f-row is-odd"><div class="f-pos">#5</div><div class="f-name">Julieta Chopper</div><div class="f-num">+2</div><div class="f-num hl">100%</div></div>
+          <div class="f-row is-even"><div class="f-pos">#6</div><div class="f-name">Emiliano Topspin</div><div class="f-num">+1</div><div class="f-num hl">67%</div></div>
+          <div class="f-row is-odd"><div class="f-pos">#7</div><div class="f-name">Iván Drive</div><div class="f-num">+1</div><div class="f-num hl">67%</div></div>
+          <div class="f-row is-even"><div class="f-pos">#8</div><div class="f-name">Demian</div><div class="f-num">0</div><div class="f-num hl">50%</div></div>
+          <div class="f-row is-odd"><div class="f-pos">#9</div><div class="f-name">César Efecto</div><div class="f-num">−1</div><div class="f-num hl">33%</div></div>
+          <div class="f-row is-even"><div class="f-pos">#10</div><div class="f-name">Helena Bloqueo</div><div class="f-num">−2</div><div class="f-num hl">33%</div></div>
+          <div class="f-row is-odd"><div class="f-pos">#11</div><div class="f-name">Daniela Smash</div><div class="f-num">−3</div><div class="f-num hl">0%</div></div>
+        </div>
+      </div>
+      <div class="f-right">
+        <div class="f-rhead"><div class="f-rtag">Estadísticas<br>2027–1</div></div>
+        <div class="f-stats">
+          <div class="f-statrow"><span>Partidos jugados</span><b>3</b></div>
+          <div class="f-statrow"><span>Sets ganados</span><b>6</b></div>
+          <div class="f-statrow"><span>Sets perdidos</span><b>2</b></div>
+          <div class="f-statrow"><span>Racha activa</span><b>3</b></div>
+          <div class="f-statrow"><span>Ranking global</span><b>#4</b></div>
+        </div>
+        <div class="f-chipwrap">
+          <div class="f-chip dark">Pepito de Prueba</div>
+          <div class="f-chip tone">Líder de la categoría</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note" style="left:1500px;top:1090px"><b>Estructura</b>Izquierda: la vista de la pestaña activa. Derecha: el jugador seleccionado, con su ficha resumida — el mismo panel que ya conoce el usuario de Bombos, así que no aprende nada nuevo.<br><br>Las 4 pestañas comparten shell: cambia la tabla, no la página.</div>
+
+<div class="lbl" style="left:0;top:1820px;width:420px"><b>3 · Móvil — Home</b><i>390 px. La tira es carrusel: se ven 2.3 tarjetas.</i></div>
+<div class="frame" style="left:0;top:2010px;width:390px;height:844px">
+  <div class="m-nav"><div class="brand"><img src="assets/escudo-fi.svg" alt="Facultad de Ingeniería">Ping Pong-FI</div><div class="burger"><i></i><i></i><i></i></div></div>
+  <div class="m-wrap">
+    <div class="hud hud-red m-catbar">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="ic" style="width:28px;height:28px;border-radius:7px;background:var(--red-soft);color:var(--red2);display:flex;align-items:center;justify-content:center">☰</div>
+        <div><b style="font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:0.04em;text-transform:uppercase">Categoría</b></div>
+      </div>
+      <div class="m-seg"><button type="button">Princ.</button><button type="button">Interm.</button><button type="button" class="on">Avanzados</button></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:9px">
+      <h3 style="font-family:var(--disp);font-weight:800;font-style:italic;font-size:14px;letter-spacing:0.05em;text-transform:uppercase">Avanzados · 27-1</h3>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+      <span style="font-family:var(--mono);font-size:9px;letter-spacing:0.12em;color:var(--muted)">4 GRUPOS · 19</span>
+    </div>
+    <div class="m-kpis">
+      <div class="m-kpi"><div class="k-top">Líder actual</div><div class="k-val">100%</div><div class="k-name">Pepito de Prueba</div></div>
+      <div class="m-kpi"><div class="k-top">Mejor racha</div><div class="k-val">7</div><div class="k-name">Julieta Chopper</div></div>
+      <div class="m-kpi"><div class="k-top">Mejor ataque</div><div class="k-val">2.6</div><div class="k-name">Brenda C.</div></div>
+    </div>
+    <div class="m-cta">Ver estadísticas de la categoría »</div>
+    <div class="sec-head" style="margin-top:2px"><div class="ic" style="width:26px;height:26px;font-size:12px">▦</div><h2 style="font-size:16px">Fase de Grupos</h2></div>
+    <div class="hud ghost-card" style="height:190px"><div class="ghost-row w2"></div><div class="ghost-row w1"></div><div class="ghost-row w3"></div><div class="ghost-row w4"></div><div class="ghost-row w2"></div></div>
+  </div>
+</div>
+
+<div class="lbl" style="left:450px;top:1820px;width:420px"><b>4 · Móvil — Ficha, pestaña Ranking</b><i>Pestañas fijas arriba, lista abajo. Sin panel lateral.</i></div>
+<div class="frame" style="left:450px;top:2010px;width:390px;height:844px">
+  <div class="mf">
+    <div class="mf-close"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></div>
+    <div class="mf-top">
+      <div class="mf-title">Avanzados<span class="f-info">i</span></div>
+      <div class="mf-kicker">27-1 · 19 participantes</div>
+      <div class="mf-tabs"><button type="button" class="on">Ranking</button><button type="button">Global</button><button type="button">Rachas</button><button type="button">Atq/Def</button></div>
+    </div>
+    <div class="mf-head"><span>#</span><span>Jugador</span><span>% Vict.</span></div>
+    <div class="mf-list">
+      <div class="mf-row is-odd"><div class="mf-pos">#1</div><div class="mf-name">Pepito de Prueba</div><div class="mf-num">100%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#2</div><div class="mf-name">Fake Avanzado 6</div><div class="mf-num">100%</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#3</div><div class="mf-name">Brenda Cortada</div><div class="mf-num">100%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#4</div><div class="mf-name">Fernanda Revés</div><div class="mf-num">100%</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#5</div><div class="mf-name">Julieta Chopper</div><div class="mf-num">100%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#6</div><div class="mf-name">Emiliano Topspin</div><div class="mf-num">67%</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#7</div><div class="mf-name">Iván Drive</div><div class="mf-num">67%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#8</div><div class="mf-name">Demian</div><div class="mf-num">50%</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#9</div><div class="mf-name">César Efecto</div><div class="mf-num">33%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#10</div><div class="mf-name">Helena Bloqueo</div><div class="mf-num">33%</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#11</div><div class="mf-name">Daniela Smash</div><div class="mf-num">0%</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#12</div><div class="mf-name">Axel Relámpago</div><div class="mf-num">0%</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="lbl" style="left:900px;top:1820px;width:420px"><b>5 · Móvil — Pestaña Rachas + ficha de jugador</b><i>Tocar un jugador abre una hoja inferior, no otra pantalla.</i></div>
+<div class="frame" style="left:900px;top:2010px;width:390px;height:844px">
+  <div class="mf">
+    <div class="mf-close"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></div>
+    <div class="mf-top">
+      <div class="mf-title">Avanzados<span class="f-info">i</span></div>
+      <div class="mf-kicker">27-1 · Rachas</div>
+      <div class="mf-tabs"><button type="button">Ranking</button><button type="button">Global</button><button type="button" class="on">Rachas</button><button type="button">Atq/Def</button></div>
+    </div>
+    <div class="mf-list" style="padding-top:8px">
+      <div class="mf-band"><b>Rachas activas</b></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#1</div><div class="mf-name">Julieta Chopper</div><div class="mf-num">7</div></div>
+      <div class="mf-row is-even"><div class="mf-pos">#2</div><div class="mf-name">Pepito de Prueba</div><div class="mf-num">3</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#3</div><div class="mf-name">Brenda Cortada</div><div class="mf-num">3</div></div>
+      <div class="mf-band"><b>Récord histórico</b></div>
+      <div class="mf-row is-even"><div class="mf-pos">#1</div><div class="mf-name">Emiliano Topspin</div><div class="mf-num">12</div></div>
+      <div class="mf-row is-odd"><div class="mf-pos">#2</div><div class="mf-name">Julieta Chopper</div><div class="mf-num">9</div></div>
+    </div>
+    <div class="mf-sheet">
+      <div class="grab"></div>
+      <h4>Julieta Chopper</h4>
+      <div class="row"><span>Racha activa</span><b>7</b></div>
+      <div class="row"><span>Mejor racha</span><b>9</b></div>
+      <div class="row"><span>Partidos jugados</span><b>14</b></div>
+      <div class="row"><span>Ranking global</span><b>#3</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="note" style="left:1350px;top:2110px"><b>Costo de scroll</b>En móvil la home crece solo ~180 px (tira + botón). Todo lo demás —4 vistas de estadísticas— vive en el overlay, que abre encima y se cierra con la cruz o el botón atrás.</div>
+
+</body>
+</html>

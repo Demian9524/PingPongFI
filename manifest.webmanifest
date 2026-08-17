@@ -1,0 +1,14 @@
+{
+  "name": "Torneo de Ping Pong FI",
+  "short_name": "Ping Pong FI",
+  "description": "Torneo de tenis de mesa de la Facultad de Ingeniería, UNAM.",
+  "start_url": "Pagina Torneo.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#131318",
+  "theme_color": "#131318",
+  "lang": "es-MX",
+  "icons": [
+    { "src": "assets/logo-pingpong.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

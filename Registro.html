@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Preinscripción · Torneo de Ping Pong FI</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:'HN Display';src:url('assets/fonts/HeadingNow-86BoldItalic.otf') format('opentype');font-weight:600 900;font-style:normal;font-display:swap}
+  @font-face{font-family:'HN Display';src:url('assets/fonts/HeadingNow-86BoldItalic.otf') format('opentype');font-weight:600 900;font-style:italic;font-display:swap}
+  @font-face{font-family:'HN Text';src:url('assets/fonts/HeadingNow-74Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'HN Text';src:url('assets/fonts/HeadingNow-75Medium.otf') format('opentype');font-weight:500 700;font-style:normal;font-display:swap}
+  :root{
+    --bg:#131318; --bg2:#17171c; --panel:#1d1d23; --panel2:#23232a;
+    --raise:#2a2a31; --line:rgba(235,236,242,0.08); --line2:rgba(235,236,242,0.16);
+    --text:#f4f4f6; --muted:#a7a8b2; --dim:#6c6d77;
+    --red:#8f9098; --red2:#c8c9d0; --red-dk:#5a5b62; --red-soft:rgba(200,201,208,0.12);
+    --red-glow:rgba(200,201,208,0.34);
+    --blue:#7a8cc4; --blue-soft:rgba(122,140,196,0.16);
+    --amber:#c9b48a; --amber-soft:rgba(201,180,138,0.16);
+    --green:#74a98a; --green-soft:rgba(116,169,138,0.16);
+    --gold:#e9d8aa;
+    --disp:'HN Display','Saira Condensed',sans-serif; --body:'HN Text','Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+    --cut:cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);
+    -webkit-font-smoothing:antialiased;line-height:1.45;min-height:100vh;
+    background-image:radial-gradient(130% 70% at 50% -8%, #1c1c22 0%, var(--bg) 52%);}
+  ::selection{background:var(--red);color:#fff}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 26px}
+  .mono{font-family:var(--mono)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  a{color:inherit}
+  .hud{position:relative;background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+    clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))}
+  .hud-red{border-color:rgba(200,201,208,0.22);box-shadow:0 0 0 1px rgba(200,201,208,0.06), inset 0 0 30px -18px var(--red-glow)}
+
+  /* NAV */
+  nav.top{position:sticky;top:0;z-index:50;background:rgba(19,19,24,0.9);backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(200,201,208,0.16)}
+  .nav-in{display:flex;align-items:center;gap:34px;height:98px}
+  .brand{display:flex;align-items:center;gap:16px;text-decoration:none}
+  .logo-main{height:66px;width:auto;display:block}
+  .logo-div{width:1px;height:36px;background:var(--line2);flex:0 0 auto}
+  .logo-fi{width:auto;height:70px;object-fit:contain;display:block;opacity:0.92}
+  .nav-links{display:flex;gap:9px;margin-left:46px}
+  .nav-links a{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:0.07em;text-transform:uppercase;
+    color:var(--muted);text-decoration:none;transition:.15s var(--cut);padding:10px 18px;border-radius:7px}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a.on{color:#fff;background:linear-gradient(180deg,rgba(200,201,208,0.32),var(--red-dk));box-shadow:0 4px 14px -5px var(--red-glow)}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .ghost{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line2);padding:13px 22px;border-radius:7px;text-decoration:none;transition:.15s}
+  .ghost:hover{color:var(--text);background:var(--raise)}
+
+  /* HAMBURGER + MOBILE MENU */
+  .hamburger{display:none;width:36px;height:36px;border-radius:7px;flex:0 0 auto;
+    background:var(--raise);border:1px solid var(--line2);color:var(--text);
+    align-items:center;justify-content:center;transition:.15s var(--cut);cursor:pointer}
+  .hamburger.open{background:var(--red-soft);border-color:rgba(200,201,208,0.5);color:var(--red2)}
+  .hamburger .close-icon{display:none}
+  .hamburger.open .hamb-icon{display:none}
+  .hamburger.open .close-icon{display:flex}
+  .mobile-menu{display:none;flex-direction:column;overflow:hidden;
+    background:rgba(19,19,24,0.97);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(200,201,208,0.22);
+    max-height:0;transition:max-height .32s cubic-bezier(.4,0,.2,1)}
+  .mobile-menu.open{max-height:400px}
+  .mob-link{display:flex;align-items:center;font-family:var(--disp);font-weight:700;font-size:15px;
+    letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+    padding:14px 20px;border-bottom:1px solid var(--line);transition:.15s var(--cut)}
+  .mob-link:last-child{border-bottom:none}
+  .mob-link:hover{color:var(--text);background:var(--panel)}
+  .mob-link.on{color:var(--red2)}
+
+  html,body{overflow-x:hidden}
+
+  /* HEAD */
+  .head{display:flex;align-items:flex-end;gap:18px;margin-top:26px;flex-wrap:wrap}
+  .head .ic{width:46px;height:46px;border-radius:11px;background:var(--red-soft);color:var(--red2);
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .head h1{font-family:var(--disp);font-weight:800;font-style:italic;font-size:32px;line-height:0.86;
+    letter-spacing:0.02em;text-transform:uppercase}
+  .head h1 .r{color:var(--red2)}
+  .head p{color:var(--muted);font-size:14px;margin-top:6px;max-width:540px}
+  .head .count{margin-left:auto;text-align:right}
+  .head .count b{font-family:var(--disp);font-weight:800;font-size:38px;color:var(--gold);line-height:1;display:block}
+  .head .count small{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+
+  /* LAYOUT */
+  .grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start;margin-top:24px;margin-bottom:50px}
+  .grid > *{min-width:0}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}.head h1{font-size:27px}.nav-links{display:none}}
+
+  /* PROGRESS BAR */
+  .progress{display:flex;align-items:flex-start;gap:8px;padding:18px 22px 16px;border-bottom:1px solid var(--line);
+    overflow-x:auto;scrollbar-width:none}
+  .progress::-webkit-scrollbar{display:none}
+  .step-dot{display:flex;align-items:center;gap:8px;flex:1;min-width:0;cursor:pointer;
+    color:var(--dim);transition:.18s var(--cut);padding:6px 6px;border-radius:7px;background:none;border:none;text-align:left}
+  .step-dot:hover{background:var(--raise)}
+  .step-dot .n{width:26px;height:26px;border-radius:50%;background:var(--raise);color:var(--muted);
+    display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:13px;flex:0 0 auto;
+    border:1.5px solid var(--line2);transition:.18s}
+  .step-dot .nm{font-family:var(--disp);font-weight:700;font-size:11.5px;letter-spacing:0.05em;text-transform:uppercase;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:inherit}
+  .step-dot.done{color:var(--muted)}
+  .step-dot.done .n{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+  .step-dot.active{color:var(--text)}
+  .step-dot.active .n{background:linear-gradient(180deg,var(--red2),var(--red-dk));color:#fff;border-color:transparent;
+    box-shadow:0 0 0 3px var(--red-soft)}
+  .step-bar-out{padding:0 22px;border-bottom:1px solid var(--line)}
+  .step-bar{height:3px;background:var(--raise);border-radius:3px;overflow:hidden;margin-bottom:14px}
+  .step-bar-fill{height:100%;background:linear-gradient(90deg,var(--red-dk),var(--red2));transition:width .35s var(--cut);border-radius:3px}
+
+  /* FORM */
+  form{padding:6px 0 0}
+  .step{display:none;padding:24px 28px 36px}
+  .privacy-notice{display:flex;gap:11px;align-items:flex-start;margin-top:30px;padding:14px 16px;
+    background:var(--amber-soft);border:1px solid rgba(227,169,63,0.38);border-radius:10px}
+  .privacy-notice .pn-ic{color:var(--amber);flex:0 0 auto;margin-top:1px;display:flex}
+  .privacy-notice p{font-size:13px;line-height:1.5;color:var(--text)}
+  .privacy-notice b{color:var(--amber)}
+  .privacy-notice .pn-rec{display:block;margin-top:5px;font-size:12px;color:var(--muted)}
+  .step.show{display:block;animation:stepIn .26s var(--cut)}
+  @keyframes stepIn{from{opacity:0;transform:translateY(6px)}}
+  .step-h{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .step-h .n{width:34px;height:34px;border-radius:9px;background:var(--red-soft);color:var(--red2);
+    display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:15px;flex:0 0 auto}
+  .step-h h2{font-family:var(--disp);font-weight:800;font-style:italic;font-size:24px;letter-spacing:0.02em;text-transform:uppercase;line-height:0.96}
+  .step-sub{color:var(--muted);font-size:13px;margin:6px 0 22px;max-width:580px}
+
+  .field{margin-bottom:16px}
+  .field > label{display:block;font-family:var(--disp);font-weight:700;font-size:13.5px;letter-spacing:0.04em;
+    text-transform:uppercase;color:var(--text);margin-bottom:7px}
+  .field .req{color:var(--red2);margin-left:3px}
+  .field .opt-tag{color:var(--dim);font-weight:600;font-size:11px;margin-left:6px;text-transform:none;letter-spacing:0}
+  .field .hint{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.4}
+  input[type=text],input[type=tel],input[type=email],input[type=url],select,textarea{
+    width:100%;background:#0e0e12;border:1px solid var(--line2);
+    border-radius:9px;padding:12px 14px;color:var(--text);font-family:var(--body);font-size:15px;transition:.15s}
+  textarea{min-height:74px;resize:vertical;line-height:1.5}
+  input::placeholder,textarea::placeholder{color:var(--dim)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red2);box-shadow:0 0 0 3px var(--red-soft)}
+  select{appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23b09a7e' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .three{display:grid;grid-template-columns:120px 1fr;gap:10px}
+  @media (max-width:560px){.two{grid-template-columns:1fr}}
+
+  /* PHONE w/ prefix */
+  .phone-wrap{display:grid;grid-template-columns:84px 1fr;gap:8px}
+  .phone-wrap .pfx{background:#0e0e12;border:1px solid var(--line2);border-radius:9px;display:flex;
+    align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--gold);font-weight:700;letter-spacing:0.06em}
+
+  /* radio cards */
+  .opts{display:grid;gap:10px}
+  .opts.c3{grid-template-columns:repeat(3,1fr)}
+  .opts.c2{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:560px){.opts.c3,.opts.c2{grid-template-columns:1fr}}
+  .opt{position:relative;display:flex;align-items:center;gap:11px;background:#0e0e12;border:1px solid var(--line2);
+    border-radius:10px;padding:13px 14px;cursor:pointer;transition:.15s var(--cut)}
+  .opt:hover{border-color:var(--muted)}
+  .opt input{position:absolute;opacity:0;pointer-events:none}
+  .opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--dim);flex:0 0 auto;transition:.15s;position:relative}
+  .opt:has(input[type=checkbox]) .dot{border-radius:5px}
+  .opt .ot{font-family:var(--disp);font-weight:700;font-size:14.5px;letter-spacing:0.02em;text-transform:uppercase;display:block}
+  .opt .od{font-size:11px;color:var(--muted);font-family:var(--body);font-weight:400;text-transform:none;letter-spacing:0;margin-top:1px;display:block}
+  .opt-body{flex:1;min-width:0}
+  .opt:has(input:checked){border-color:var(--red2);background:linear-gradient(100deg,var(--red-soft),rgba(14,14,18,0.4))}
+  .opt:has(input:checked) .dot{border-color:var(--red2)}
+  .opt:has(input[type=radio]:checked) .dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--red2)}
+  .opt:has(input[type=checkbox]:checked) .dot{background:var(--red2);border-color:var(--red2)}
+  .opt:has(input[type=checkbox]:checked) .dot::after{content:'';position:absolute;inset:2px;border-radius:3px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23131318' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M3 8.5l3 3 7-7'/></svg>") center/74% no-repeat}
+
+  /* chip select for multi-options */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{position:relative;background:#0e0e12;border:1px solid var(--line2);border-radius:30px;padding:9px 14px;cursor:pointer;
+    font-family:var(--disp);font-weight:700;font-size:12.5px;letter-spacing:0.04em;text-transform:uppercase;
+    color:var(--muted);transition:.15s var(--cut);user-select:none}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip:hover{border-color:var(--muted);color:var(--text)}
+  .chip:has(input:checked){background:var(--red-soft);border-color:var(--red2);color:var(--text)}
+  .chip:has(input:checked)::before{content:'✓';margin-right:6px;font-weight:900;color:var(--red2)}
+
+  /* conditional block */
+  .cond{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s var(--cut),opacity .25s,margin .35s}
+  .cond.show{max-height:900px;opacity:1;margin-top:6px}
+  .cond-inner{border-left:2px solid var(--red);padding:6px 0 6px 16px;margin-top:6px;display:flex;flex-direction:column;gap:14px}
+
+  .err{color:var(--red2);font-size:11.5px;margin-top:6px;font-weight:600;display:none}
+  .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--red2)}
+  .field.invalid .err{display:block}
+  .opts.invalid,.chips.invalid{outline:1px solid var(--red2);outline-offset:4px;border-radius:12px}
+
+  /* ── REVIEW STEP ─────────────────────────────────────────── */
+  .review{display:flex;flex-direction:column;gap:18px;margin-top:6px}
+  .review-card{background:#0e0e12;border:1px solid var(--line2);border-radius:10px;padding:16px 18px}
+  .review-card h3{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .review-card h3 .ic{color:var(--red2);display:flex}
+  .review-card .rv-edit{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:0.5px;color:var(--dim);
+    text-transform:uppercase;cursor:pointer;background:none;border:none}
+  .review-card .rv-edit:hover{color:var(--red2)}
+  .rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+  @media (max-width:560px){.rv-grid{grid-template-columns:1fr}}
+  .rv-item{display:flex;flex-direction:column;gap:2px}
+  .rv-item small{font-family:var(--mono);font-size:9.5px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .rv-item b{font-family:var(--body);font-weight:600;font-size:14px;color:var(--text);word-break:break-word}
+  .rv-cat{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:9px;
+    background:var(--red-soft);border:1px solid var(--red2);margin-top:6px;
+    font-family:var(--disp);font-weight:800;font-size:18px;letter-spacing:0.03em;text-transform:uppercase}
+  .rv-cat .rv-dot{width:10px;height:10px;border-radius:50%}
+  .rv-cat-note{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .rv-prov{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .rv-why{margin-top:12px;background:#0a0a0e;border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .rv-why-h{display:block;font-family:var(--disp);font-weight:800;font-size:10.5px;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .rv-why ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
+  .rv-why li{font-size:12.5px;line-height:1.45;color:var(--text)}
+  .rv-why li.flag{color:var(--amber)}
+  .consents{display:flex;flex-direction:column;gap:10px}
+  .consent{display:flex;gap:10px;background:#0a0a0e;border:1px solid var(--line);border-radius:9px;padding:11px 13px;cursor:pointer;transition:.15s var(--cut)}
+  .consent input{position:absolute;opacity:0;pointer-events:none}
+  .consent .cbox{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--dim);flex:0 0 auto;margin-top:2px;position:relative;transition:.15s}
+  .consent:has(input:checked){border-color:var(--red2);background:rgba(200,201,208,0.05)}
+  .consent:has(input:checked) .cbox{background:var(--red2);border-color:var(--red2)}
+  .consent:has(input:checked) .cbox::after{content:'';position:absolute;inset:2px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23131318' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M3 8.5l3 3 7-7'/></svg>") center/82% no-repeat}
+  .consent p{font-size:13px;line-height:1.45;color:var(--text)}
+  .consent a{color:var(--gold);text-decoration:underline}
+  .consent.invalid{outline:1px solid var(--red2);outline-offset:2px}
+  .consent.term-view{cursor:default}
+  .consent .tnum{width:18px;height:18px;border-radius:50%;background:var(--red2);color:#131318;flex:0 0 auto;margin-top:1px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:11px}
+  .terms-intro{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+
+  /* ── NAV BUTTONS ─────────────────────────────────────────── */
+  .actions{display:flex;align-items:center;gap:12px;margin-top:10px;padding:20px 28px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .btn-prev{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line2);padding:11px 18px;border-radius:8px;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+  .btn-prev:hover{color:var(--text);background:var(--raise)}
+  .btn-next,.btn-submit{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;
+    color:#fff;background:linear-gradient(180deg,var(--red2),var(--red-dk));padding:13px 22px;display:inline-flex;
+    align-items:center;gap:8px;border-radius:8px;box-shadow:0 6px 18px -7px var(--red-glow);transition:.15s}
+  .btn-next:hover,.btn-submit:hover{filter:brightness(1.1)}
+  .btn-submit[disabled],.btn-next[disabled]{filter:grayscale(.5);opacity:0.7;cursor:not-allowed}
+  .actions .spacer{flex:1}
+  .actions .draft-note{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:0.4px}
+
+  /* SIDEBAR (heredada) */
+  .side{display:flex;flex-direction:column;gap:18px}
+  .card{padding:18px}
+  .card h3{font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:0.05em;text-transform:uppercase;
+    display:flex;align-items:center;gap:9px;margin-bottom:13px}
+  .card h3 .ic{color:var(--red2);display:flex}
+  .ilist{display:flex;flex-direction:column;gap:11px}
+  .ilist .it{display:flex;gap:11px;align-items:flex-start}
+  .ilist .it .b{width:26px;height:26px;border-radius:7px;background:var(--red-soft);color:var(--red2);
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-family:var(--disp);font-weight:800;font-size:13px}
+  .ilist .it .tx b{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:0.02em;display:block}
+  .ilist .it .tx small{font-size:11.5px;color:var(--muted)}
+  .cat-leg{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+  .cat-leg .cl{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
+  .cat-leg .cl b{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:0.03em;text-transform:uppercase;color:var(--text)}
+  .cat-leg .cl .sw{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+
+  /* SUCCESS OVERLAY */
+  .ov{position:fixed;inset:0;z-index:100;background:rgba(10,7,4,0.78);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;padding:14px}
+  .ov.show{display:flex;animation:fade .25s}
+  @keyframes fade{from{opacity:0}}
+  .ticket{width:480px;max-width:100%;animation:pop .35s var(--cut)}
+  .ticket .top{padding:16px 22px 12px}
+  .ticket .badge{width:42px;height:42px;border-radius:12px;margin:0 auto 8px}
+  .ticket .top h2{font-size:20px}
+  .ticket .top p{font-size:12px;margin-top:5px}
+  .ticket .stub{padding:12px 22px;gap:8px}
+  .ticket .stub .s b{font-size:14px}
+  .ticket .foot{padding:0 22px 16px;gap:8px}
+  .ticket .foot button,.ticket .foot a{min-width:130px;font-size:11.5px;padding:9px 8px}
+  .wa-ic{width:34px;height:34px;flex:0 0 auto;border-radius:6px;filter:drop-shadow(0 0 5px rgba(120,200,70,0.6))}
+  @keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}}
+  .ticket .top{text-align:center}
+  .ticket .badge{background:var(--green-soft);color:var(--green);
+    display:flex;align-items:center;justify-content:center}
+  .ticket .top h2{font-family:var(--disp);font-weight:800;font-style:italic;letter-spacing:0.02em;text-transform:uppercase}
+  .ticket .top p{color:var(--muted);line-height:1.45;text-align:left}
+  .ticket .stub{border-top:2px dashed var(--line2);display:grid;grid-template-columns:1fr 1fr}
+  .ticket .stub .s small{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;display:block}
+  .ticket .stub .s b{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:0.02em;display:block;margin-top:3px}
+  .ticket .stub .s b.gold{color:var(--gold)}
+  .ticket .foot{display:flex;flex-wrap:wrap}
+  .ticket .foot button,.ticket .foot a{flex:1;font-family:var(--disp);font-weight:800;letter-spacing:0.05em;text-transform:uppercase;
+    border-radius:8px;transition:.15s;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+  .ticket .foot .pri{color:#fff;background:linear-gradient(180deg,var(--red2),var(--red-dk));box-shadow:0 6px 18px -7px var(--red-glow)}
+  .ticket .foot .pri:hover{filter:brightness(1.1)}
+  .ticket .foot .wa{color:#eafcd2;background:linear-gradient(135deg,rgba(120,180,70,0.35) 0%,rgba(60,110,38,0.3) 60%,rgba(120,180,70,0.22) 100%);border:1.5px solid rgba(150,200,90,0.85);box-shadow:0 0 12px rgba(120,190,70,0.3);font-size:14px;padding:12px 16px;gap:10px;flex:1 1 100%;order:-1}
+  .ticket .foot .wa:hover{filter:brightness(1.15);transform:translateY(-1px)}
+  @media(max-width:480px){.ticket .foot .wa{font-size:16px;padding:15px 16px;gap:12px}.ticket .foot .wa .wa-ic{width:38px;height:38px}}
+  .ticket .foot .sec{color:var(--text);border:1px solid var(--line2);background:transparent}
+  .ticket .foot .sec:hover{background:var(--raise)}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel2);
+    border:1px solid var(--red2);padding:12px 20px;border-radius:9px;font-size:13.5px;z-index:120;opacity:0;
+    transition:.25s var(--cut);pointer-events:none;box-shadow:0 12px 30px -10px rgba(0,0,0,0.6)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.err{border-color:var(--red2);color:#fff}
+  .toast.ok{border-color:var(--green);color:var(--green)}
+
+  /* RULES MODAL */
+  .rules-modal{position:fixed;inset:0;z-index:110;background:rgba(10,7,4,0.75);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;padding:24px}
+  .rules-modal.show{display:flex}
+  .rules-box{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line2);
+    max-width:580px;width:100%;max-height:80vh;display:flex;flex-direction:column;border-radius:12px;overflow:hidden}
+  .rules-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center}
+  .rules-head h3{font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;letter-spacing:0.02em;text-transform:uppercase}
+  .rules-head .x{margin-left:auto;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .rules-head .x:hover{background:var(--raise);color:var(--text)}
+  .rules-body{padding:20px 22px;overflow-y:auto;line-height:1.55;font-size:14px;color:var(--muted)}
+  .rules-body h4{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text);margin:14px 0 6px}
+  .rules-body h4:first-child{margin-top:0}
+  .rules-body ul{padding-left:18px}
+
+  /* ── MOBILE ─────────────────────────────────── */
+  @media (max-width:640px){
+    .wrap{padding:0 12px}
+    .nav-in{height:95px;gap:12px}
+    .logo-main{height:56px}
+    .logo-fi{width:auto;height:64px;object-fit:contain;flex-shrink:0}
+    .logo-div{display:none}
+    .nav-right .ghost{display:inline-flex;align-items:center;font-size:12px;padding:9px 13px;letter-spacing:0.04em;white-space:nowrap}
+    .hamburger{display:none}
+    .mobile-menu{display:none}
+    .head{margin-top:18px;gap:12px;flex-wrap:wrap}
+    .head .ic{width:38px;height:38px;border-radius:9px}
+    .head h1{font-size:22px}
+    .head p{font-size:12.5px;margin-top:4px;width:100%}
+    .head .count b{font-size:26px}
+    .head .count small{font-size:8.5px}
+    .grid{margin-top:16px;margin-bottom:30px;gap:16px}
+    .step{padding:18px 16px 28px}
+    .step-h h2{font-size:18px}
+    .step-dot .nm{display:none}
+    .field label{font-size:12.5px}
+    input,select,textarea{font-size:14px;padding:11px 12px}
+    .opt{padding:11px 12px;gap:9px}
+    .opt .ot{font-size:13.5px}
+    .opt .od{font-size:10.5px}
+    .actions{padding:16px}
+  }
+
+  /* ── Custom faculty dropdown (siempre abre hacia abajo) ── */
+  .fac-wrap{position:relative}
+  .fac-btn{
+    width:100%;background:#0e0e12;border:1px solid var(--line2);
+    border-radius:9px;padding:12px 14px;color:var(--text);
+    font-family:var(--body);font-size:15px;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+    text-align:left;transition:border-color .15s,box-shadow .15s;
+  }
+  .fac-btn:focus,.fac-btn[aria-expanded="true"]{
+    outline:none;border-color:var(--red2);box-shadow:0 0 0 3px var(--red-soft)
+  }
+  .fac-btn svg{flex-shrink:0;color:var(--gold);transition:transform .15s}
+  .fac-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .fac-menu{
+    display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;
+    z-index:400;background:#1c1c22;border:1px solid var(--line2);
+    border-radius:9px;max-height:min(230px,55vh);overflow-y:auto;overscroll-behavior:contain;
+    box-shadow:0 8px 32px rgba(0,0,0,.65);
+  }
+  .fac-menu.open{display:block}
+  .fac-item{
+    padding:10px 14px;cursor:pointer;font-size:14px;color:var(--text);
+    transition:background .1s;
+  }
+  .fac-item:first-child{border-radius:9px 9px 0 0}
+  .fac-item:last-child{border-radius:0 0 9px 9px}
+  .fac-item:hover{background:rgba(255,255,255,.07)}
+  .fac-item.fac-sel{color:var(--gold);background:rgba(255,255,255,.04)}
+  .fac-btn .fac-ph{color:var(--muted)}
+  .career-cond{display:none}
+  #levelRest.hidden{display:none}
+  .career-cond.show{display:block;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+</style>
+<!-- HN TYPOGRAPHY — elimina esta línea para revertir -->
+<link rel="stylesheet" href="typography-hn.css" id="hn-typography">
+<link rel="stylesheet" href="css/navbar-fi.css?v=2">
+</head>
+<body>
+
+<nav class="top fi-nav" data-fi-nav data-active="" aria-label="Principal"></nav>
+
+<div class="wrap">
+  <div class="head">
+    <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div>
+    <div>
+      <h1>Pre <span class="r">inscripción</span></h1>
+      <p>Llena los 3 pasos para reservar tu lugar. Tu inscripción se confirma después con el pago y la revisión de tu categoría.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- FORM -->
+    <div class="hud hud-red">
+
+      <!-- PROGRESS DOTS -->
+      <div class="progress" id="progress" role="tablist" aria-label="Pasos del formulario">
+        <button type="button" class="step-dot active" data-step="0" role="tab" aria-selected="true"><span class="n">1</span><span class="nm">Datos</span></button>
+        <button type="button" class="step-dot" data-step="1" role="tab" aria-selected="false"><span class="n">2</span><span class="nm">Nivel</span></button>
+        <button type="button" class="step-dot" data-step="2" role="tab" aria-selected="false"><span class="n">3</span><span class="nm">Confirmar</span></button>
+      </div>
+      <div class="step-bar-out"><div class="step-bar"><div class="step-bar-fill" id="stepBar" style="width:33.33%"></div></div></div>
+
+      <form id="regForm" novalidate autocomplete="on">
+
+        <!-- ─── STEP 1: PERSONAL ──────────────────────────── -->
+        <section class="step show" data-step-panel="0">
+          <div class="step-h"><span class="n">1</span><h2>Datos personales</h2></div>
+          <p class="step-sub">Empezamos con lo básico para identificarte y poder contactarte.</p>
+
+          <div class="field" data-field="displayName">
+            <label for="f-displayName">Nombre o apodo<span class="req">*</span></label>
+            <input id="f-displayName" type="text" name="displayName" maxlength="60" minlength="2" autocomplete="nickname" placeholder="Ej. El Tornado" required />
+            <div class="hint">Con el que te conocen en las pimponeras (lo verás en grupos y bracket).</div>
+            <div class="err">Escribe al menos 2 caracteres (máx. 60).</div>
+          </div>
+
+          <div class="field" data-field="phone">
+            <label for="f-phone">Número de teléfono (WhatsApp)<span class="req">*</span></label>
+            <div class="phone-wrap">
+              <div class="pfx" aria-hidden="true">+52</div>
+              <input id="f-phone" type="tel" name="phone" inputmode="numeric" autocomplete="tel-national" placeholder="55 1234 5678" required />
+            </div>
+            <div class="hint">Se incluirá en el botón de WhatsApp del torneo: será visible para tus rivales y tu grupo para coordinar partidos.</div>
+            <div class="err">Ingresa un número de 10 dígitos.</div>
+          </div>
+
+          <div class="field" data-field="faculty">
+              <label for="facBtn">Facultad o escuela<span class="req">*</span></label>
+              <!-- select nativo oculto — registro.js lo lee/escribe por nombre -->
+              <select id="f-faculty" name="faculty" required style="display:none">
+                <option value="ARQUITECTURA">Facultad de Arquitectura</option>
+                <option value="CIENCIAS">Facultad de Ciencias</option>
+                <option value="CIENCIAS_POLITICAS_SOCIALES">Facultad de Ciencias Políticas y Sociales</option>
+                <option value="CONTADURIA_ADMINISTRACION">Facultad de Contaduría y Administración</option>
+                <option value="DERECHO">Facultad de Derecho</option>
+                <option value="ECONOMIA">Facultad de Economía</option>
+                <option value="FILOSOFIA_LETRAS">Facultad de Filosofía y Letras</option>
+                <option value="INGENIERIA" selected>Facultad de Ingeniería</option>
+                <option value="MEDICINA">Facultad de Medicina</option>
+                <option value="MEDICINA_VETERINARIA_ZOOTECNIA">Facultad de Medicina Veterinaria y Zootecnia</option>
+                <option value="ODONTOLOGIA">Facultad de Odontología</option>
+                <option value="PSICOLOGIA">Facultad de Psicología</option>
+                <option value="QUIMICA">Facultad de Química</option>
+                <option value="EXTERNO">Otra</option>
+              </select>
+              <!-- dropdown visual personalizado -->
+              <div class="fac-wrap" id="facWrap">
+                <button type="button" class="fac-btn" id="facBtn" aria-haspopup="listbox" aria-expanded="false">
+                  <span id="facLabel">Facultad de Ingeniería</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="fac-menu" id="facMenu" role="listbox">
+                  <div class="fac-item fac-sel" data-val="INGENIERIA" role="option">Facultad de Ingeniería</div>
+                  <div class="fac-item" data-val="ARQUITECTURA" role="option">Facultad de Arquitectura</div>
+                  <div class="fac-item" data-val="CIENCIAS" role="option">Facultad de Ciencias</div>
+                  <div class="fac-item" data-val="CIENCIAS_POLITICAS_SOCIALES" role="option">Facultad de Ciencias Políticas y Sociales</div>
+                  <div class="fac-item" data-val="CONTADURIA_ADMINISTRACION" role="option">Facultad de Contaduría y Administración</div>
+                  <div class="fac-item" data-val="DERECHO" role="option">Facultad de Derecho</div>
+                  <div class="fac-item" data-val="ECONOMIA" role="option">Facultad de Economía</div>
+                  <div class="fac-item" data-val="FILOSOFIA_LETRAS" role="option">Facultad de Filosofía y Letras</div>
+                  <div class="fac-item" data-val="MEDICINA" role="option">Facultad de Medicina</div>
+                  <div class="fac-item" data-val="MEDICINA_VETERINARIA_ZOOTECNIA" role="option">Facultad de Medicina Veterinaria y Zootecnia</div>
+                  <div class="fac-item" data-val="ODONTOLOGIA" role="option">Facultad de Odontología</div>
+                  <div class="fac-item" data-val="PSICOLOGIA" role="option">Facultad de Psicología</div>
+                  <div class="fac-item" data-val="QUIMICA" role="option">Facultad de Química</div>
+                  <div class="fac-item" data-val="EXTERNO" role="option">Otra</div>
+                </div>
+              </div>
+              <div class="hint">Todas las opciones son sedes en Ciudad Universitaria.</div>
+              <div class="err">Selecciona tu facultad o escuela.</div>
+            </div>
+
+            <div class="career-cond" id="condCareer">
+                <div class="field" data-field="career">
+                  <label for="carBtn">Carrera<span class="req">*</span></label>
+                  <select id="f-career" name="career" style="display:none">
+                    <option value="" disabled selected>Selecciona tu carrera…</option>
+                    <option value="AEROESPACIAL">Ingeniería Aeroespacial</option>
+                    <option value="AMBIENTAL">Ingeniería Ambiental</option>
+                    <option value="CIVIL">Ingeniería Civil</option>
+                    <option value="MINAS_METALURGIA">Ingeniería de Minas y Metalurgia</option>
+                    <option value="ELECTRICA_ELECTRONICA">Ingeniería Eléctrica Electrónica</option>
+                    <option value="COMPUTACION">Ingeniería en Computación</option>
+                    <option value="BIOMEDICA">Ingeniería en Sistemas Biomédicos</option>
+                    <option value="TELECOMUNICACIONES">Ingeniería en Telecomunicaciones</option>
+                    <option value="GEOFISICA">Ingeniería Geofísica</option>
+                    <option value="GEOLOGICA">Ingeniería Geológica</option>
+                    <option value="GEOMATICA">Ingeniería Geomática</option>
+                    <option value="INDUSTRIAL">Ingeniería Industrial</option>
+                    <option value="MECANICA">Ingeniería Mecánica</option>
+                    <option value="MECATRONICA">Ingeniería Mecatrónica</option>
+                    <option value="PETROLERA">Ingeniería Petrolera</option>
+                  </select>
+                  <div class="fac-wrap" id="carWrap">
+                    <button type="button" class="fac-btn" id="carBtn" aria-haspopup="listbox" aria-expanded="false">
+                      <span id="carLabel" class="fac-ph">Selecciona tu carrera…</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="fac-menu" id="carMenu" role="listbox">
+                      <div class="fac-item" data-val="AEROESPACIAL" role="option">Ingeniería Aeroespacial</div>
+                      <div class="fac-item" data-val="AMBIENTAL" role="option">Ingeniería Ambiental</div>
+                      <div class="fac-item" data-val="CIVIL" role="option">Ingeniería Civil</div>
+                      <div class="fac-item" data-val="MINAS_METALURGIA" role="option">Ingeniería de Minas y Metalurgia</div>
+                      <div class="fac-item" data-val="ELECTRICA_ELECTRONICA" role="option">Ingeniería Eléctrica Electrónica</div>
+                      <div class="fac-item" data-val="COMPUTACION" role="option">Ingeniería en Computación</div>
+                      <div class="fac-item" data-val="BIOMEDICA" role="option">Ingeniería en Sistemas Biomédicos</div>
+                      <div class="fac-item" data-val="TELECOMUNICACIONES" role="option">Ingeniería en Telecomunicaciones</div>
+                      <div class="fac-item" data-val="GEOFISICA" role="option">Ingeniería Geofísica</div>
+                      <div class="fac-item" data-val="GEOLOGICA" role="option">Ingeniería Geológica</div>
+                      <div class="fac-item" data-val="GEOMATICA" role="option">Ingeniería Geomática</div>
+                      <div class="fac-item" data-val="INDUSTRIAL" role="option">Ingeniería Industrial</div>
+                      <div class="fac-item" data-val="MECANICA" role="option">Ingeniería Mecánica</div>
+                      <div class="fac-item" data-val="MECATRONICA" role="option">Ingeniería Mecatrónica</div>
+                      <div class="fac-item" data-val="PETROLERA" role="option">Ingeniería Petrolera</div>
+                    </div>
+                  </div>
+                  <div class="hint">Tu carrera dentro de la Facultad de Ingeniería.</div>
+                  <div class="err">Selecciona tu carrera.</div>
+                </div>
+            </div>
+
+            <div class="privacy-notice" role="note">
+              <span class="pn-ic" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+              </span>
+              <p>Al introducir tu información, aceptas que <b>tu nombre o apodo y tu número de teléfono se publiquen en la página principal</b> para que los demás participantes puedan ponerse en contacto contigo. <span class="pn-rec">Por tu privacidad, te recomendamos usar un apodo y evitar compartir otros datos personales.</span></p>
+            </div>
+        </section>
+
+        <!-- ─── PASO 2: NIVEL ─────────────────────────────── -->
+        <section class="step" data-step-panel="1">
+          <div class="step-h"><span class="n">2</span><h2>Tu nivel</h2></div>
+          <p class="step-sub">Con estas respuestas calculamos tu <b>categoría provisional</b>. No buscamos jugadores federados: aquí «Avanzado» significa control y consistencia por encima del promedio del torneo.</p>
+
+          <div class="field" data-field="representative">
+            <label>¿Perteneces al representativo de tenis de mesa?<span class="req">*</span></label>
+            <div class="opts c2" data-opts>
+              <label class="opt"><input type="radio" name="representative" value="YES" /><span class="dot"></span><span class="opt-body"><span class="ot">Sí</span><span class="od">Compito o entreno con el representativo.</span></span></label>
+              <label class="opt"><input type="radio" name="representative" value="NO" /><span class="dot"></span><span class="opt-body"><span class="ot">No</span></span></label>
+            </div>
+            <div class="hint">Si perteneces al representativo, vas directo a Avanzados (pala de madera) y no necesitas responder lo demás.</div>
+            <div class="err">Selecciona una opción.</div>
+          </div>
+
+          <div id="levelRest">
+            <div class="field" data-field="privateTraining">
+              <label>¿Has recibido entrenamiento particular (clases con profesor o coach)?<span class="req">*</span></label>
+              <div class="opts c2" data-opts>
+                <label class="opt"><input type="radio" name="privateTraining" value="NONE" /><span class="dot"></span><span class="opt-body"><span class="ot">No, nunca</span></span></label>
+                <label class="opt"><input type="radio" name="privateTraining" value="LT1M" /><span class="dot"></span><span class="opt-body"><span class="ot">Menos de 1 mes</span></span></label>
+                <label class="opt"><input type="radio" name="privateTraining" value="GE1M" /><span class="dot"></span><span class="opt-body"><span class="ot">1 mes o más</span><span class="od">Clases o entrenamiento formal.</span></span></label>
+              </div>
+              <div class="hint">Con 1 mes o más de entrenamiento particular pasas directo a Avanzados.</div>
+              <div class="err">Selecciona una opción.</div>
+            </div>
+
+          <div class="field" data-field="playingExperience">
+            <label>¿Cuánto tiempo llevas jugando ping pong (aunque sea casual)?<span class="req">*</span></label>
+            <div class="hint">Experiencia jugando. No tiene nada que ver con horarios ni con tu disponibilidad.</div>
+            <div class="opts c2" data-opts>
+              <label class="opt"><input type="radio" name="playingExperience" value="EXP_NONE" /><span class="dot"></span><span class="opt-body"><span class="ot">Nunca he jugado</span><span class="od">Esta sería mi primera vez.</span></span></label>
+              <label class="opt"><input type="radio" name="playingExperience" value="EXP_LT6M" /><span class="dot"></span><span class="opt-body"><span class="ot">Menos de 6 meses</span></span></label>
+              <label class="opt"><input type="radio" name="playingExperience" value="EXP_6M_1Y" /><span class="dot"></span><span class="opt-body"><span class="ot">Entre 6 meses y 1 año</span></span></label>
+              <label class="opt"><input type="radio" name="playingExperience" value="EXP_GT1Y" /><span class="dot"></span><span class="opt-body"><span class="ot">Más de 1 año</span></span></label>
+            </div>
+            <div class="err">Selecciona una opción.</div>
+          </div>
+
+          <div class="field" data-field="frequency">
+            <label>¿Con qué frecuencia juegas hoy en día?<span class="req">*</span></label>
+            <div class="opts c2" data-opts>
+              <label class="opt"><input type="radio" name="frequency" value="NUNCA" /><span class="dot"></span><span class="opt-body"><span class="ot">Nunca o casi nunca</span><span class="od">Llevo meses sin tomar una raqueta.</span></span></label>
+              <label class="opt"><input type="radio" name="frequency" value="MONTHLY" /><span class="dot"></span><span class="opt-body"><span class="ot">Algunas veces al mes</span><span class="od">1 o 2 veces al mes.</span></span></label>
+              <label class="opt"><input type="radio" name="frequency" value="WEEKLY" /><span class="dot"></span><span class="opt-body"><span class="ot">1 o 2 veces por semana</span></span></label>
+              <label class="opt"><input type="radio" name="frequency" value="FREQUENT" /><span class="dot"></span><span class="opt-body"><span class="ot">3 o más veces por semana</span></span></label>
+            </div>
+            <div class="err">Selecciona una opción.</div>
+          </div>
+
+          <div class="field" data-field="rallyLength">
+            <label>Jugando con alguien de tu nivel, ¿cuántos golpes seguidos aguantas?<span class="req">*</span></label>
+            <div class="hint">Un cálculo aproximado basta. Nos ayuda a separar Principiante de Intermedio.</div>
+            <div class="opts c2" data-opts>
+              <label class="opt"><input type="radio" name="rallyLength" value="R0_3" /><span class="dot"></span><span class="opt-body"><span class="ot">0 a 3</span><span class="od">La pelota se cae rápido.</span></span></label>
+              <label class="opt"><input type="radio" name="rallyLength" value="R4_7" /><span class="dot"></span><span class="opt-body"><span class="ot">4 a 7</span></span></label>
+              <label class="opt"><input type="radio" name="rallyLength" value="R8_15" /><span class="dot"></span><span class="opt-body"><span class="ot">8 a 15</span></span></label>
+              <label class="opt"><input type="radio" name="rallyLength" value="R16P" /><span class="dot"></span><span class="opt-body"><span class="ot">16 o más</span><span class="od">Puedo pelotear sin problema.</span></span></label>
+              <label class="opt"><input type="radio" name="rallyLength" value="UNSURE" /><span class="dot"></span><span class="opt-body"><span class="ot">No estoy seguro</span><span class="od">La organización lo revisará.</span></span></label>
+            </div>
+            <div class="err">Selecciona una opción.</div>
+          </div>
+
+          <div class="field" data-field="techniques">
+            <label>¿Qué puedes hacer conscientemente cuando juegas?<span class="req">*</span></label>
+            <div class="hint">Marca todo lo que apliques. No hace falta que salga perfecto: basta con que lo intentes a propósito y te funcione. Si no aplica ninguna, marca "Ninguna".</div>
+            <div class="opts c2" data-opts>
+              <label class="opt opt-none"><input type="checkbox" name="techniques" value="NONE" /><span class="dot"></span><span class="opt-body"><span class="ot">Ninguna</span></span></label>
+              <label class="opt"><input type="checkbox" name="techniques" value="RALLY" /><span class="dot"></span><span class="opt-body"><span class="ot">Mantener un peloteo básico</span><span class="od">Devuelvo con cierta consistencia.</span></span></label>
+              <label class="opt"><input type="checkbox" name="techniques" value="SERVE" /><span class="dot"></span><span class="opt-body"><span class="ot">Saque con efecto</span><span class="od">Le pongo efecto a propósito.</span></span></label>
+              <label class="opt"><input type="checkbox" name="techniques" value="CHOP" /><span class="dot"></span><span class="opt-body"><span class="ot">Corte / chop consistente</span><span class="od">Cortado o backspin controlado.</span></span></label>
+              <label class="opt"><input type="checkbox" name="techniques" value="ATTACK" /><span class="dot"></span><span class="opt-body"><span class="ot">Ataque ocasional</span><span class="od">Remato o acelero cuando la pelota queda alta.</span></span></label>
+              <label class="opt"><input type="checkbox" name="techniques" value="TOPSPIN" /><span class="dot"></span><span class="opt-body"><span class="ot">Topspin consciente</span><span class="od">No hace falta que sea perfecto.</span></span></label>
+            </div>
+            <div class="err">Selecciona al menos una opción.</div>
+          </div>
+
+          <div class="field" data-field="participatedPreviously">
+            <label>¿Jugaste el torneo pasado?<span class="req">*</span></label>
+            <div class="opts c2" data-opts>
+              <label class="opt"><input type="radio" name="participatedPreviously" value="YES" /><span class="dot"></span><span class="opt-body"><span class="ot">Sí, ya jugué antes</span></span></label>
+              <label class="opt"><input type="radio" name="participatedPreviously" value="NO" /><span class="dot"></span><span class="opt-body"><span class="ot">No, es mi primera vez</span></span></label>
+            </div>
+            <div class="hint">Si ya jugaste, tu resultado anterior dice tu nivel real mejor que cualquier respuesta.</div>
+            <div class="err">Selecciona una opción.</div>
+          </div>
+
+          <div class="cond" id="condPrev">
+            <div class="cond-inner">
+              <div class="two">
+                <div class="field" data-field="prevCategory">
+                  <label>¿En qué categoría jugaste?</label>
+                  <select name="prevCategory">
+                    <option value="" disabled selected>Selecciona…</option>
+                    <option value="PRINCIPIANTE">Principiante</option>
+                    <option value="INTERMEDIO">Intermedio</option>
+                    <option value="AVANZADO_OPEN">Avanzado / Open</option>
+                    <option value="UNKNOWN">No recuerdo</option>
+                  </select>
+                </div>
+                <div class="field" data-field="prevResult">
+                  <label>¿Hasta dónde llegaste?</label>
+                  <select name="prevResult">
+                    <option value="" disabled selected>Selecciona…</option>
+                    <option value="NO_GROUP_PASS">No pasé de fase de grupos</option>
+                    <option value="GROUP_PASS">Clasifiqué de grupos</option>
+                    <option value="QF">Cuartos de final</option>
+                    <option value="SEMIFINAL">Semifinal</option>
+                    <option value="FINALIST">Finalista</option>
+                    <option value="CHAMPION">Campeón</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field" data-field="prevNickname">
+                <label for="f-prevNickname">¿Con qué apodo jugaste? <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+                <input id="f-prevNickname" type="text" name="prevNickname" maxlength="60" placeholder="Como aparecías en los grupos del torneo pasado" />
+                <div class="hint">Nos sirve para enlazar tu historial. Si no lo recuerdas, déjalo vacío.</div>
+              </div>
+            </div>
+          </div>
+          </div><!-- /levelRest -->
+        </section>
+
+        <!-- ─── PASO 3: CONFIRMAR ─────────────────────────── -->
+        <section class="step" data-step-panel="2">
+          <div class="step-h"><span class="n">3</span><h2>Confirmar y enviar</h2></div>
+          <p class="step-sub">Revisa tus datos antes de enviar. Puedes regresar a editar cualquier paso.</p>
+
+          <div class="review" id="review">
+            <div class="review-card">
+              <h3><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>Datos personales<button type="button" class="rv-edit" data-go="0">Editar</button></h3>
+              <div class="rv-grid" id="rvPersonal"></div>
+            </div>
+            <div class="review-card">
+              <h3><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>Nivel<button type="button" class="rv-edit" data-go="1">Editar</button></h3>
+              <div class="rv-cat" id="rvCat"><span class="rv-dot"></span><span id="rvCatLabel">—</span></div>
+              <div class="rv-prov">Categoría <b>provisional</b>. La organización puede corregirla durante los primeros 7 días y después de tu primer partido. Al disputar dos partidos queda congelada.</div>
+              <div class="rv-why"><span class="rv-why-h">Motivos principales</span><ul id="rvReasons"></ul></div>
+              <div class="rv-cat-note" id="rvCatNote">La organización podrá ajustar tu categoría antes del sorteo con base en tu historial y referencias.</div>
+              <div class="rv-grid" style="margin-top:14px" id="rvLevel"></div>
+            </div>
+
+            <div class="review-card">
+              <h3><span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Reglamento y aceptaciones</h3>
+              <div class="consents">
+                <label class="consent" data-consent="allTerms"><input type="checkbox" required /><span class="cbox"></span><p>Al marcar esta casilla confirmo que leí todos los <a href="#" id="openTerms">términos y condiciones</a> del torneo.</p></label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+          <button type="button" class="btn-prev" id="btnPrev" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M15 5l-7 7 7 7"/></svg> Anterior
+          </button>
+          <span class="draft-note" id="draftNote">Tus respuestas se guardan automáticamente</span>
+          <span class="spacer"></span>
+          <button type="button" class="btn-next" id="btnNext">
+            Siguiente <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button type="submit" class="btn-submit" id="btnSubmit" style="display:none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 6"/></svg>
+            Enviar preinscripción
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="side">
+      <div class="hud card">
+        <h3><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Cómo funciona</h3>
+        <div class="ilist">
+          <div class="it"><span class="b">1</span><div class="tx"><b>Preinscripción</b><small>Llenas este formulario y obtienes tu categoría provisional.</small></div></div>
+          <div class="it"><span class="b">2</span><div class="tx"><b>Pago y confirmación</b><small>Realizas el pago y la organización confirma tu lugar.</small></div></div>
+          <div class="it"><span class="b">3</span><div class="tx"><b>Sorteo y juego</b><small>Tu grupo se decide en un sorteo <b>físico y presencial</b> con pelotas, dentro de tu categoría. La página solo publica el resultado.</small></div></div>
+        </div>
+      </div>
+
+      <div class="hud card">
+        <h3><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>Categorías</h3>
+        <div class="cat-leg">
+          <div class="cl"><span class="sw" style="background:#37bb66"></span><b>Principiantes</b> · apenas empiezas</div>
+          <div class="cl"><span class="sw" style="background:#3a63f0"></span><b>Intermedios</b> · juego casual</div>
+          <div class="cl"><span class="sw" style="background:#dd3b2c"></span><b>Avanzados</b> · competitivo</div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<!-- RULES MODAL -->
+<div class="rules-modal" id="rulesModal" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+  <div class="rules-box">
+    <div class="rules-head">
+      <h3 id="rulesTitle">Reglamento del torneo</h3>
+      <button type="button" class="x" id="rulesClose" aria-label="Cerrar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="rules-body">
+      <h4>1 · Categorías y revisión</h4>
+      <p>Las categorías vigentes son <b>Principiante, Intermedio y Avanzado / Open</b> (no existe la categoría «Novato»: los registros históricos con ese nombre se muestran como Principiante). La organización revisa cada preinscripción y puede ajustar la categoría. Con <b>0 o 1 partido disputado</b> todavía puedes ser reclasificado —ese único partido se anula y empiezas desde cero en la nueva categoría—; al llegar a <b>2 partidos disputados tu categoría queda congelada</b>.</p>
+      <h4>2 · Inscripción, sorteo y altas extemporáneas</h4>
+      <p>La preinscripción no garantiza el lugar: se confirma únicamente después del pago y de la confirmación de la organización. El <b>sorteo de grupos es físico y presencial</b> (se extrae una pelota con tu nombre y otra con el grupo); la página solo publica el resultado. Durante los <b>primeros 7 días</b> (una semana) de la fase de grupos aún pueden incorporarse participantes extemporáneos, aceptando un <b>calendario comprimido</b> y contactando a sus rivales dentro de 24 horas. <b>Después del día 7</b> no hay nuevas altas ni creación de grupos.</p>
+      <h4>3 · Reglas de juego</h4>
+      <ul>
+        <li>Sets a 11 puntos. Los partidos se juegan <b>al mejor de 3 sets</b> en todas las categorías.</li>
+        <li><b>Semifinales y finales al mejor de 5 sets.</b></li>
+        <li>Cambio de saque cada 2 puntos; en empate 10-10 el set sube y el saque alterna cada punto hasta una diferencia de 2.</li>
+        <li>Calzado adecuado obligatorio. Raqueta propia recomendada.</li>
+      </ul>
+      <h4>4 · Conducta</h4>
+      <p>Se exige respeto a los rivales, jueces y a la mesa. Comportamientos antideportivos llevarán a sanción o descalificación.</p>
+      <h4>5 · Privacidad y contacto <span style="color:var(--red2);font-family:var(--disp);font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;vertical-align:middle;margin-left:6px;border:1px solid var(--red2);border-radius:4px;padding:2px 6px">Muy importante</span></h4>
+      <p style="border-left:3px solid var(--red2);padding-left:12px"><b style="color:var(--text)">Tu número de teléfono será información pública para los demás participantes.</b> Al inscribirte, tu número se incluye en el botón de WhatsApp del torneo para que tus rivales y los integrantes de tu grupo puedan contactarte y coordinar los partidos. Si no estás de acuerdo con que tu número sea visible, no completes la inscripción.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div class="rules-modal" id="termsModal" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+  <div class="rules-box">
+    <div class="rules-head">
+      <h3 id="termsTitle">Términos y condiciones</h3>
+      <button type="button" class="x" id="termsClose" aria-label="Cerrar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="rules-body">
+      <p class="terms-intro">Al marcar la casilla de aceptación en el formulario, confirmas que:</p>
+      <div class="consents">
+        <div class="consent term-view"><span class="tnum">1</span><p>Respondiste con honestidad las preguntas de nivel y aceptas que la organización pueda <b>cambiar tu categoría</b> antes del sorteo si tu experiencia o nivel no corresponde con la categoría provisional asignada.</p></div>
+        <div class="consent term-view"><span class="tnum">2</span><p>Entiendes que llenar este formulario <b>no garantiza tu lugar</b>. Tu inscripción queda confirmada únicamente después de realizar el pago y recibir confirmación de la organización.</p></div>
+        <div class="consent term-view"><span class="tnum">3</span><p>Entiendes que el sorteo de grupos es <b>físico y presencial</b>, y que las altas extemporáneas solo se aceptan durante los <b>primeros 7 días</b> (una semana) de la fase de grupos, con calendario comprimido. Después del día 7 ya no hay nuevas altas ni grupos nuevos.</p></div>
+        <div class="consent term-view"><span class="tnum">4</span><p>Entiendes y aceptas que tu número de teléfono será <b>información pública</b>: se incluirá en el botón de WhatsApp del torneo y será visible para tus rivales e integrantes de tu grupo, para coordinar los partidos.</p></div>
+        <div class="consent term-view"><span class="tnum">5</span><p>Leíste y aceptas las <a href="Pagina Torneo.html?reglas=1" id="openRulesFromTerms">reglas del torneo</a>: partidos al mejor de 3 sets (semifinales y finales al mejor de 5), reclasificaciones con 0 o 1 partido disputado, defaults y la ventana de ajustes de 10 días.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<style>
+  .ov-stack{display:flex;flex-direction:column;align-items:center;gap:8px;width:480px;max-width:100%;max-height:100%;overflow-y:auto;padding:2px}
+  .pay-reminder{width:480px;max-width:100%;padding:12px 16px 14px}
+  .pay-reminder h4{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.03em;text-transform:uppercase;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+  .pay-reminder h4 svg{color:var(--red2);width:14px;height:14px}
+  .pr-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+  .pr-cut{position:relative;border:1px solid color-mix(in srgb,var(--red-dk) 45%,transparent);border-radius:9px;padding:9px 11px;
+    clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+  .pr-ticket{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;
+    background:linear-gradient(160deg,rgba(233,216,170,0.16),rgba(233,216,170,0.02) 60%),linear-gradient(180deg,var(--panel2,var(--panel)),var(--panel))}
+  .pr-ticket b{font-family:var(--disp);font-weight:800;font-style:italic;letter-spacing:0.01em;display:flex;align-items:baseline;gap:6px;
+    font-size:40px;color:var(--gold);text-shadow:0 0 9px rgba(237,187,82,0.55)}
+  .pr-amt{color:#edbb52}
+  .pr-ticket .pr-mxn{font-size:0.44em;color:#f2e9d3}
+  .pr-cap{font-family:var(--body);font-size:11.5px;color:var(--muted);flex:1 1 100%}
+  .pr-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pr-presencial{background:linear-gradient(180deg,var(--panel),var(--bg2))}
+  .pr-transferencia{background:linear-gradient(180deg,var(--bg2),var(--bg));position:relative}
+  .pr-lbl-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+  .mp-badge-sm{height:18px;width:auto;object-fit:contain;flex:0 0 auto}
+  .pr-lbl{font-family:var(--disp);font-weight:800;font-style:italic;font-size:13px;letter-spacing:0.01em;text-transform:uppercase;color:var(--red2);display:block;margin-bottom:5px}
+  .pr-lbl-bar{width:22px;height:2px;background:var(--red2);border-radius:2px;margin-bottom:0;display:block}
+  .pr-cut p{font-family:var(--body);font-size:12.5px;color:var(--text);line-height:1.4;margin:0}
+  .pr-cut p b{color:var(--text)}
+  .pr-clabe{display:flex;align-items:center;justify-content:space-between;gap:6px;
+    background:rgba(233,216,170,0.08);border:1px solid rgba(233,216,170,0.3);border-radius:7px;padding:5px 5px 5px 9px}
+  .pr-clabe code{font-family:var(--mono);font-weight:700;font-size:12px;color:var(--gold);letter-spacing:0}
+  .pr-copy{color:#241c0c;background:linear-gradient(180deg,#f0e2bd,var(--gold));border:1px solid rgba(233,216,170,0.6);
+    border-radius:5px;padding:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .pr-copy svg{width:11px;height:11px}
+  .pr-copy .i-check{display:none}
+  .pr-copy.copied{color:#0f2e18;background:linear-gradient(180deg,#a8e8b8,#8fd99a)}
+  .pr-copy.copied .i-copy{display:none}
+  .pr-copy.copied .i-check{display:inline}
+  .pr-name{display:block;font-family:var(--body);font-size:10.5px;color:var(--muted);margin-top:6px}
+  .pr-name b{color:var(--gold)}
+  .pay-note{display:flex;gap:10px;align-items:center;background:rgba(200,201,208,0.08);border:1px solid var(--line2);border-radius:8px;padding:9px 11px}
+  .pn-row{display:flex;gap:8px;align-items:flex-start;flex:1;min-width:0}
+  .pn-row svg{color:var(--red2);flex:0 0 auto;margin-top:1px;width:15px;height:15px}
+  .pn-row p{font-family:var(--body);font-size:11px;line-height:1.4;color:var(--text);margin:0}
+  .pn-row p b{color:var(--gold)}
+  .pn-cta{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto;padding-left:12px;border-left:1px dashed var(--line2)}
+  .pn-cta span{font-family:var(--body);font-size:10.5px;color:var(--text);font-weight:600;white-space:nowrap}
+  .pn-wa{position:relative;font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;
+    color:#eafcd2;padding:9px 20px 9px 12px;display:inline-flex;align-items:center;gap:10px;
+    background:linear-gradient(135deg,rgba(120,180,70,0.35) 0%,rgba(60,110,38,0.3) 60%,rgba(120,180,70,0.22) 100%);
+    border:1.5px solid rgba(150,200,90,0.85);border-radius:9px;text-decoration:none;
+    box-shadow:0 0 12px rgba(120,190,70,0.3);transition:.15s var(--cut)}
+  .pn-wa:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  .pn-wa img{width:26px;height:26px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 0 5px rgba(120,200,70,0.6))}
+  @media(max-width:480px){.pay-note{flex-direction:column;align-items:stretch}.pn-cta{border-left:none;border-top:1px dashed var(--line2);padding-left:0;padding-top:8px;width:100%}.pn-wa{font-size:16px;padding:13px 26px 13px 16px;gap:12px;width:100%;justify-content:center}.pn-wa img{width:32px;height:32px}}
+</style>
+<div class="ov" id="overlay" role="dialog" aria-modal="true">
+  <div class="ov-stack">
+  <div class="hud hud-red pay-reminder">
+    <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Cómo pagar tu entrada</h4>
+    <div class="pr-grid">
+      <div class="pr-cut pr-ticket">
+        <b><span class="pr-amt">$35</span><span class="pr-mxn">MXN</span></b>
+        <span class="pr-cap">Costo de entrada · cualquier categoría</span>
+      </div>
+      <div class="pr-methods">
+        <div class="pr-cut pr-presencial">
+          <span class="pr-lbl">Presencial</span><span class="pr-lbl-bar"></span>
+          <p>En las pimponeras, con <b>Demian</b>.</p>
+        </div>
+        <div class="pr-cut pr-transferencia">
+          <span class="pr-lbl">Transferencia</span>
+          <div class="pr-lbl-bar-row">
+            <span class="pr-lbl-bar"></span>
+            <img class="mp-badge-sm" src="assets/mercadopago-logo.png" alt="Mercado Pago" />
+          </div>
+          <span class="pr-clabe"><code>722969010457609861</code><button type="button" class="pr-copy" aria-label="Copiar número de cuenta" onclick="navigator.clipboard.writeText('722969010457609861');this.classList.add('copied');setTimeout(()=&gt;this.classList.remove('copied'),1600)"><svg class="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><svg class="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></button></span>
+          <span class="pr-name">Cuenta a nombre de <b>Demian</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="pay-note">
+      <div class="pn-row">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v13H8l-4 4z"/><path d="M8 8h8M8 12h5"/></svg>
+        <p>Si pagas por transferencia, envía tu <b>comprobante de pago con tu nombre</b> al momento del registro por WhatsApp. También puedes escribirle a <b>Demian</b> por ahí para coordinar tu pago o cualquier duda.</p>
+      </div>
+      <div class="pn-cta">
+        <span>¿Dudas o ya pagaste?</span>
+        <a class="pn-wa" href="https://wa.me/525520308289" target="_blank" rel="noopener noreferrer" aria-label="Enviar comprobante de pago por WhatsApp">
+          <img src="assets/whatsapp-icon.png?v=2" alt="" />
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hud hud-red ticket">
+    <div class="top">
+      <div class="badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 6"/></svg></div>
+      <h2>Preinscripción registrada</h2>
+      <p id="okMsg">Tu lugar quedará confirmado después de realizar el pago y recibir la confirmación de la organización. La categoría podrá ajustarse antes del sorteo.</p>
+    </div>
+    <div class="stub">
+      <div class="s"><small>Participante</small><b id="tkName">—</b></div>
+      <div class="s"><small>Folio</small><b class="gold" id="tkFolio">—</b></div>
+      <div class="s"><small>Categoría provisional</small><b id="tkCat">—</b></div>
+      <div class="s"><small>Fecha de registro</small><b id="tkDate">—</b></div>
+    </div>
+    <div class="foot">
+      <!-- Se oculta desde registro.js mientras REGISTRO_CONFIG.pending.whatsappUrl siga en true -->
+      <a class="wa" id="waLink" style="display:none" target="_blank" rel="noopener noreferrer">
+        <img class="wa-ic" src="assets/wa-community-icon.png" alt="" />
+        Entrar a la comunidad de WhatsApp
+      </a>
+      <a class="pri" href="Pagina Torneo.html">
+        Ir al torneo
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/registration.js"></script>
+<script src="registro-config.js"></script>
+<script src="registro-storage.js"></script>
+<script src="supabase/registro-bridge.js"></script>
+<script src="registro-scoring.js"></script>
+<script src="registro.js"></script>
+<link rel="stylesheet" href="css/reglas-torneo.css?v=124">
+<script src="supabase/format-engine.js?v=124"></script>
+<script src="reglas-torneo.js?v=125"></script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(function(){});</script>
+<script>
+(function(){
+  var sel  = document.getElementById('f-faculty');
+  var btn  = document.getElementById('facBtn');
+  var menu = document.getElementById('facMenu');
+  var lbl  = document.getElementById('facLabel');
+  var wrap = document.getElementById('facWrap');
+  var condCareer = document.getElementById('condCareer');
+
+  function toggleCareer(){
+    if(condCareer) condCareer.classList.toggle('show', sel.value === 'INGENIERIA');
+  }
+
+  function syncLabel(){
+    var val = sel.value;
+    menu.querySelectorAll('.fac-item').forEach(function(item){
+      var active = item.dataset.val === val;
+      item.classList.toggle('fac-sel', active);
+      if(active) lbl.textContent = item.textContent;
+    });
+  }
+
+  syncLabel(); // sincroniza si registro.js ya restauró un valor guardado
+  toggleCareer();
+
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    if(open){
+      var selected = menu.querySelector('.fac-item.fac-sel');
+      if(selected) selected.scrollIntoView({block:'nearest'});
+    }
+  });
+
+  menu.addEventListener('click', function(e){
+    var item = e.target.closest('.fac-item');
+    if(!item) return;
+    sel.value = item.dataset.val;
+    syncLabel();
+    toggleCareer();
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    var field = document.querySelector('[data-field="faculty"]');
+    if(field) field.classList.remove('invalid');
+  });
+
+  document.addEventListener('click', function(e){
+    if(!wrap.contains(e.target)){
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+
+/* Dropdown personalizado de CARRERA — idéntico al de facultad */
+(function(){
+  var sel  = document.getElementById('f-career');
+  var btn  = document.getElementById('carBtn');
+  var menu = document.getElementById('carMenu');
+  var lbl  = document.getElementById('carLabel');
+  var wrap = document.getElementById('carWrap');
+  if(!sel || !btn || !menu) return;
+
+  function syncLabel(){
+    var val = sel.value;
+    var found = false;
+    menu.querySelectorAll('.fac-item').forEach(function(item){
+      var active = item.dataset.val === val;
+      item.classList.toggle('fac-sel', active);
+      if(active){ lbl.textContent = item.textContent; found = true; }
+    });
+    if(!found){ lbl.textContent = 'Selecciona tu carrera…'; lbl.classList.add('fac-ph'); }
+    else { lbl.classList.remove('fac-ph'); }
+  }
+
+  syncLabel(); // sincroniza si registro.js ya restauró un valor guardado
+
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    if(open){
+      var selected = menu.querySelector('.fac-item.fac-sel');
+      if(selected) selected.scrollIntoView({block:'nearest'});
+    }
+  });
+
+  menu.addEventListener('click', function(e){
+    var item = e.target.closest('.fac-item');
+    if(!item) return;
+    sel.value = item.dataset.val;
+    syncLabel();
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    var field = document.querySelector('[data-field="career"]');
+    if(field) field.classList.remove('invalid');
+  });
+
+  document.addEventListener('click', function(e){
+    if(!wrap.contains(e.target)){
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
+<script src="navbar-fi.js?v=1"></script>
+</body>
+</html>

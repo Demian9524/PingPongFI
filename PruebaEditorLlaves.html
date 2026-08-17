@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba · Editor de llaves (sin backend)</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/bracket-final.css">
+<link rel="stylesheet" href="css/bracket-canvas.css?v=213">
+<link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.4;padding:18px 22px 60px;background-image:radial-gradient(130% 70% at 50% -8%,var(--page-tint) 0%,var(--bg) 52%)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--gold)}a:hover{color:var(--red2)}
+h1{font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+h1 .r{color:var(--red2)}
+.sub{font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.ba-panel{margin:14px 0;padding:16px 18px;border:1px solid var(--line2);border-radius:12px;background:var(--panel)}
+.ba-panel h3{font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+.ba-panel h3 small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:1.6px;color:var(--muted);font-style:normal;text-transform:none;margin-top:4px}
+.ba-note{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;margin-top:10px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tools button{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:8px 14px;border-radius:7px;border:1px solid var(--line2);color:var(--text);background:var(--raise)}
+.tools button:hover{background:var(--panel2)}
+.tools .gold{background:color-mix(in srgb,var(--gold) 18%,transparent);border-color:color-mix(in srgb,var(--gold) 55%,transparent);color:var(--gold)}
+#pub{margin-top:18px;padding:16px;border:1px solid var(--line2);border-radius:12px;background:var(--bg2)}
+#pub h3{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+</style>
+</head>
+<body class="bk-adminmode" data-cat="intermedio">
+<h1>Prueba del editor de <span class="r">llaves</span></h1>
+<p class="sub">Datos de demostración en memoria · sin Supabase · sirve para revisar el comportamiento del lienzo</p>
+
+<div class="tools">
+  <button id="tValidate">Validar llave</button>
+  <button id="tPublish" class="gold">Publicar (vista pública simulada)</button>
+  <button id="tDump">Ver JSON del borrador</button>
+</div>
+
+<section class="ba-panel" id="baCanvas" hidden>
+  <h3>Editor de la llave<small>Lienzo libre: crea, mueve, conecta y siembra a mano.</small></h3>
+  <div class="bkc-wrap bkc-editor">
+    <div class="bkc-bar" id="bkcBar"></div>
+    <div class="bkc-view" id="bkcView">
+      <div id="bkcStage"></div>
+      <div class="bkc-zoom">
+        <button id="bkcZoomOut" type="button" title="Alejar">−</button>
+        <span id="bkcZoomLbl">100%</span>
+        <button id="bkcZoomIn" type="button" title="Acercar">+</button>
+        <button id="bkcZoom100" type="button" title="Tamaño real">1:1</button>
+        <button id="bkcFit" type="button" title="Ajustar todo">Ajustar</button>
+      </div>
+      <div class="bkc-hint"><b>¿Cómo conectar?</b><span>Cada tarjeta tiene 3 anclajes por lado (arriba · centro · abajo) y no se conecta fuera de ellos · arrastra del punto de salida (centro, color de la categoría) a cualquier anclaje de entrada · al mover, las guías marcan alineación, distancias iguales y simetría (mantén Alt para moverlo libre) · arrastra un anclaje ya conectado para moverlo · rueda = zoom · Alt = desplazar · clic derecho = menú</span></div>
+    </div>
+    <div class="bkc-insp" id="bkcInsp"></div><div class="bkc-tray" id="bkcTray"></div>
+  </div>
+  <div class="bkc-val" id="bkcVal" hidden></div>
+</section>
+
+<section id="pub" hidden>
+  <h3>Vista pública — misma llave, sin herramientas</h3>
+  <div id="bracket"><div class="hud"><div class="bkt" id="bracket-cols"></div><div class="gloria">« ¡La gloria te espera! »</div></div></div>
+</section>
+
+<script>
+// ── backend simulado: 4 grupos de 4, con posiciones ya calculadas ────────
+(function(){
+  const NAMES = ['Chuy','Pau','Rafa','Nadia','Tavo','Iker','Bere','Memo','Sol','Beto','Dani','Kari','Fer','Lalo','Rita','Nico'];
+  const FAC = ['INGENIERIA','QUIMICA','CIENCIAS','DERECHO'];
+  const CAR = ['MECATRONICA','CIVIL','COMPUTACION','INDUSTRIAL'];
+  const groups = ['A','B','C','D'].map((label, gi) => ({
+    group_id: 100 + gi, group_label: label,
+    rows: [0,1,2,3].map(i => ({
+      registration_id: '0000000' + (gi + 1) + '-0000-4000-8000-00000000000' + i,
+      nickname: NAMES[gi * 4 + i],
+      wins: 3 - i, matches_played: 3, sets_won: 9 - i * 2, sets_lost: 2 + i * 2,
+      set_pct: (9 - i * 2) / 11, faculty_code: FAC[(gi + i) % 4],
+      career_code: FAC[(gi + i) % 4] === 'INGENIERIA' ? CAR[i % 4] : null
+    }))
+  }));
+  window.SB = {
+    from(){ return {
+      select(){ return this; }, eq(){ return this; }, in(){ return this; }, limit(){ return this; },
+      then(res){ return Promise.resolve({ data: groups.map(g => ({ group_id:g.group_id, group_label:g.group_label })), error:null }).then(res); }
+    }; },
+    rpc(name, p){
+      if (name === 'get_group_standings'){
+        const g = groups.find(x => x.group_id === p.p_group_id);
+        return Promise.resolve({ data: g ? g.rows : [], error:null });
+      }
+      return Promise.resolve({ data:null, error:{ message:'RPC_MISSING' } });
+    }
+  };
+})();
+</script>
+<script src="supabase/format-engine.js"></script>
+<script src="supabase/logo-resolver.js"></script>
+<script src="supabase/bracket-topology.js?v=178"></script>
+<script src="supabase/bracket-canvas.js?v=229"></script>
+<script src="supabase/bracket-config.js?v=192"></script>
+<script src="supabase/bracket-seeds.js"></script>
+<script src="torneo-bracket-render.js?v=197"></script>
+<script src="torneo-bracket-dust.js?v=227"></script>
+<script src="torneo-bracket-canvas.js?v=229"></script>
+<script src="bracket-canvas-guides.js?v=211"></script>
+<script src="bracket-canvas-interact.js?v=228"></script>
+<script src="bracket-canvas-editor.js?v=233"></script>
+<script>
+(function(){
+  const CFG = window.SB_BRACKETCFG;
+  const cfg = CFG.emptyConfig({ categoryLabel:'INTERMEDIO' });
+  CFG.applySystem(cfg, { groupCount:4, effectiveSizes:[4,4,4,4] });
+  const S = { cfg, edcatId: 7, dirty:false, view:'draft', catKey:'intermedio', warns:[] };
+  window.BA = {
+    S, CFG,
+    catLabel: () => 'INTERMEDIO',
+    markDirty(){ S.dirty = true; window.BKC_ED && window.BKC_ED.renderBar(); },
+    markDirtyQuiet(){ S.dirty = true; window.BKC_ED && window.BKC_ED.renderBar(); },
+    refreshStatus(){},
+    openOverlay(){}, closeOverlay(){}, promptDialog(){ return Promise.resolve('ok'); }
+  };
+  window.BA_SLOT = { openSlot(id){ alert('Aquí se abre el editor de tarjeta del nodo ' + id + ' (BracketAdmin.html).'); } };
+  window.BKC_ED.mount();
+  document.getElementById('tValidate').onclick = () => window.BKC_ED.validate(true);
+  document.getElementById('tDump').onclick = () => {
+    const c = CFG.stripRuntime(S.cfg);
+    console.log(c);
+    alert('JSON en la consola. Nodos: ' + Object.keys(c.slots).length + ' · conexiones: ' + (c.connections || []).length);
+  };
+  document.getElementById('tPublish').onclick = () => {
+    const box = document.getElementById('pub');
+    box.hidden = false;
+    window.TORNEO_BKT.render(document.getElementById('bracket-cols'), JSON.parse(JSON.stringify(S.cfg)),
+      { catLabel:'INTERMEDIO', source:'published' });
+  };
+})();
+</script>
+</body>
+</html>

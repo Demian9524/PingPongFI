@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Preparación del sorteo eliminatorio · Torneo de Ping Pong FI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/pre-group-print.css?v=167">
+<style>
+  .who{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .kp-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 14px}
+  .kp-tab{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:9px 16px;border:1px solid var(--line2);color:var(--muted);border-radius:8px}
+  .kp-tab.on{color:var(--text);border-color:var(--red2);background:var(--raise)}
+  .kp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 16px}
+  .kp-kpi{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--raise)}
+  .kp-kpi b{font-family:var(--disp);font-size:24px;font-weight:800;display:block}
+  .kp-kpi small{color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+  .kp-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:0 0 16px}
+  .kp-fld{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+  .kp-sec{font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin:22px 0 8px}
+  .kp-sub{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin:18px 0 6px}
+  .kp-plan{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid var(--line2);border-radius:10px;padding:12px 14px;background:var(--raise)}
+  .kp-plan-k{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+  .kp-plan b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:.03em;text-transform:uppercase;color:var(--gold)}
+  .kp-plan-tag{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--green);border:1px solid rgba(116,169,138,0.55);border-radius:4px;padding:4px 9px;white-space:nowrap}
+  .kp-plan .kp-note{flex:1 1 300px;margin:0}
+  .kp-eff{display:flex;flex-direction:column;gap:7px;margin:12px 0 0}
+  .kp-effrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .kp-effrow .g{font-family:var(--disp);font-weight:800;font-size:13px;text-transform:uppercase;min-width:82px}
+  .kp-effrow select{min-height:36px}
+  .kp-effrow .e{font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--green)}
+  table.kp{width:100%;border-collapse:collapse;font-size:13px}
+  .kp th,.kp td{padding:7px 9px;text-align:center;border-bottom:1px solid var(--line)}
+  .kp th{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .kp td.l,.kp th.l{text-align:left}
+  .kp-rules{border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;color:var(--muted);font-size:13px}
+  .kp-rules li{margin:5px 0}
+  .kp-list{list-style:none;display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .kp-list li{border-left:2px solid var(--line2);padding-left:10px}
+  .kp-note{color:var(--muted);font-size:12px}
+  .kp-mismatch{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 0;padding:12px 14px;border-radius:10px;
+    border:1px solid color-mix(in srgb,var(--err,#e4564a) 55%,transparent);background:color-mix(in srgb,var(--err,#e4564a) 12%,transparent)}
+  .kp-mismatch b{font-family:var(--disp);font-weight:800;font-size:13.5px;letter-spacing:.04em;text-transform:uppercase;flex:1 1 100%}
+  .kp-mismatch span{flex:1 1 340px;font-size:12.5px;line-height:1.5;color:var(--text)}
+  .kp-mismatch i{font-style:normal;color:var(--gold)}
+  .kp-sync{margin:10px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--green)}
+  .kp-sync.is-off{color:var(--gold)}
+  .kp-sync b{color:inherit}
+  .kp-adv{margin:12px 0 0;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+  .kp-adv>summary{cursor:pointer;list-style:none;padding:10px 14px;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+  .kp-adv>summary::-webkit-details-marker{display:none}
+  .kp-adv>summary::before{content:'▸ ';color:var(--gold)}
+  .kp-adv[open]>summary::before{content:'▾ '}
+  .kp-adv>summary b{color:var(--gold)}
+  .kp-adv>summary i{font-style:normal;color:var(--green)}
+  .kp-adv .kp-eff,.kp-adv .kp-note{padding:0 14px}
+  .kp-adv .kp-note{padding-bottom:12px}
+  .kp-plan{flex-direction:row;flex-wrap:wrap}
+  html.embed nav.top,html.embed .skip-link{display:none!important}
+  html.embed .wrap{padding-top:6px}
+  html.embed .head h1{font-size:22px}
+  @media print{
+    body{background:#fff;color:#000}
+    nav.top,.kp-controls,.kp-tabs,.no-print,.kp-rules,.kp-grid{display:none !important}
+    .hud{border:none;box-shadow:none;padding:0}
+    .kp th,.kp td{border-color:#999;color:#000}
+    .kp-sec{color:#000}
+  }
+</style>
+<script>if(location.search.indexOf('embed=1')>=0)document.documentElement.classList.add('embed');</script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top" data-site-nav data-active="" data-admin="off" aria-label="Principal">
+  <template data-nav-right>
+    <span class="who" id="whoami"></span>
+    <a class="btn btn-ghost" href="ControlTorneo.html">Centro de control</a>
+    <a class="btn btn-ghost" href="TableroGrupos.html">Tablero de grupos</a>
+    <a class="btn btn-ghost" href="BracketAdmin.html">Bracket</a>
+    <button class="btn btn-ghost" id="btnLogout" type="button">Cerrar sesión</button>
+  </template>
+</nav>
+
+<main class="wrap" id="contenido">
+  <div class="hud center" id="noSession" style="display:none">
+    <h1>Sorteo <span style="color:var(--red2)">eliminatorio</span></h1>
+    <p class="sub">Esta sección es exclusiva del staff. Inicia sesión desde el panel de organizadores.</p>
+    <a class="btn btn-main" href="Admin.html" style="width:100%;justify-content:center">Ir a iniciar sesión</a>
+  </div>
+  <div class="hud center" id="deniedView" style="display:none">
+    <h1 style="color:var(--err)">Sin permisos</h1>
+    <p class="sub">Tu cuenta está autenticada pero no tienes permisos de organizador.</p>
+    <button class="btn btn-ghost" id="btnDeniedLogout" style="width:100%;justify-content:center" type="button">Salir</button>
+  </div>
+
+  <div id="prepView" style="display:none">
+    <div class="head">
+      <div>
+        <h1>Preparación del <span class="r">sorteo eliminatorio</span></h1>
+        <p>El sorteo se realiza físicamente con pelotas. Esta página solo calcula los bombos e imprime los papeles; <b>no</b> selecciona rivales ni crea partidos. Los emparejamientos que salgan se capturan en la pestaña «Editar el bracket».</p>
+      </div>
+      <div class="nav-right" style="margin-left:auto;gap:10px">
+        <button class="btn btn-ghost" id="btnReload" type="button">Actualizar</button>
+        <button class="btn btn-main no-print" id="btnPrint" type="button">Imprimir / mostrar lista de pelotas</button>
+      </div>
+    </div>
+
+    <div class="kp-tabs" id="kpTabs" role="tablist" aria-label="Categorías"></div>
+    <div class="kp-controls no-print">
+      <label class="kp-fld" style="min-width:300px">Formato a preparar
+        <select class="filter" id="kpVariant"></select>
+      </label>
+      <span class="kp-note">El formato lo determina el reglamento a partir del número de grupos y del tamaño efectivo de cada uno. La alternativa manual solo aparece cuando el reglamento contempla una excepción.</span>
+    </div>
+    <div id="kpPlan" class="no-print" style="margin:0 0 14px"></div>
+    <div class="kp-note" id="kpWarn" style="display:none;color:var(--gold);border:1px solid var(--line2);border-radius:8px;padding:10px 14px;margin:0 0 14px" aria-live="polite"></div>
+    <div class="kp-grid" id="kpKpis" data-screen-label="Resumen eliminatoria"></div>
+
+    <div class="kp-rules">
+      <b>Reglas del sorteo físico (informativas)</b>
+      <ul>
+        <li><b>Bombo 1</b> = todos los primeros · <b>Bombo 2</b> = todos los segundos · <b>Bombo 3</b> = terceros seleccionados. El bombo lo define la posición de grupo, nada más.</li>
+        <li>Dentro del Bombo 1 y del Bombo 2 <b>no existe orden interno</b>: los primeros no se comparan entre sí y los segundos tampoco.</li>
+        <li>Si el formato tiene pases directos, los reciben <b>todos los primeros</b> con exactamente el mismo privilegio. Nunca algunos sí y otros no.</li>
+        <li>Los únicos comparables entre grupos distintos son los <b>terceros</b>, y solo contra terceros del <b>mismo tamaño efectivo</b>: Nivel A (grupos de 5) → Nivel B (grupos de 4) → Nivel C (grupos de 3, solo si es indispensable).</li>
+        <li>Criterios entre terceros del mismo nivel: victorias → diferencia de sets → % de sets ganados. <b>No hay criterios de puntos</b> porque la base no guarda puntos por set.</li>
+        <li>Solo se desempata cuando el empate cruza la <b>última plaza disponible</b>; si todos clasifican o todos quedan fuera, no se juega nada.</li>
+        <li>Evitar rivales del mismo grupo en la primera ronda; si sale, reextracción y se registra el motivo.</li>
+        <li>La posición del enfrentamiento en el bracket se sortea con la caja de posiciones. Publicada la llave, <b>no se vuelve a sortear</b>.</li>
+        <li>No cuentan partidos CANCELLED ni anulados para clasificación; los walkover cuentan con su marcador oficial.</li>
+      </ul>
+    </div>
+
+    <div class="kp-rules no-print">
+      <b>Documentos para el sorteo físico</b>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn btn-ghost" id="kpDocPots" type="button">Preparar papeletas de bombos</button>
+        <button class="btn btn-ghost" id="kpDocMatches" type="button">Preparar cajas de posiciones y acceso</button>
+        <button class="btn btn-ghost" id="kpDocMaster" type="button">Imprimir lista maestra</button>
+        <button class="btn btn-ghost" id="kpDocActa" type="button">Imprimir acta</button>
+      </div>
+      <p class="kp-note" style="margin:8px 0 0">Las papeletas de bombos y las cajas salen en el <b>mismo papelito físico del sorteo de grupos</b>: 80 × 30 mm, cuatro módulos, doblado en cuatro. Imprime al 100 %, sin ajustar a página. La lista maestra y el acta salen como hoja A4 con la misma piel del acta oficial. Solo vistas derivadas: nada se guarda en Supabase.</p>
+    </div>
+
+    <div id="kpBody" aria-live="polite"></div>
+  </div>
+
+  <div class="state" id="bootState" aria-live="polite"><span class="spin" aria-hidden="true">◌</span> Comprobando sesión…</div>
+</main>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/auth.js"></script>
+<script src="supabase/admin.js"></script>
+<script src="supabase/ui.js"></script>
+<script src="supabase/nav.js"></script>
+<script src="supabase/group-board-core.js"></script>
+<script src="supabase/format-engine.js?v=163"></script>
+<script src="supabase/admin-actions.js"></script>
+<script src="supabase/pre-group-print.js?v=166"></script>
+<script src="supabase/knockout-print.js?v=167"></script>
+<script src="supabase/knockout-prep.js?v=168"></script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(function(){});</script>
+</body>
+</html>
