@@ -75,15 +75,35 @@
       reasons.push('Perteneces o entrenas con el representativo de tenis de mesa.');
       flag('REPRESENTATIVE', 'Representativo: juega en Avanzados con pala de madera para emparejar.');
     }
-    else if (s.privateTraining === 'GE1M'){
+    else if (s.privateTraining === 'GE1M' || s.privateTraining === 'LT1M'){
       category = 'AVANZADO_OPEN';
-      reasons.push('Entrenamiento formal de un mes o más (clases, profesor o coach).');
-      flag('PRIVATE_TRAINING', 'Declaró entrenamiento particular de un mes o más.');
+      reasons.push('Ha ido a entrenar de forma particular (con profesor o coach), sin importar cuánto tiempo.');
+      flag('PRIVATE_TRAINING', 'Declaró entrenamiento particular' + (s.privateTraining === 'GE1M' ? ' de un mes o más.' : ' (menos de un mes).'));
     }
-    // ── CASCADA (umbrales originales, sin cambios) ──────────────────────
-    else if ((exp === 'EXP_GT1Y' && tech >= 3) || tech >= 4 || (exp === 'EXP_GT1Y' && freq === 'FREQUENT' && tech >= 2)){
+    else if (techniques.includes('TOPSPIN')){
       category = 'AVANZADO_OPEN';
-      reasons.push('Más de un año jugando y varios recursos técnicos declarados.');
+      reasons.push('Declaró que sabe hacer topspin.');
+    }
+    else if (techniques.includes('SERVE')){
+      category = 'AVANZADO_OPEN';
+      reasons.push('Declaró que sabe sacar con efecto.');
+    }
+    else if (rally === 'R16P'){
+      category = 'AVANZADO_OPEN';
+      reasons.push('Sostiene peloteos de 16 golpes o más.');
+    }
+    else if (freq === 'FREQUENT'){
+      category = 'AVANZADO_OPEN';
+      reasons.push('Juega 3 o más veces por semana.');
+    }
+    else if (exp === 'EXP_GT1Y'){
+      category = 'AVANZADO_OPEN';
+      reasons.push('Tiene más de un año jugando.');
+    }
+    // ── CASCADA (para el resto, que no disparó ninguna regla dura) ──────
+    else if (tech >= 2){
+      category = 'AVANZADO_OPEN';
+      reasons.push('Varios recursos técnicos declarados.');
     }
     else if (((exp === 'EXP_6M_1Y' || exp === 'EXP_GT1Y') && tech >= 1) || tech >= 2 ||
              ((freq === 'WEEKLY' || freq === 'FREQUENT') && tech >= 1) || exp === 'EXP_GT1Y'){
@@ -106,6 +126,15 @@
     if (s.participatedPreviously && s.previousTournament){
       const cat = normalizeCategory(s.previousTournament.category);
       const res = (s.previousTournament.result || '').toUpperCase();
+
+      // Piso: si avanzó al menos de fase de grupos (no solo se inscribió),
+      // no baja de la categoría que ya jugó. Solo sube, nunca baja la cascada.
+      const FLOOR_RESULTS = ['GROUP_PASS','REPECHAGE','R16','QF','SEMIFINAL','FINALIST','CHAMPION'];
+      if (ORDER.includes(cat) && FLOOR_RESULTS.includes(res)){
+        const before = category;
+        category = atLeast(category, cat);
+        if (before !== category) reasons.push(`Jugó ${cat.replace('_OPEN','')} el torneo pasado y avanzó de fase de grupos: se mantiene ahí como piso.`);
+      }
 
       if (cat === 'PRINCIPIANTE' && res === 'CHAMPION'){
         const before = category;

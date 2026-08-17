@@ -106,4 +106,5 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
 }
 @media (max-width:400px){
   html body .fi-nav .logo-main{height:56px}
+  html body .fi-nav .btn{font-size:10.5px;padding:9px 12px}
 }
