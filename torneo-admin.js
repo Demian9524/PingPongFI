@@ -277,7 +277,22 @@
     window.PRIZE_POOL_DEFAULTS = JSON.parse(JSON.stringify(d));
     window.PRIZE_POOL_SAVE = () => {
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); } catch(e){}
+      if (window.SB && window.SB.rpc){
+        window.SB.rpc('admin_save_site_setting', { p_key: STORAGE_KEY, p_value: c }).then(({ error }) => {
+          if (error && window.SB_UI) window.SB_UI.toast('No se guardó en el servidor: ' + error.message, 'error');
+        });
+      }
     };
+    // Trae la config real del servidor (global) y, si difiere de lo que ya
+    // se pintó desde localStorage, repinta con el valor de todos.
+    if (window.SB){
+      window.SB.from('site_settings').select('value').eq('key', STORAGE_KEY).maybeSingle().then(({ data, error }) => {
+        if (error || !data || !data.value) return;
+        Object.assign(c, data.value);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); } catch(e){}
+        if (window.renderPrizePool) window.renderPrizePool();
+      });
+    }
   }
   const cfg = () => window.PRIZE_POOL;
   const $ = id => document.getElementById(id);
