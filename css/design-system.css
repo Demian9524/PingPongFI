@@ -1,0 +1,231 @@
+/* ── PING PONG–FI · Sistema de diseño central (Fase 3) ──────────────────
+   Capa de tokens semánticos + componentes compartidos. Se carga DESPUÉS
+   de css/supabase-pages.css y NO reemplaza la identidad existente:
+   alias-a las variables actuales y agrega componentes nuevos
+   (badges, alertas, drawer, modal, toast, nav móvil, bracket, KPI). */
+
+:root{
+  /* tokens semánticos → paleta PING PONG–FI existente */
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-panel: var(--panel);
+  --color-panel2: var(--panel2);
+  --color-raise: var(--raise);
+  --color-border: var(--line);
+  --color-border2: var(--line2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-primary: var(--red2);
+  --color-primary-dk: var(--red-dk);
+  --color-success: var(--green);
+  --color-success-soft: var(--green-soft);
+  --color-warning: var(--amber);
+  --color-warning-soft: var(--amber-soft);
+  --color-danger: var(--err);
+  --color-info: var(--gold);
+  --color-disabled: var(--dim);
+  /* radios / espaciado / sombras */
+  --r-sm: 6px; --r-md: 9px; --r-lg: 12px;
+  --sp-1: 6px; --sp-2: 10px; --sp-3: 14px; --sp-4: 20px; --sp-5: 28px; --sp-6: 40px;
+  --shadow-panel: 0 18px 40px -22px rgba(0,0,0,0.65);
+  --z-nav: 50; --z-drawer: 90; --z-modal: 100; --z-toast: 120;
+}
+
+/* ── Badges de estado (traducidos vía SB_UI.badge) ─────────────────── */
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:0.8px;text-transform:uppercase;padding:4px 10px;border-radius:5px;white-space:nowrap;
+  background:var(--color-raise);border:1px solid var(--color-border2);color:var(--color-muted)}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.badge.ok{color:var(--color-success);border-color:rgba(116,169,138,0.45);background:rgba(116,169,138,0.10)}
+.badge.warn{color:var(--color-warning);border-color:rgba(201,180,138,0.45);background:rgba(201,180,138,0.10)}
+.badge.late{color:var(--color-info);border-color:rgba(233,216,170,0.4);background:rgba(233,216,170,0.08)}
+.badge.danger{color:var(--color-danger);border-color:rgba(196,106,95,0.45);background:rgba(196,106,95,0.10)}
+.badge.waived{color:#8fb3d9;border-color:rgba(143,179,217,0.45);background:rgba(143,179,217,0.10)}
+.badge.neutral{color:var(--color-muted)}
+
+/* ── Botón de acción pendiente de backend ──────────────────────────── */
+.btn-pending{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;color:var(--color-disabled);
+  border:1px dashed var(--color-border2);border-radius:var(--r-sm);padding:8px 10px;min-height:36px;
+  opacity:0.55;cursor:not-allowed;display:inline-flex;align-items:center;gap:6px}
+.btn-pending::after{content:'🔒';font-size:9px;filter:grayscale(1);opacity:0.7}
+
+/* ── Alertas operativas ────────────────────────────────────────────── */
+.alerts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.alert{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--color-border);
+  border-radius:var(--r-md);background:var(--color-panel);font-size:13.5px}
+.alert .an{font-family:var(--disp);font-weight:800;font-size:20px;min-width:34px;text-align:center;line-height:1}
+.alert.warn{border-color:rgba(201,180,138,0.35)} .alert.warn .an{color:var(--color-warning)}
+.alert.danger{border-color:rgba(196,106,95,0.35)} .alert.danger .an{color:var(--color-danger)}
+.alert.ok{border-color:rgba(116,169,138,0.3)} .alert.ok .an{color:var(--color-success)}
+.alert .alink{margin-left:auto;flex:0 0 auto}
+
+/* ── KPI (Centro de control) ───────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:20px}
+.kpi{padding:16px 18px}
+.kpi b{font-family:var(--disp);font-weight:800;font-size:32px;line-height:1;display:block;color:var(--color-info)}
+.kpi small{font-family:var(--mono);font-size:9.5px;letter-spacing:1.2px;color:var(--color-muted);text-transform:uppercase;display:block;margin-top:6px}
+.kpi.k-ok b{color:var(--color-success)} .kpi.k-warn b{color:var(--color-warning)} .kpi.k-danger b{color:var(--color-danger)}
+
+/* ── Accesos rápidos ───────────────────────────────────────────────── */
+.quick{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:16px}
+.quick .btn{justify-content:center}
+
+/* ── Secciones ─────────────────────────────────────────────────────── */
+.sect{margin-top:38px}
+.sect > h2{font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;letter-spacing:0.03em;
+  text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.sect > h2::after{content:'';flex:1;height:1px;background:var(--color-border2)}
+.sect > .ssub{color:var(--color-muted);font-size:13px;margin-top:6px;max-width:640px}
+
+/* ── Drawer de detalle ─────────────────────────────────────────────── */
+.drawer-bg{position:fixed;inset:0;background:rgba(10,10,14,0.6);backdrop-filter:blur(3px);z-index:var(--z-drawer);
+  opacity:0;pointer-events:none;transition:opacity .18s var(--cut)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,96vw);z-index:calc(var(--z-drawer) + 1);
+  background:var(--color-panel);border-left:1px solid var(--color-border2);box-shadow:var(--shadow-panel);
+  transform:translateX(102%);transition:transform .22s var(--cut);display:flex;flex-direction:column;overflow:hidden}
+.drawer.open{transform:none}
+.drawer-bg.open{opacity:1;pointer-events:auto}
+.drawer header{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--color-border)}
+.drawer header h2{font-family:var(--disp);font-weight:800;font-style:italic;font-size:19px;letter-spacing:0.02em;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drawer .dclose{min-width:44px;min-height:44px;border-radius:8px;color:var(--color-muted);font-size:20px}
+.drawer .dclose:hover{color:var(--color-text);background:var(--color-raise)}
+.drawer .dbody{overflow-y:auto;padding:14px 20px 24px;flex:1}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--color-border);font-size:14px}
+.drow dt{font-family:var(--body);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.3px;color:var(--color-muted);align-self:center;flex:0 0 auto}
+.drow dd{text-align:right;min-width:0;overflow-wrap:anywhere;font-weight:600;color:var(--color-text)}
+.drawer .dact{padding:14px 20px;border-top:1px solid var(--color-border);display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── Modal de confirmación ─────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(10,10,14,0.65);backdrop-filter:blur(3px);z-index:var(--z-modal);
+  display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{width:min(440px,100%);padding:24px;background:var(--color-panel)}
+.modal h2{font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;text-transform:uppercase;margin-bottom:8px}
+.modal p{color:var(--color-muted);font-size:13.5px;margin-bottom:18px}
+.modal .mact{display:flex;gap:10px;justify-content:flex-end}
+
+/* ── Drawer: ficha de participante (resumen + secciones) ────────────── */
+.dsummary{display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px 14px;padding:18px 20px;margin-bottom:20px;
+  background:var(--color-raise);border:1px solid var(--color-border2);border-radius:var(--r-md)}
+.dsummary .dsum-name{font-family:var(--disp);font-weight:800;font-style:italic;font-size:26px;letter-spacing:0.02em;
+  text-transform:uppercase;width:100%}
+.dsummary .badge{margin:0}
+.dsec{margin-bottom:22px;padding:0 4px}
+.dsec:last-child{margin-bottom:0}
+.dsec > h3{font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:0.02em;
+  text-transform:uppercase;color:var(--color-text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--color-border)}
+.dsec-logos{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.dsec-logos img{width:80px;height:80px;max-width:80px;max-height:80px;object-fit:contain;border-radius:10px;background:var(--color-raise);flex:0 0 auto;padding:6px}
+.dchips{display:flex;flex-wrap:wrap;gap:8px}
+.dchip{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:0.2px;padding:7px 12px;
+  border-radius:7px;background:var(--color-raise);border:1px solid var(--color-border2);color:var(--color-text)}
+.dnote{font-size:12.5px;color:var(--color-muted);line-height:1.5;padding:10px 12px;border-radius:var(--r-sm);
+  background:rgba(201,180,138,0.08);border:1px solid rgba(201,180,138,0.3)}
+.dnote.danger{background:rgba(196,106,95,0.08);border-color:rgba(196,106,95,0.35)}
+.dnote.ok{background:rgba(116,169,138,0.08);border-color:rgba(116,169,138,0.35)}
+.wa-btn{display:inline-flex;align-items:center;gap:8px;background:#1f8a4c;color:#fff;font-weight:700;
+  font-size:13px;padding:9px 16px;border-radius:8px;text-decoration:none;min-height:44px}
+.wa-btn:hover{filter:brightness(1.08)}
+
+/* ── Drawer: acciones administrativas (sticky, botones reales) ──────── */
+.drawer .dact{position:sticky;bottom:0;background:var(--color-panel);flex-wrap:wrap;gap:10px;padding:16px 20px}
+.dact-btn{font-family:var(--body);font-weight:700;font-size:13.5px;padding:12px 18px;border-radius:9px;
+  min-height:46px;display:inline-flex;align-items:center;gap:8px;flex:1 1 100%;justify-content:center;
+  border:1px solid var(--color-border2);color:var(--color-text);background:var(--color-raise);
+  transition:filter .15s var(--cut),transform .1s var(--cut)}
+.dact-btn:hover{filter:brightness(1.2)}
+.dact-btn:active{transform:scale(0.98)}
+.dact-btn.primary{background:linear-gradient(180deg,var(--red2),var(--red-dk));color:#131318;border-color:transparent}
+.dact-btn.danger{background:transparent;color:var(--color-danger);border-color:rgba(196,106,95,0.5)}
+.dact-btn.danger:hover{background:rgba(196,106,95,0.12)}
+.dact-status{font-family:var(--body);font-weight:700;font-size:13.5px;
+  color:var(--color-success);display:flex;align-items:center;justify-content:center;gap:8px;flex:1 1 100%;
+  padding:12px 18px;min-height:46px;border-radius:9px;background:rgba(116,169,138,0.12);border:1px solid rgba(116,169,138,0.4)}
+.dact-status.off{color:var(--color-danger);background:rgba(196,106,95,0.1);border-color:rgba(196,106,95,0.4)}
+
+/* ── Tabla: botón "Ver ficha" activo, con icono ──────────────────────── */
+.btn-view{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-weight:700;font-size:12.5px;
+  padding:10px 14px;min-height:44px;border-radius:8px;color:#131318;background:var(--red2);
+  border:1px solid var(--red2);cursor:pointer;transition:.15s var(--cut);white-space:nowrap}
+.btn-view:hover,.btn-view:focus-visible{filter:brightness(1.12)}
+.btn-view svg{flex:0 0 auto;width:14px;height:14px}
+.part-name{display:flex;flex-direction:column;gap:1px;min-width:0}
+.part-name b{overflow:hidden;text-overflow:ellipsis}
+.part-name .sub2{font-size:11px;color:var(--color-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:var(--z-toast);
+  display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(480px,92vw)}
+.toast{pointer-events:auto;background:var(--color-panel2);border:1px solid var(--color-border2);border-radius:var(--r-md);
+  padding:12px 18px;font-size:13.5px;box-shadow:var(--shadow-panel);display:flex;gap:10px;align-items:center;width:100%}
+.toast.ok{border-color:rgba(116,169,138,0.5)} .toast.err{border-color:rgba(196,106,95,0.5)}
+.toast.warn{border-color:rgba(201,180,138,0.5)}
+
+/* ── Banner informativo (fuente pública pendiente) ─────────────────── */
+.notice{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;margin-top:22px;
+  border:1px solid rgba(233,216,170,0.3);border-radius:var(--r-md);background:rgba(233,216,170,0.05);font-size:13.5px;color:var(--color-muted)}
+.notice b{color:var(--color-info);font-family:var(--disp);font-weight:800;text-transform:uppercase;letter-spacing:0.04em;display:block;margin-bottom:4px;font-size:14px}
+
+/* ── Navegación global (inyectada por supabase/nav.js) ─────────────── */
+.nav-admin{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-dim);
+  text-decoration:none;padding:10px 12px;border-radius:7px;min-height:44px;display:inline-flex;align-items:center}
+.nav-admin:hover{color:var(--color-muted);background:var(--color-raise)}
+.nav-burger{display:none;min-width:46px;min-height:46px;border-radius:9px;border:1px solid var(--color-border2);
+  align-items:center;justify-content:center;color:var(--color-text)}
+.nav-burger:hover{background:var(--color-raise)}
+@media (max-width:760px){
+  .nav-burger{display:inline-flex}
+  nav[data-site-nav] .nav-admin{display:none}
+}
+.navm-bg{position:fixed;inset:0;background:rgba(10,10,14,0.7);backdrop-filter:blur(4px);z-index:calc(var(--z-nav) + 4);
+  opacity:0;pointer-events:none;transition:opacity .18s var(--cut)}
+.navm-bg.open{opacity:1;pointer-events:auto}
+.navm{position:fixed;top:0;right:0;bottom:0;width:min(300px,86vw);z-index:calc(var(--z-nav) + 5);
+  background:var(--color-panel);border-left:1px solid var(--color-border2);transform:translateX(102%);
+  transition:transform .2s var(--cut);display:flex;flex-direction:column;padding:18px}
+.navm.open{transform:none}
+.navm .navm-close{align-self:flex-end;min-width:46px;min-height:46px;border-radius:9px;font-size:22px;color:var(--color-muted)}
+.navm .navm-close:hover{color:var(--color-text);background:var(--color-raise)}
+.navm a{font-family:var(--disp);font-weight:800;font-size:19px;font-style:italic;letter-spacing:0.05em;text-transform:uppercase;
+  color:var(--color-muted);text-decoration:none;padding:14px 12px;border-radius:9px;min-height:48px;display:flex;align-items:center}
+.navm a:hover{color:var(--color-text);background:var(--color-raise)}
+.navm a.on{color:#fff;background:linear-gradient(180deg,rgba(200,201,208,0.32),var(--red-dk))}
+.navm a.adm{font-family:var(--mono);font-style:normal;font-weight:400;font-size:11px;letter-spacing:1.5px;color:var(--color-dim);margin-top:auto}
+body.nav-locked{overflow:hidden}
+
+/* ── Cola de revisión ──────────────────────────────────────────────── */
+.queue{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:16px}
+.qcard{padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.qcard .qtop{display:flex;align-items:center;gap:10px}
+.qcard .qtop b{font-family:var(--disp);font-weight:800;font-size:17px;letter-spacing:0.02em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qcard .qmeta{font-family:var(--mono);font-size:10.5px;color:var(--color-dim);letter-spacing:0.5px}
+
+/* ── Bracket ───────────────────────────────────────────────────────── */
+.bracket-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:20px;margin-top:26px}
+.bracket{display:flex;gap:34px;min-width:900px;padding:4px}
+.bround{display:flex;flex-direction:column;flex:1;min-width:190px}
+.bround h3{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-dim);
+  text-align:center;margin-bottom:14px}
+.bround .bmatches{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:12px}
+.bmatch{position:relative;background:var(--color-panel);border:1px solid var(--color-border);border-radius:var(--r-md);overflow:hidden}
+.bmatch .bp{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:13px;min-height:40px}
+.bmatch .bp + .bp{border-top:1px solid var(--color-border)}
+.bmatch .bp .bn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bmatch .bp .bs{font-family:var(--mono);font-size:11px;color:var(--color-muted)}
+.bmatch .bp.tbd .bn{color:var(--color-dim);font-style:italic}
+.bmatch .bp.winner{background:rgba(116,169,138,0.08)}
+.bmatch .bp.winner .bn{color:var(--color-success);font-weight:600}
+.bmatch::after{content:'';position:absolute;right:-18px;top:50%;width:18px;height:1px;background:var(--color-border2)}
+.bround:last-child .bmatch::after{display:none}
+
+/* ── Tabla → tarjetas en móvil (patrón compartido) ─────────────────── */
+@media (max-width:720px){
+  .m-cards table.sb{min-width:0}
+  .m-cards table.sb thead{display:none}
+  .m-cards table.sb tr{display:block;border:1px solid var(--color-border);border-radius:10px;margin-bottom:10px;padding:10px 12px;background:var(--color-panel)}
+  .m-cards table.sb td{display:flex;justify-content:space-between;gap:10px;border:none;padding:5px 0;font-size:13px}
+  .m-cards table.sb td::before{content:attr(data-th);font-family:var(--mono);font-size:9.5px;letter-spacing:1px;color:var(--color-dim);text-transform:uppercase;align-self:center}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .drawer,.drawer-bg,.navm,.navm-bg{transition:none}
+}
