@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="css/design-system.css">
 <link rel="stylesheet" href="css/perfil-jugador.css?v=132">
 <link rel="stylesheet" href="css/trophies.css?v=5">
+<link rel="stylesheet" href="css/navbar-fi.css?v=2">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
   .breadcrumbs{display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:14px}
@@ -648,135 +649,11 @@
     --cx-1:#2c9b52;--cx-2:#237f43;--cx-3:#1a6234;--cx-p1:#103c20;--cx-p2:#072413}
 </style>
 
-
-<style id="copied-top-nav">
-  /* Navbar copiada de Pagina Torneo.html, aislada para no alterar los estilos de Categoria2 */
-  nav.top{
-    --red:#8f9098; --red2:#c8c9d0; --red-dk:#5a5b62; --red-soft:rgba(200,201,208,0.12);
-    --red-glow:rgba(200,201,208,0.34); --text:#f6efe2; --muted:#b09a7e;
-    --line:rgba(255,240,220,0.09); --line2:rgba(255,240,220,0.16);
-    --panel:#221a11; --panel2:#291f15; --raise:#2f2418;
-    --disp:'HN Display','Saira Condensed',sans-serif; --cut:cubic-bezier(.4,0,.2,1);
-    position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(10,10,12,0.9);
-    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-    border-bottom:1px solid color-mix(in srgb,var(--red2) 22%,transparent)
-  }
-  body.catx2{padding-top:98px}
-  nav.top .wrap{max-width:1560px;margin:0 auto;padding:0 26px}
-  nav.top .nav-in{display:flex;align-items:center;gap:34px;height:98px;position:relative}
-  nav.top .brand{display:flex;align-items:center;gap:16px}
-  nav.top .logo-main{height:66px;width:auto;display:block}
-  nav.top .logo-gif{height:80px;width:auto;margin:-14px 0 -12px}
-  nav.top .logo-div{width:1px;height:36px;background:var(--line2);flex:0 0 auto}
-  nav.top .logo-fi{width:auto;height:70px;flex:0 0 auto;object-fit:contain;display:block}
-  nav.top .btn-gray{background:linear-gradient(180deg,#43434b,#26262c);color:#f2f2f4;border:1px solid rgba(255,255,255,0.12);box-shadow:0 6px 18px -7px rgba(0,0,0,0.6)}
-  nav.top .btn-gray:hover{filter:brightness(1.14)}
-  nav.top .nav-links{display:flex;gap:9px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-  nav.top .nav-links a{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:.15s var(--cut);padding:10px 18px;border-radius:7px;position:relative}
-  nav.top .nav-links a:hover{color:var(--text)}
-  nav.top .nav-links a.on{color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--red2) 90%,transparent),var(--red-dk));box-shadow:0 4px 14px -5px var(--red-glow)}
-  nav.top .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
-  nav.top .socials{display:flex;gap:12px;color:var(--muted)}
-  nav.top .socials a{color:var(--muted);transition:color .15s}
-  nav.top .socials a:hover{color:var(--red2)}
-  nav.top .btn{font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:0.07em;text-transform:uppercase;padding:13px 24px;display:inline-flex;align-items:center;gap:8px;transition:.15s var(--cut);clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
-
-  /* Hamburger + menú móvil: mismo comportamiento que en Pagina Torneo */
-  nav.top .hamburger{display:none;width:38px;height:38px;border-radius:7px;flex:0 0 auto;background:var(--raise);border:1px solid var(--line2);color:var(--text);align-items:center;justify-content:center;transition:.15s var(--cut);position:relative;z-index:210}
-  nav.top .hamburger:hover{background:var(--panel2)}
-  nav.top .hamburger.open{background:var(--red-soft);border-color:color-mix(in srgb,var(--red2) 50%,transparent);color:var(--red2)}
-  nav.top .hamburger .close-icon{display:none}
-  nav.top .mobile-menu-backdrop{position:fixed;inset:0;background:rgba(6,6,8,0.6);z-index:198;opacity:0;pointer-events:none;transition:opacity .28s var(--cut)}
-  nav.top .mobile-menu-backdrop.open{opacity:1;pointer-events:auto}
-  nav.top .mobile-menu{display:flex;flex-direction:column;position:fixed;top:0;right:0;z-index:199;width:min(76vw,300px);height:100dvh;overflow-y:auto;background:#111114;border-left:1px solid color-mix(in srgb,var(--red2) 22%,transparent);box-shadow:-18px 0 40px -14px rgba(0,0,0,0.6);transform:translateX(100%);transition:transform .34s cubic-bezier(.4,0,.2,1)}
-  nav.top .mob-menu-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 6px 10px 16px;border-bottom:1px solid var(--line)}
-  nav.top .mob-menu-logos{display:flex;align-items:center;gap:14px}
-  nav.top .mob-menu-logos img:first-child{height:72px;width:auto}
-  nav.top .mob-menu-logos img:last-child{height:62px;width:auto}
-  nav.top .mob-menu-x{appearance:none;border:0;background:transparent;flex:0 0 auto;padding:0;cursor:pointer;width:60px;height:60px;display:flex;align-items:center;justify-content:center;color:#f5f0e6}
-  nav.top .mob-menu-x svg{display:block;width:50px;height:50px;fill:currentColor}
-  nav.top .mob-menu-x:hover{color:var(--red2)}
-  nav.top .mobile-menu.open{transform:translateX(0)}
-  nav.top .mob-link{display:flex;align-items:center;font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:15px 22px;border-bottom:1px solid var(--line);transition:.15s var(--cut)}
-  nav.top .mob-link:last-child{border-bottom:none}
-  nav.top .mob-link:hover{color:var(--text);background:var(--panel)}
-  nav.top .mob-link.on{color:var(--red2)}
-  nav.top #mobileMenu .mob-link:first-of-type{margin-top:28px}
-  nav.top #mobileMenu .mob-link{font-family:'HN Display','Saira Condensed',sans-serif!important}
-
-  @media (max-width:1010px){
-    nav.top .nav-links,nav.top .socials{display:none}
-    nav.top .nav-right{margin-left:auto}
-    nav.top .hamburger{display:flex}
-  }
-  @media (max-width:860px){
-    nav.top .wrap{padding:0 16px}
-    nav.top .nav-in{gap:16px;height:70px}
-    body.catx2{padding-top:70px}
-    nav.top .logo-main{height:52px}
-    nav.top .hamburger{display:flex}
-  }
-  @media (max-width:640px){
-    nav.top .nav-links,nav.top .socials{display:none}
-    nav.top .nav-in{height:84px;gap:8px;padding:12px 0}
-    body.catx2{padding-top:84px}
-    nav.top .brand{gap:8px}
-    nav.top .logo-main{height:40px}
-    nav.top .logo-fi,nav.top .logo-div,nav.top .logo-gif{display:none!important}
-    nav.top .nav-right{gap:8px}
-    nav.top .btn-gray{font-size:11px;padding:9px 12px;gap:5px}
-    nav.top .btn-gray svg{width:12px;height:12px}
-    nav.top .hamburger{display:flex;width:34px;height:34px}
-    nav.top .wrap{padding:0 12px}
-  }
-</style>
-
 </head>
 <body class="pjx apx catx2">
+<nav class="top fi-nav" data-fi-nav data-active="categorias" aria-label="Principal"></nav>
 <svg class="fac-lb-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="ico-racha" viewBox="0 0 481 639"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M 175.035 11.934 C 174.466 12.998, 174 14.500, 174 15.271 C 174 16.043, 175.849 19.256, 178.108 22.412 C 189.005 37.629, 196.916 53.782, 201.169 69.500 C 203.906 79.617, 204.616 96.564, 202.720 106.534 C 200.612 117.617, 195.991 129.075, 189.820 138.525 C 186.955 142.911, 179.378 151.900, 172.981 158.500 C 157.293 174.687, 150.017 183.408, 141.746 195.943 C 126.176 219.538, 115.603 247.846, 112.433 274.423 C 111.811 279.637, 111.569 280.131, 110.413 278.551 C 108.315 275.681, 103.277 260.948, 101.573 252.699 C 100.712 248.530, 99.507 239.506, 98.896 232.646 C 97.808 220.429, 97.888 218.360, 100.644 187.292 L 101.283 180.083 97.742 176.542 C 94.964 173.764, 93.403 173, 90.504 173 C 88.472 173, 85.614 173.723, 84.154 174.606 C 75.853 179.627, 51.835 214.355, 39.998 238.453 C 24.439 270.126, 16.227 299.239, 12.927 334.417 C 11.376 350.948, 12.237 375.934, 14.876 391 C 19.719 418.643, 30.497 446.589, 45.285 469.847 L 48.684 475.194 49.296 461.347 C 50.064 443.970, 52.898 427.372, 57.558 412.956 C 64.532 391.383, 71.795 377.038, 84.875 359 C 93.533 347.059, 109.895 330.216, 121.067 321.743 C 139.778 307.551, 164.683 295.468, 186.673 289.915 C 205.323 285.204, 219.145 283.707, 238.500 284.301 C 263.995 285.084, 279.708 288.390, 303.901 298.061 C 317.105 303.340, 332.075 311.741, 343.493 320.278 C 347.333 323.150, 355.155 330, 360.873 335.500 C 382.956 356.738, 398.513 381.228, 407.881 409.500 C 410.068 416.100, 412.900 426.450, 414.175 432.500 C 416.206 442.141, 416.493 446.303, 416.496 466.197 C 416.498 478.681, 416.791 488.581, 417.146 488.197 C 419.922 485.200, 429.246 469.356, 434.034 459.500 C 443.921 439.151, 450.399 416.581, 452.978 393.500 C 454.436 380.450, 454.226 359.825, 452.500 346.662 C 448.361 315.082, 436.094 286.891, 417.487 266.197 C 413.464 261.722, 412.250 260.942, 409.711 261.197 C 408.056 261.364, 406.366 262.175, 405.956 263 C 405.545 263.825, 403.560 267.994, 401.543 272.264 C 397.061 281.756, 390.437 288.680, 381.780 292.923 C 374.480 296.501, 365.518 297.769, 359.343 296.098 C 352.765 294.318, 345.876 289.108, 342.402 283.288 C 339.034 277.645, 337 269.537, 337 261.757 C 337 259.057, 338.345 248.895, 339.989 239.174 C 344.834 210.523, 346.034 199.635, 346.676 178.500 C 347.361 155.930, 346.199 140.972, 342.486 124.539 C 335.353 92.969, 317.326 65.196, 292.500 47.524 C 268.020 30.099, 233.212 17.089, 196.198 11.530 C 190.596 10.688, 183.776 10, 181.042 10 C 177.150 10, 175.846 10.420, 175.035 11.934 M 206 318.014 C 171.864 324.037, 138.812 343.270, 116.461 370.114 C 98.227 392.014, 86.559 418.111, 82.407 446.277 C 81.153 454.778, 80.888 461.380, 81.314 473.500 C 81.915 490.601, 83.842 501.962, 88.571 516.282 C 94.293 533.607, 104.515 551.661, 117.394 567.188 C 120.445 570.866, 126.892 577.347, 131.721 581.589 C 152.137 599.527, 175.229 611.327, 201.275 617.129 C 207.888 618.602, 215.597 619.331, 228.500 619.701 C 243.852 620.143, 248.320 619.908, 258.871 618.110 C 289.141 612.951, 316.023 599.408, 338.302 578.095 C 349.578 567.308, 360.699 553.030, 367.393 540.746 C 377.130 522.879, 383.143 502.563, 385.129 480.828 C 386.030 470.962, 386.025 464.984, 385.107 454.936 C 384.451 447.750, 382.618 436.740, 381.034 430.468 C 375.955 410.360, 365.674 389.493, 353.048 373.671 C 344.830 363.372, 328.803 348.411, 318.968 341.858 C 309.421 335.497, 295.910 328.569, 285.500 324.699 C 277.101 321.576, 265.127 318.554, 255.308 317.080 C 243.978 315.378, 218.166 315.868, 206 318.014 M 126.055 544.015 C 145.145 575.497, 177.044 597.115, 213.423 603.224 C 217.316 603.878, 226.800 604.382, 234.500 604.345 C 255.256 604.245, 270.701 600.611, 289.176 591.481 C 309.678 581.348, 328.236 564.398, 339.832 545.213 L 343.027 539.926 336.427 545.525 C 327.634 552.984, 317.643 559.312, 305.500 565.114 C 293.276 570.955, 280.879 575.151, 267 578.146 C 257.862 580.118, 253.581 580.414, 234 580.430 C 216.637 580.444, 209.544 580.055, 202.933 578.726 C 186.489 575.421, 168.200 569.006, 156 562.263 C 147.295 557.452, 135.509 549.483, 130.543 545.052 C 123.033 538.349, 122.552 538.238, 126.055 544.015"/></symbol><symbol id="ico-ataque" viewBox="0 0 638 702"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M 339.500 23.991 C 321.833 25.491, 302.104 29.538, 282.732 35.635 C 271.891 39.047, 250.016 48.767, 237.509 55.730 C 224.893 62.754, 208.142 74.103, 196.500 83.515 C 184.180 93.476, 162.091 116.302, 152.502 128.983 C 143.519 140.861, 134.094 155.880, 127.918 168.159 C 118.814 186.260, 111.156 208.759, 108.040 226.566 C 105.992 238.273, 105.130 256.678, 106.033 269.425 C 107.395 288.645, 110.796 304.440, 117.164 321.115 L 120.115 328.843 239.808 402.670 C 377.036 487.313, 360.744 479.128, 383.021 474.617 C 406.540 469.854, 429.628 460.290, 447.603 447.864 C 457.699 440.884, 472.670 428.232, 479.008 421.322 C 487.594 411.962, 499.854 396.251, 506.656 385.890 C 514.611 373.775, 524.534 354.763, 530.384 340.429 C 535.753 327.276, 542.204 306.208, 544.908 292.997 C 551.729 259.675, 552.615 224.400, 547.394 194 C 545.518 183.077, 540.990 164, 540.273 164 C 539.970 164, 537.646 165.275, 535.111 166.834 C 529.255 170.433, 519.115 174.448, 511.888 176.029 C 508.305 176.813, 501.979 177.071, 494.388 176.743 C 484.979 176.337, 480.891 175.668, 474.782 173.535 C 465.479 170.287, 456.744 164.801, 448.726 157.169 C 435.195 144.290, 428.390 129.122, 427.338 109.500 C 426.683 97.268, 428.495 87.702, 433.439 77.291 C 438.021 67.642, 442.038 61.949, 449.180 54.983 L 455.090 49.217 444.295 43.703 C 432.956 37.911, 417.916 32.285, 405.116 29.048 C 386.840 24.425, 359.343 22.306, 339.500 23.991 M 482.500 49.931 C 473.029 52.739, 464.612 57.494, 457.796 63.890 C 438.616 81.888, 433.863 108.913, 445.639 133 C 452.476 146.984, 467.947 159.365, 483.644 163.415 C 491.407 165.417, 503.815 165.449, 511.540 163.485 C 514.818 162.652, 520.875 160.333, 525 158.332 C 535.169 153.399, 545.143 143.358, 550.160 133 C 552.159 128.875, 554.391 123.025, 555.121 120 C 555.851 116.975, 556.400 110.450, 556.342 105.500 C 556.148 89.016, 549.304 73.778, 537.280 63.062 C 530.557 57.070, 520.693 51.736, 512.356 49.585 C 504.211 47.484, 490.209 47.646, 482.500 49.931 M 518.522 62.250 C 520.710 64.037, 523.789 66.850, 525.364 68.500 C 530.570 73.953, 535.982 83.227, 538.740 91.422 C 541.154 98.592, 541.456 100.961, 541.433 112.500 C 541.411 124.055, 541.118 126.257, 538.805 132.314 C 536.535 138.256, 536.443 138.909, 538.090 137.419 C 541.482 134.349, 546.171 126.123, 548.163 119.748 C 550.785 111.356, 550.729 99.572, 548.026 90.818 C 545.517 82.695, 539.488 73.460, 533.482 68.539 C 528.676 64.600, 518.473 59.034, 516.022 59.013 C 515.209 59.006, 516.334 60.462, 518.522 62.250 M 131 350.459 C 131 350.777, 134.989 357.298, 139.864 364.951 C 144.740 372.604, 152.831 386.938, 157.846 396.804 C 164.964 410.810, 167.227 416.288, 168.172 421.797 C 171.084 438.781, 163.916 458.136, 141.760 493.105 C 126.873 516.601, 118.038 527.827, 78.130 573.955 C 66.926 586.905, 55.770 600.078, 53.338 603.229 C 48.311 609.741, 46 614.644, 46 618.796 C 46 622.753, 50.931 629.799, 56.710 634.100 C 63.771 639.356, 101.411 662.852, 109 666.742 C 124.378 674.624, 130.848 671.992, 139.080 654.506 C 141.670 649.002, 149.484 631.225, 156.444 615 C 178.290 564.074, 195.344 531.802, 214.703 504.755 C 221.659 495.038, 231.690 484.664, 238.395 480.255 C 241.087 478.484, 245.812 476.015, 248.895 474.768 C 254.188 472.626, 255.782 472.506, 277.500 472.601 C 295.737 472.682, 303.089 473.133, 313 474.779 C 329.216 477.472, 338.797 478.417, 337.500 477.195 C 336.754 476.492, 135.812 352.563, 131.750 350.300 C 131.338 350.070, 131 350.142, 131 350.459"/></symbol><symbol id="ico-escudo" viewBox="0 0 345 391"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M 151 15.037 C 127.145 27.489, 82.571 41.074, 33 51.001 C 16.493 54.306, 12.150 55.518, 10.703 57.221 C 9.002 59.225, 8.925 63.300, 9.268 133.919 C 9.669 216.469, 9.315 211.635, 16.588 233.838 C 24.748 258.749, 38.976 282.427, 59.897 305.913 C 73.450 321.128, 95.907 339.454, 117.883 353.233 C 133.220 362.848, 156.984 375, 160.452 375 C 163.156 375, 175.851 368.964, 189.500 361.190 C 201.771 354.200, 218.484 343.104, 229 334.964 C 241.119 325.585, 261.235 305.963, 269.972 295 C 284.973 276.177, 297.438 253.892, 304.034 234.106 C 305.756 228.940, 308.028 220.261, 309.082 214.821 C 310.866 205.621, 311 199.765, 311 131.087 C 311 73.226, 310.729 57.023, 309.750 56.221 C 309.063 55.658, 299.050 53.315, 287.500 51.014 C 260.397 45.614, 231.875 38.316, 210.500 31.310 C 193.026 25.584, 173.700 17.769, 166.322 13.447 C 164.024 12.101, 161.324 11.027, 160.322 11.061 C 159.320 11.094, 155.125 12.883, 151 15.037 M 145.437 85.559 C 104.635 92.418, 72.040 120.077, 58.605 159.240 C 57.145 163.497, 55.242 171.597, 54.376 177.240 C 51.710 194.608, 53.849 215.077, 60.098 232 C 63.008 239.878, 69.402 251.444, 75.094 259.124 C 84.551 271.885, 99.554 284.309, 114.500 291.756 C 128.118 298.541, 146.935 302.992, 162 302.992 C 171.668 302.992, 185.638 300.708, 196.172 297.406 C 228.465 287.282, 255.444 260.531, 266.461 227.710 C 269.544 218.526, 271.991 203.768, 271.996 194.322 C 272.006 177.120, 267.774 159.446, 259.888 143.747 C 249.872 123.810, 231.359 105.630, 210.500 95.247 C 190.887 85.485, 167.020 81.931, 145.437 85.559 M 145.500 104.595 C 141.650 105.457, 135.409 107.242, 131.630 108.562 C 111.036 115.757, 92.448 132.056, 82.038 152.049 C 75.950 163.742, 72.934 175.362, 72.316 189.500 C 71.897 199.096, 72.188 203.405, 73.767 211.010 C 76.223 222.835, 80.871 234.149, 87.072 243.398 C 92.359 251.284, 102.848 262.109, 110.500 267.576 C 117.540 272.607, 130.100 278.498, 139.500 281.178 C 146.282 283.112, 149.784 283.452, 162.500 283.408 C 174.725 283.366, 178.980 282.951, 185.500 281.164 C 196.417 278.172, 209.990 271.254, 219 264.088 C 228.050 256.890, 237.565 245.330, 242.934 235.011 C 245.111 230.826, 248.118 223.374, 249.616 218.451 C 252.073 210.374, 252.341 207.987, 252.356 194 C 252.370 181.079, 252.006 177.169, 250.170 170.500 C 243.126 144.908, 225.642 123.844, 201.307 111.631 C 198.452 110.197, 192.152 107.854, 187.307 106.422 C 180.364 104.371, 175.748 103.736, 165.500 103.424 C 156.096 103.138, 150.564 103.462, 145.500 104.595 M 98.889 239.063 C 102.466 245.080, 110.298 253.780, 116.798 258.956 C 120.263 261.714, 126.338 265.520, 130.298 267.413 C 141.631 272.829, 148.817 274.384, 162.500 274.384 C 176.155 274.384, 183.370 272.828, 194.609 267.457 C 207.060 261.508, 218.510 251.135, 226.334 238.719 C 227.732 236.501, 226.814 236.971, 221.793 241.046 C 214.370 247.071, 198.171 255.165, 189 257.431 C 185.425 258.315, 178.113 259.562, 172.750 260.202 C 165.355 261.086, 160.645 261.089, 153.250 260.212 C 141.343 258.801, 129.825 255.847, 121.489 252.068 C 115.450 249.330, 107.123 243.960, 100.173 238.323 L 96.846 235.625 98.889 239.063"/></symbol><symbol id="ico-x" viewBox="0 0 128 128"><path fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round" transform="matrix(1 0 -.1228 1 7.86 0)" d="M21 26h24l19 26 19-26h24L78 64l29 38H83L64 76l-19 26H21l29-38-29-38Z"></path></symbol><symbol id="ico-i" viewBox="0 0 128 128"><path fill="currentColor" d="M60 18h32l-6 23H54l6-23ZM53 48h32L72 95h19l-4 15H27l4-15h18l9-32H43l4-15h6Z"></path></symbol><symbol id="ico-medalla" viewBox="0 0 64 64"><defs><mask id="ico-medalla-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff"></rect><circle cx="32" cy="24.5" r="14" fill="#000"></circle><path d="M21.9 41.5c1.6 0 3.3.2 4.8.8l-7.4 13.1-2.3-1.8 4.9-12.1Z" fill="#000"></path><path d="M42.1 41.5c-1.6 0-3.3.2-4.8.8l7.4 13.1 2.3-1.8-4.9-12.1Z" fill="#000"></path></mask></defs><g fill="currentColor" mask="url(#ico-medalla-cut)"><path d="M17.2 34C15.4 38.7 12.7 44.4 9.8 49.6l-2.6 4.6c-.8 1.4-.8 1.4.9 1.1l9-1.6 2.5 8.3c.5 1.7.5 1.7 1.4.1l11-18.7L17.2 34Z"></path><path d="M46.8 34c1.8 4.7 4.5 10.4 7.4 15.6l2.6 4.6c.8 1.4.8 1.4-.9 1.1l-9-1.6-2.5 8.3c-.5 1.7-.5 1.7-1.4.1L32 43.4 46.8 34Z"></path><path d="M32 3c1.34 0 3.57 2.43 5.01 2.81 1.43.38 4.58-.6 5.74.07 1.16.67 1.88 3.89 2.93 4.94 1.05 1.05 4.27 1.77 4.94 2.93.67 1.16-.31 4.31.07 5.74.38 1.44 2.81 3.67 2.81 5.01 0 1.34-2.43 3.57-2.81 5.01-.38 1.43.6 4.58-.07 5.74-.67 1.16-3.89 1.88-4.94 2.93-1.05 1.05-1.77 4.27-2.93 4.94-1.16.67-4.31-.31-5.74.07C35.57 43.57 33.34 46 32 46c-1.34 0-3.57-2.43-5.01-2.81-1.43-.38-4.58.6-5.74-.07-1.16-.67-1.88-3.89-2.93-4.94-1.05-1.05-4.27-1.77-4.94-2.93-.67-1.16.31-4.31-.07-5.74-.38-1.44-2.81-3.67-2.81-5.01 0-1.34 2.43-3.57 2.81-5.01.38-1.43-.6-4.58.07-5.74.67-1.16 3.89-1.88 4.94-2.93 1.05-1.05 1.77-4.27 2.93-4.94 1.16-.67 4.31.31 5.74-.07C28.43 5.43 30.66 3 32 3Z"></path></g><path d="m32 15.7 2.8 5.5 6.2.9-4.5 4.4 1.1 6.3-5.6-2.9-5.6 2.9 1.1-6.3-4.5-4.4 6.2-.9 2.8-5.5Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></symbol></defs></svg>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
-
-
-<!-- NAV copiada de Pagina Torneo.html -->
-<nav class="top">
-  <div class="wrap nav-in">
-    <div class="brand">
-      <img class="logo-main" src="assets/logo-pingpong-v2.png" alt="Ping Pong FI" />
-      <img class="logo-gif" id="logoMain" src="assets/cerdito-2027-1.gif?v=2027-1" alt="Cerdito Ping Pong FI" />
-      <span class="logo-div"></span>
-      <img class="logo-fi" src="assets/escudo-fi.svg" alt="Facultad de Ingeniería" />
-    </div>
-    <div class="nav-links">
-      <a href="Pagina Torneo.html#inicio">Inicio</a>
-      <a href="Directorio.html">Directorio</a>
-      <a href="Pagina Torneo.html#grupos" class="on" data-cat-link="avanzado">Categorías</a>
-      <a href="Facultad.html?code=INGENIERIA">Facultades</a>
-    </div>
-    <div class="nav-right">
-      <div class="socials"></div>
-      <a class="btn btn-gray" href="Registro.html" style="text-decoration:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>Inscribirse</a>
-      <button class="hamburger" id="hambBtn" aria-label="Menú" aria-expanded="false">
-        <svg class="hamb-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        <svg class="close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-    <div class="mob-menu-top">
-      <div class="mob-menu-logos">
-        <img src="assets/cerdito-2027-1.gif?v=2027-1" alt="Cerdito Ping Pong FI" />
-        <img src="assets/escudo-fi.svg" alt="Facultad de Ingeniería" />
-      </div>
-      <button type="button" class="mob-menu-x" id="mobMenuClose" aria-label="Cerrar menú"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></button>
-    </div>
-    <a href="Pagina Torneo.html#inicio" class="mob-link">Inicio</a>
-    <a href="Directorio.html" class="mob-link">Directorio</a>
-    <a href="Pagina Torneo.html#grupos" class="mob-link on" data-cat-link="avanzado">Categorías</a>
-    <a href="Facultad.html?code=INGENIERIA" class="mob-link">Facultades</a>
-  </div>
-  <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
-</nav>
-
 
 <main class="wrap pjx-wrap" id="contenido">
   <div class="pjx-topline">
@@ -957,7 +834,7 @@
 <script src="supabase/public-links.js"></script>
 <script src="supabase/participants.js?v=histdir3"></script>
 <script src="supabase/ui.js"></script>
-<script src="supabase/nav.js"></script>
+<script src="navbar-fi.js?v=1"></script>
 <script src="supabase/player-card.js?v=99"></script>
 <script src="supabase/academic-titles.js?v=109"></script>
 <script src="supabase/academic-page.js?v=102"></script>
@@ -1207,30 +1084,5 @@
   if (window.ResizeObserver) new ResizeObserver(schedule).observe(el.parentElement || el);
 })();
 </script>
-
-<script id="copied-top-nav-js">
-(function(){
-  var btn = document.getElementById('hambBtn');
-  var menu = document.getElementById('mobileMenu');
-  var backdrop = document.getElementById('mobileMenuBackdrop');
-  var closeBtn = document.getElementById('mobMenuClose');
-  if (!btn || !menu) return;
-  function setOpen(isOpen){
-    menu.classList.toggle('open', isOpen);
-    if (backdrop) backdrop.classList.toggle('open', isOpen);
-    btn.classList.toggle('open', isOpen);
-    btn.style.visibility = isOpen ? 'hidden' : '';
-    btn.setAttribute('aria-expanded', String(isOpen));
-    menu.setAttribute('aria-hidden', String(!isOpen));
-  }
-  btn.addEventListener('click', function(){ setOpen(!menu.classList.contains('open')); });
-  if (closeBtn) closeBtn.addEventListener('click', function(){ setOpen(false); });
-  if (backdrop) backdrop.addEventListener('click', function(){ setOpen(false); });
-  menu.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){ setOpen(false); });
-  });
-})();
-</script>
-
 </body>
 </html>

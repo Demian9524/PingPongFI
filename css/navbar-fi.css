@@ -24,10 +24,10 @@ html body .fi-nav .logo-main{height:66px;width:auto;display:block}
 html body .fi-nav .logo-gif{height:80px;width:auto;margin:-14px 0 -12px;display:block}
 html body .fi-nav .logo-div{width:1px;height:36px;background:var(--fi-line2);flex:0 0 auto}
 html body .fi-nav .logo-fi{width:auto;height:70px;flex:0 0 auto;object-fit:contain;display:block}
-html body .fi-nav .nav-links{display:flex;gap:9px;margin:0;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-html body .fi-nav .nav-links a{font-family:var(--fi-disp);font-weight:700;font-size:15px;letter-spacing:0.07em;
+html body .fi-nav .nav-links{display:flex;gap:clamp(2px,0.9vw,9px);margin:0;flex:1 1 auto;min-width:0;justify-content:center}
+html body .fi-nav .nav-links a{font-family:var(--fi-disp);font-weight:700;font-size:clamp(12px,1.05vw,15px);letter-spacing:0.07em;
   text-transform:uppercase;color:var(--fi-muted);text-decoration:none;transition:.15s var(--fi-cut);
-  padding:10px 18px;border-radius:7px;position:relative;min-height:0;display:block;background:none;box-shadow:none}
+  padding:10px clamp(8px,1.3vw,18px);border-radius:7px;position:relative;min-height:0;display:block;background:none;box-shadow:none;white-space:nowrap}
 html body .fi-nav .nav-links a:hover{color:var(--fi-text);background:none}
 html body .fi-nav .nav-links a.on{color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--fi-red2) 90%,transparent),var(--fi-red-dk));
   box-shadow:0 4px 14px -5px var(--fi-red-glow)}
@@ -103,4 +103,7 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
   html body .fi-nav .btn-gray svg{width:12px;height:12px}
   html body .fi-nav .hamburger{display:flex;width:34px;height:34px}
   html body .fi-nav .logo-gif{display:none}
+}
+@media (max-width:400px){
+  html body .fi-nav .logo-main{height:56px}
 }

@@ -13,6 +13,8 @@
   'use strict';
   const KEY = 'torneo_sections_cfg_v1';
   const SECTIONS = [
+    { id:'categoria', label:'Barra de categorías',
+      hint:'Selector de nivel (Principiantes / Intermedios / Avanzados) en la página principal.' },
     { id:'participantes', label:'Lista de participantes',
       hint:'Listado previo al sorteo con todos los inscritos confirmados de la categoría.' },
     { id:'grupos',  label:'Fase de grupos',
@@ -21,6 +23,8 @@
       hint:'Tabla única con todos los participantes de la categoría, repartidos por bombo y corte de puntos.' },
     { id:'bracket', label:'Bracket Final',
       hint:'Llave de la fase eliminatoria en la página pública.' },
+    { id:'terceros', label:'Terceros y sistema 5–4–3',
+      hint:'Explicación de cómo se reparten las plazas de tercer lugar entre grupos.' },
     { id:'whatsapp', label:'Pop-up de comunidad WhatsApp',
       hint:'Burbuja flotante en la esquina que invita a unirse al grupo de WhatsApp del torneo.' }
   ];
@@ -29,7 +33,7 @@
     { id:'empty', label:'Vacía',   title:'Se muestra el bloque, pero con el aviso «aún no se publica».' },
     { id:'off',   label:'Oculta',  title:'El bloque no aparece en la página.' }
   ];
-  const DEFAULTS = { participantes:'on', grupos:'on', bombos:'on', bracket:'on', whatsapp:'on' };
+  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', whatsapp:'on' };
 
   // Compatibilidad con la versión anterior, que guardaba booleanos.
   function norm(v){

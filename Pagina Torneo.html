@@ -83,11 +83,10 @@
   .brand .bt span{color:var(--red2)}
   .brand .bt small{display:inline-block;font-size:9px;letter-spacing:1px;color:#fff;font-weight:800;
     background:var(--red);padding:1px 5px;border-radius:3px;margin-top:3px;font-style:normal}
-  .nav-in{position:relative}
-  .nav-links{display:flex;gap:9px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-  .nav-links a{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:0.07em;
+  .nav-links{display:flex;gap:clamp(2px,0.9vw,9px);flex:1 1 auto;min-width:0;justify-content:center}
+  .nav-links a{font-family:var(--disp);font-weight:700;font-size:clamp(12px,1.05vw,15px);letter-spacing:0.07em;
     text-transform:uppercase;color:var(--muted);text-decoration:none;transition:.15s var(--cut);
-    padding:10px 18px;border-radius:7px;position:relative}
+    padding:10px clamp(8px,1.3vw,18px);border-radius:7px;position:relative;white-space:nowrap}
   .nav-links a:hover{color:var(--text)}
   .nav-links a.on{color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--red2) 90%,transparent),var(--red-dk));
     box-shadow:0 4px 14px -5px var(--red-glow)}
@@ -1947,21 +1946,6 @@
 <!-- Piel «leaderboard» del bracket (solo estilos; va después del CSS de la página) -->
 <link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
 <link rel="manifest" href="manifest.webmanifest">
-
-
-<!-- TEMPORAL: ocultar bloques de precompetencia en la portada.
-     Para restaurarlos, elimina este bloque completo. -->
-<style id="temp-hide-precompetition">
-  #grupos,
-  #preGroupSection,
-  #faseGrupos,
-  #bombos,
-  #bracket,
-  #reglas {
-    display: none !important;
-  }
-</style>
-
 </head>
 <body data-cat="neutral">
 <svg class="ui-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="ico-x" viewBox="0 0 128 128"><path fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round" transform="matrix(1 0 -.1228 1 7.86 0)" d="M21 26h24l19 26 19-26h24L78 64l29 38H83L64 76l-19 26H21l29-38-29-38Z"></path></symbol><symbol id="ico-i" viewBox="0 0 128 128"><path fill="currentColor" d="M60 18h32l-6 23H54l6-23ZM53 48h32L72 95h19l-4 15H27l4-15h18l9-32H43l4-15h6Z"></path></symbol></defs></svg>
@@ -2032,7 +2016,7 @@
     <div class="nav-links">
       <a href="#inicio" class="on">Inicio</a>
       <a href="Directorio.html">Directorio</a>
-      <a href="#grupos" data-cat-link="avanzado">Categorías</a>
+      <a href="Categoria2.html?code=avanzado">Categorías</a>
       <a href="Facultad.html?code=INGENIERIA">Facultades</a>
     </div>
     <div class="nav-right">
@@ -2054,7 +2038,7 @@
     </div>
     <a href="#inicio" class="mob-link on">Inicio</a>
     <a href="Directorio.html" class="mob-link">Directorio</a>
-    <a href="#grupos" class="mob-link" data-cat-link="avanzado">Categorías</a>
+    <a href="Categoria2.html?code=avanzado" class="mob-link">Categorías</a>
     <a href="Facultad.html?code=INGENIERIA" class="mob-link">Facultades</a>
   </div>
   <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
@@ -2625,6 +2609,8 @@
 (function(){
   var KEY = 'torneo_sections_cfg_v1';
   var SEC = [
+    { id:'categoria', sel:'#grupos', auto:false,
+      msg:'El selector de categorías no está disponible por el momento.' },
     { id:'participantes', sel:'#preGroupSection', auto:true,
       msg:'La lista de participantes de esta categoría aún no ha sido publicada.' },
     { id:'grupos',  sel:'#faseGrupos', auto:false,
@@ -2632,7 +2618,9 @@
     { id:'bombos',  sel:'#bombos', auto:false,
       msg:'Los bombos de esta categoría aún no han sido publicados.' },
     { id:'bracket', sel:'#bracket', auto:false,
-      msg:'El bracket de esta categoría aún no ha sido publicado.' }
+      msg:'El bracket de esta categoría aún no ha sido publicado.' },
+    { id:'terceros', sel:'#reglas', auto:false,
+      msg:'La información de terceros de esta categoría aún no ha sido publicada.' }
   ];
   function stateOf(cfg, id){
     var v = cfg[id];
