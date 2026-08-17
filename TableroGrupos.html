@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tablero de grupos · Torneo de Ping Pong FI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+  .who{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  /* tabs por categoría */
+  .gb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+  .gb-tab{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+    padding:9px 16px;border:1px solid var(--line2);color:var(--muted);border-radius:8px;display:inline-flex;gap:8px;align-items:center}
+  .gb-tab.on{color:var(--text);border-color:var(--red2);background:var(--raise)}
+  .gb-tab-n{font-family:var(--mono);font-size:10px;color:var(--gold)}
+  /* toolbar */
+  .gb-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+  /* tablero */
+  .gb-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start;padding-bottom:110px}
+  .gb-island{padding:0;display:flex;flex-direction:column;min-height:120px}
+  .gb-island.pool{border-color:var(--gold)}
+  .gb-island.over{outline:2px dashed var(--red2);outline-offset:-4px}
+  .gb-island-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .gb-island-head b{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+  .gb-count{font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .gb-count.warn{color:var(--gold)}
+  .gb-count.dim{color:var(--muted);opacity:.75}
+  .gb-tools{margin-left:auto;display:flex;gap:4px}
+  .gb-ico{border:1px solid var(--line2);border-radius:6px;min-width:30px;min-height:30px;color:var(--muted);font-size:13px}
+  .gb-ico:hover{color:var(--text);background:var(--raise)}
+  .gb-island-body{display:flex;flex-direction:column;gap:8px;padding:10px;max-height:420px;overflow-y:auto}
+  .gb-empty{color:var(--muted);font-size:12px;text-align:center;padding:14px 0}
+  /* tarjetas */
+  .gb-card{display:flex;gap:10px;align-items:center;background:var(--raise);border:1px solid var(--line);
+    border-radius:8px;padding:8px 10px;cursor:grab}
+  .gb-card.drag{opacity:.5}
+  .gb-card.moved{border-color:var(--gold)}
+  .gb-card.dim{opacity:.55;cursor:default}
+  .gb-logo{width:34px;height:34px;object-fit:contain;flex:none}
+  .gb-info{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+  .gb-line1{display:flex;gap:6px;align-items:center}
+  .gb-line1 b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gb-line1 a{color:inherit;text-decoration:none}
+  .gb-line1 a:hover{text-decoration:underline;color:var(--gold)}
+  .gb-played{color:var(--gold);font-size:10px}
+  .gb-line2{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gb-badges{display:flex;gap:6px;flex-wrap:wrap}
+  .gb-menu{flex:none}
+  /* nuevo grupo / no elegibles */
+  .gb-add{border:1px dashed var(--line2);border-radius:10px;min-height:80px;color:var(--muted);
+    font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+  .gb-add:hover{color:var(--text);border-color:var(--red2)}
+  .gb-inel{grid-column:1/-1;border:1px solid var(--line);border-radius:10px;padding:6px 12px;color:var(--muted)}
+  .gb-inel summary{cursor:pointer;font-size:13px;padding:8px 0}
+  .gb-inel .gb-card{filter:grayscale(1)}
+  /* barra inferior */
+  .gb-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border-top:1px solid var(--line2);display:none;gap:10px;align-items:center;padding:12px 26px;flex-wrap:wrap}
+  .gb-bar-msg{color:var(--gold);font-family:var(--mono);font-size:12px}
+  .gb-bar .btn{min-height:40px;padding:8px 16px}
+  /* modal */
+  .gb-modal{max-width:520px;width:calc(100vw - 40px);max-height:82vh;overflow-y:auto}
+  .gb-modal.wide{max-width:760px}
+  .gb-modal-sub{color:var(--muted);font-size:13px;margin:8px 0}
+  .gb-move-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .gb-move-list .btn{justify-content:flex-start}
+  .gb-move-list .btn.sel{border-color:var(--red2);color:var(--text)}
+  .gb-field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);margin-top:10px}
+  .gb-sec{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:16px 0 6px;color:var(--gold)}
+  .gb-ul{list-style:none;display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+  .gb-ul li{border-left:2px solid var(--line2);padding-left:10px}
+  .gb-rematch{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px;font-size:13px}
+  .gb-warn-line{color:var(--gold);font-size:12px;margin-bottom:8px}
+  /* Bloque de bloqueo: va ARRIBA del modal de impacto para que se vea sin scroll.
+     Antes los errores bloqueantes solo vivían al final de la lista y el botón
+     deshabilitado no explicaba por qué. */
+  .gb-block{border:1.5px solid var(--red2);border-radius:10px;background:rgba(221,59,44,.1);padding:12px 14px;margin-bottom:14px}
+  .gb-block-h{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--red2)}
+  .gb-block-h svg{flex:0 0 auto}
+  .gb-block p{font-size:12.5px;color:var(--muted);margin:6px 0 0;text-wrap:pretty}
+  .gb-block ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin:10px 0 0;font-size:13px;color:var(--text)}
+  .gb-block li{border-left:2px solid var(--red2);padding-left:10px}
+  .gb-block-why{font-size:12.5px;color:var(--red2);margin:0 0 8px;text-align:right;text-wrap:pretty}
+  .btn.btn-main:disabled{opacity:.45;cursor:not-allowed}
+  .gb-table{width:100%;border-collapse:collapse;font-size:13px}
+  .gb-table th,.gb-table td{padding:6px 8px;text-align:center;border-bottom:1px solid var(--line)}
+  .gb-table th{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  /* móvil: sin depender de drag & drop (el menú ⋯ siempre disponible) */
+  @media (max-width:640px){
+    .gb-board{grid-template-columns:1fr}
+    .gb-card{cursor:default}
+    .gb-bar{padding:10px 14px}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top" data-site-nav data-active="" data-admin="off" aria-label="Principal">
+  <template data-nav-right>
+    <span class="who" id="whoami"></span>
+    <a class="btn btn-ghost" href="ControlTorneo.html">Centro de control</a>
+    <a class="btn btn-ghost" href="Admin.html">Inscripciones</a>
+    <button class="btn btn-ghost" id="btnLogout" type="button">Cerrar sesión</button>
+  </template>
+</nav>
+
+<main class="wrap" id="contenido">
+
+  <div class="hud center" id="noSession" style="display:none">
+    <h1>Tablero de <span style="color:var(--red2)">grupos</span></h1>
+    <p class="sub">Este tablero es exclusivo del staff. Inicia sesión desde el panel de organizadores.</p>
+    <a class="btn btn-main" href="Admin.html" style="width:100%;justify-content:center">Ir a iniciar sesión</a>
+  </div>
+
+  <div class="hud center" id="deniedView" style="display:none">
+    <h1 style="color:var(--err)">Sin permisos</h1>
+    <p class="sub">Tu cuenta está autenticada pero no tienes permisos de organizador.</p>
+    <button class="btn btn-ghost" id="btnDeniedLogout" style="width:100%;justify-content:center" type="button">Salir</button>
+  </div>
+
+  <div id="boardView" style="display:none">
+    <div class="head">
+      <div>
+        <h1>Tablero de <span class="r">grupos</span></h1>
+        <p>Herramienta oficial para replicar el sorteo físico (pelotas con papelitos). Arrastra participantes entre islas, usa el menú ⋯ o el panel «Registrar extracción». Nada se guarda hasta «Revisar y guardar cambios».</p>
+        <p class="metaline" id="gbPhase" aria-live="polite"></p>
+      </div>
+      <div class="nav-right" style="margin-left:auto;gap:10px;flex-wrap:wrap">
+        <span class="metaline" id="edName">—</span>
+        <button class="btn btn-ghost" id="btnReloadBoard" type="button">Actualizar</button>
+      </div>
+    </div>
+
+    <div class="gb-tabs" id="gbTabs" role="tablist" aria-label="Categorías"></div>
+
+    <div class="gb-toolbar">
+      <input class="filter" id="gbSearch" type="search" placeholder="Buscar apodo, folio, teléfono…" style="min-width:240px" />
+      <select class="filter" id="gbFilter">
+        <option value="ALL">Todos</option>
+        <option value="REVIEW">Solo con revisión pendiente</option>
+      </select>
+      <span class="metaline">Máximo recomendado por grupo: 4 (solo advertencia; se permiten grupos de cualquier tamaño).</span>
+      <button class="btn btn-ghost" id="gbExtractToggle" type="button" style="margin-left:auto">Registrar extracción</button>
+      <button class="btn btn-ghost" id="gbBallots" type="button">Preparar papeletas de grupos</button>
+    </div>
+
+    <section class="hud" id="gbExtract" style="display:none;padding:14px 16px;margin:0 0 16px" aria-label="Registrar siguiente extracción">
+      <b style="font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)">Registrar siguiente extracción</b>
+      <p class="gb-modal-sub" style="margin:6px 0 10px">Replica exactamente lo que sale de las pelotas: elige el participante extraído y el grupo que le tocó. Hace el mismo movimiento que arrastrar la tarjeta.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+        <label class="gb-field" style="margin:0;min-width:220px"><span>Participante</span>
+          <select class="filter" id="gbExtractWho"></select>
+        </label>
+        <label class="gb-field" style="margin:0;min-width:160px"><span>Grupo extraído</span>
+          <select class="filter" id="gbExtractGroup"></select>
+        </label>
+        <button class="btn btn-main" id="gbExtractGo" type="button">Asignar</button>
+        <button class="btn btn-ghost" id="gbExtractUndo" type="button" disabled>Deshacer última extracción</button>
+      </div>
+      <p class="metaline" id="gbExtractLog" style="margin:10px 0 0"></p>
+    </section>
+
+    <div class="gb-board" id="gbBoard" data-screen-label="Tablero de grupos"></div>
+
+    <section class="hud" id="qcSection" style="display:none" data-screen-label="Configuración de clasificación">
+      <div class="qc-head">
+        <h2>Configuración de clasificación</h2>
+        <span class="metaline">Zonas de colores y tabla de terceros (sistema 5–4–3) por categoría · solo visualización, no crea partidos ni bracket</span>
+        <span class="qc-dirty" id="qcDirty" style="display:none">Cambios sin guardar</span>
+      </div>
+      <div class="qc-tabs" id="qcTabs" role="tablist" aria-label="Categoría a configurar"></div>
+      <div class="qc-editing" id="qcEditing" aria-live="polite"></div>
+      <div id="qcZones"></div>
+      <button class="btn btn-ghost" id="qcAdd" type="button" style="margin:6px 0 14px">+ Añadir zona</button>
+      <h3 class="qc-sub">Terceros · sistema 5–4–3</h3>
+      <div id="qcThirds"></div>
+      <div class="qc-errors" id="qcErrors" style="display:none" aria-live="polite"></div>
+      <h3 class="qc-sub">Vista previa</h3>
+      <div id="qcPreview"></div>
+      <div class="qc-foot">
+        <button class="btn btn-ghost" id="qcCancel" type="button">Cancelar cambios</button>
+        <button class="btn btn-ghost" id="qcDefaults" type="button">Restaurar valores predeterminados</button>
+        <button class="btn btn-main" id="qcSave" type="button">Guardar y publicar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="state" id="bootState" aria-live="polite"><span class="spin" aria-hidden="true">◌</span> Comprobando sesión…</div>
+</main>
+
+<div class="gb-bar" id="gbBar">
+  <span class="gb-bar-msg" id="gbBarMsg" aria-live="polite"></span>
+  <span style="flex:1"></span>
+  <button class="btn btn-ghost" id="btnUndo" type="button">Deshacer</button>
+  <button class="btn btn-ghost" id="btnRestore" type="button">Restaurar original</button>
+  <button class="btn btn-main" id="btnReview" type="button">Revisar y guardar cambios</button>
+</div>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/auth.js"></script>
+<script src="supabase/admin.js"></script>
+<script src="supabase/logo-resolver.js"></script>
+<script src="supabase/public-links.js"></script>
+<script src="supabase/ui.js"></script>
+<script src="supabase/nav.js"></script>
+<script src="supabase/group-board-core.js"></script>
+<script src="supabase/group-board.js"></script>
+<script src="supabase/format-engine.js?v=124"></script>
+<script src="supabase/qualification-config.js?v=161"></script>
+<script src="supabase/qualification-admin.js?v=161"></script>
+<style>
+#qcSection{margin-top:26px;padding:18px}
+#qcSection h2{font-size:20px;margin:0}
+#qcSection .qc-sub{font-size:14px;letter-spacing:0.06em;text-transform:uppercase;margin:18px 0 8px;opacity:0.85}
+.qc-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.qc-dirty{font-size:11px;letter-spacing:0.5px;padding:3px 8px;border-radius:4px;background:rgba(227,169,63,0.18);color:#e3a93f;border:1px solid rgba(227,169,63,0.4)}
+.qc-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.qc-tab{padding:8px 14px;min-height:44px;border-radius:6px;border:1px solid var(--line,#333);background:transparent;color:inherit;cursor:pointer;font:inherit}
+.qc-tab.on{border-color:var(--red2,#dd3b2c);color:var(--red2,#dd3b2c);font-weight:700}
+.qc-editing{font-size:13px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--red2,#dd3b2c);border-radius:6px;padding:10px 14px;margin-bottom:14px;background:rgba(221,59,44,0.08)}
+.qc-editing b{color:var(--red2,#dd3b2c)}
+.qc-zone{border:1px solid var(--line,#333);border-radius:8px;padding:12px;margin-bottom:10px;display:flex;flex-direction:column;gap:10px}
+.qc-zrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qc-color{width:52px;height:44px;padding:2px;border:1px solid var(--line,#333);border-radius:6px;background:transparent;cursor:pointer}
+.qc-fl{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+.qc-flcol{flex-direction:column;align-items:flex-start}
+.qc-ck{display:inline-flex;align-items:center;gap:6px;font-size:12px;min-height:44px;cursor:pointer}
+.qc-ck input{width:16px;height:16px}
+.qc-zone .btn{min-height:44px}
+.qc-switch{font-size:14px}
+.qc-btgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:10px 0}
+.qc-rules{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.qc-derived{border:1px solid var(--line2,#444);border-left:3px solid var(--gold,#edbb52);border-radius:8px;padding:10px 13px;margin:10px 0;font-size:12.5px;line-height:1.6;color:var(--muted,#999)}
+.qc-derived b{color:var(--text,#fff)}
+.qc-rule{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line,#333);border-radius:6px;padding:6px 10px;font-size:12px}
+.qc-rule button{min-width:34px;min-height:34px;border:none;background:transparent;color:inherit;cursor:pointer}
+.qc-rule button:disabled{opacity:0.25;cursor:default}
+.qc-errors{border:1px solid rgba(228,68,102,0.5);background:rgba(228,68,102,0.08);border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13px}
+.qc-errors ul{margin:6px 0 0;padding-left:18px}
+.qc-prevtable{border:1px solid var(--line,#333);border-radius:8px;overflow:hidden;margin-top:10px;max-width:520px}
+.qc-prow{display:flex;align-items:center;gap:10px;padding:10px 12px;position:relative;border-bottom:1px solid var(--line,#333);font-size:13px}
+.qc-prow:last-child{border-bottom:none}
+.qc-pacc{position:absolute;left:0;top:0;bottom:0;width:3px}
+.qc-ppos{width:32px;opacity:0.7;font-weight:700}
+.qc-pname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qc-pzone{font-size:10px;letter-spacing:0.5px;text-transform:uppercase;opacity:0.75}
+.qc-prevleg{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.qc-lg{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;opacity:0.85}
+.qc-sw{width:11px;height:11px;border-radius:3px}
+.qc-foot{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px}
+.qc-foot .btn{min-height:44px}
+.qc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.qc-modal{max-width:480px;width:100%;padding:18px;display:flex;flex-direction:column;gap:12px}
+.qc-modal h3{margin:0}
+.qc-summary{margin:0;padding-left:18px;font-size:13px;line-height:1.7}
+@media (max-width:640px){.qc-zone .qc-zrow{align-items:stretch}.qc-color{width:64px;height:48px}}
+</style>
+</body>
+</html>

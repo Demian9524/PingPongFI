@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diagnóstico de conexión · Torneo de Ping Pong FI</title>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<style>
+  .checks{margin:24px 0 40px;display:flex;flex-direction:column;gap:8px}
+  .chk{display:flex;align-items:center;gap:14px;padding:13px 16px}
+  .chk .ic{width:26px;height:26px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:13px;background:var(--raise);border:1px solid var(--line2)}
+  .chk.pending .ic{color:var(--dim)}
+  .chk.running .ic{color:var(--amber);animation:sb-sp 0.9s linear infinite}
+  .chk.ok .ic{color:var(--green);border-color:rgba(116,169,138,0.5)}
+  .chk.error .ic{color:var(--err);border-color:rgba(196,106,95,0.5)}
+  .chk .nm{flex:1;min-width:0}
+  .chk .nm b{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:0.02em;display:block}
+  .chk .nm small{font-family:var(--mono);font-size:11px;color:var(--muted);display:block;margin-top:2px;word-break:break-word}
+  .chk .ms{font-family:var(--mono);font-size:11px;color:var(--dim);flex:0 0 auto}
+  .diag-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .overall{font-family:var(--disp);font-weight:800;font-style:italic;font-size:22px;text-transform:uppercase;margin-top:6px}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Principal">
+  <div class="wrap nav-in">
+    <a class="brand" href="Pagina Torneo.html"><img class="logo-main" src="assets/logo-pingpong.png" alt="Torneo de Ping Pong FI" /></a>
+  </div>
+</nav>
+
+<main class="wrap" id="contenido">
+  <div class="head">
+    <div>
+      <h1>Diagnóstico de <span class="r">conexión</span></h1>
+      <p>Comprobaciones de solo lectura contra Supabase. No escribe datos. No muestra claves completas ni teléfonos.</p>
+    </div>
+  </div>
+  <div class="diag-actions">
+    <button class="btn btn-main" id="btnRun" type="button">Ejecutar diagnóstico</button>
+    <button class="btn btn-ghost" id="btnCopy" type="button">Copiar reporte</button>
+  </div>
+  <div class="overall" id="overall"></div>
+  <div class="checks" id="checks"></div>
+</main>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/directory.js"></script>
+<script src="supabase/auth.js"></script>
+<script src="supabase/admin.js"></script>
+<script src="supabase/diagnostic.js"></script>
+<script src="supabase/debug-panel.js"></script>
+<script>
+(function(){
+  'use strict';
+  const $ = s => document.querySelector(s);
+  let lastResults = [];
+  const nodes = {};
+
+  function build(){
+    const wrap = $('#checks');
+    wrap.textContent = '';
+    window.SB_DIAGNOSTIC.checks.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'hud chk pending';
+      const ic = document.createElement('div'); ic.className = 'ic'; ic.textContent = '·';
+      const nm = document.createElement('div'); nm.className = 'nm';
+      const b = document.createElement('b'); b.textContent = c.name;
+      const small = document.createElement('small'); small.textContent = 'Pendiente';
+      nm.appendChild(b); nm.appendChild(small);
+      const ms = document.createElement('div'); ms.className = 'ms';
+      row.appendChild(ic); row.appendChild(nm); row.appendChild(ms);
+      wrap.appendChild(row);
+      nodes[c.id] = { row, ic, small, ms };
+    });
+  }
+  function update(id, s){
+    const n = nodes[id]; if (!n) return;
+    n.row.className = 'hud chk ' + s.status;
+    n.ic.textContent = s.status === 'ok' ? '✓' : s.status === 'error' ? '✗' : s.status === 'running' ? '◌' : '·';
+    if (s.status === 'running') n.small.textContent = 'Ejecutando…';
+    if (s.detail != null) n.small.textContent = s.detail;
+    if (s.ms != null) n.ms.textContent = s.ms + ' ms';
+  }
+
+  async function run(){
+    $('#overall').textContent = '';
+    $('#btnRun').disabled = true;
+    build();
+    lastResults = await window.SB_DIAGNOSTIC.runAll(update);
+    const okAll = lastResults.every(r => r.ok);
+    const anyOk = lastResults.some(r => r.ok);
+    $('#overall').style.color = okAll ? 'var(--green)' : anyOk ? 'var(--amber)' : 'var(--err)';
+    $('#overall').textContent = okAll ? 'Todo correcto' : anyOk ? 'Parcial — revisa los errores' : 'Sin conexión';
+    $('#btnRun').disabled = false;
+  }
+
+  $('#btnRun').addEventListener('click', run);
+  $('#btnCopy').addEventListener('click', () => {
+    const report = window.SB_DIAGNOSTIC.buildReport(lastResults);
+    navigator.clipboard?.writeText(report).then(
+      () => { $('#overall').textContent = 'Reporte copiado al portapapeles'; },
+      () => { $('#overall').textContent = 'No se pudo copiar'; }
+    );
+  });
+  build();
+})();
+</script>
+</body>
+</html>

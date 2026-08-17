@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prueba local · Imprimibles del sorteo de grupos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/pre-group-print.css?v=121">
+<link rel="stylesheet" href="css/pre-group-draw-capture.css?v=116">
+<style>.harness{border:1px dashed var(--line2);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.4px}</style>
+</head>
+<body>
+<main class="wrap" id="contenido">
+  <div class="head"><div><h1>Prueba <span class="r">local</span></h1></div></div>
+  <div class="harness">Banco de pruebas SIN Supabase: los datos vienen de un stub en memoria (19 elegibles en Avanzado/Open, 6 en Novato). Sirve para revisar el imprimible sin sesión administrativa. El módulo real vive en ControlTorneo.html.</div>
+
+  <section class="sect" id="pgpSect" aria-labelledby="hPgp" style="display:none">
+    <h2 id="hPgp">Imprimibles del sorteo de grupos</h2>
+    <p class="ssub">Genera los papelitos físicos que van dentro de las pelotas. Es un documento de solo lectura: no crea grupos, membresías ni partidos, no realiza ningún sorteo virtual y funciona aunque la lista pública esté desactivada.</p>
+    <div class="hud pgp-panel" id="pgpPanel">
+      <div class="pgp-controls">
+        <label class="pgp-fld"><span>Edición</span><select id="pgpEdition"></select></label>
+        <label class="pgp-fld"><span>Categoría</span><select id="pgpCat"></select></label>
+        <label class="pgp-fld"><span>Medida del papelito</span><select id="pgpSize"></select></label>
+        <label class="pgp-fld"><span>Distribución de grupos</span><select id="pgpDist"></select></label>
+      </div>
+      <div class="pgp-kpis" id="pgpKpis"></div>
+      <div class="pgp-stale" id="pgpStale" style="display:none">La lista de inscritos cambió. Regenera los imprimibles antes del sorteo.</div>
+      <label class="pgp-check"><input type="checkbox" id="pgpTest" /> Marcar como documento de prueba</label>
+      <div class="pgp-actions">
+        <button class="btn btn-ghost" id="pgpCalib" type="button">Imprimir calibración</button>
+        <button class="btn btn-ghost" id="pgpPrevP" type="button">Vista previa de participantes</button>
+        <button class="btn btn-ghost" id="pgpPrevG" type="button">Vista previa de grupos</button>
+        <button class="btn btn-main" id="pgpPkg" type="button">Generar paquete completo</button>
+      </div>
+      <div id="pgpMsg" class="metaline" aria-live="polite"></div>
+      <p class="metaline">Reglas del cálculo: tamaño objetivo 4, mínimo 3, máximo 5 y diferencia máxima de una persona entre grupos.</p>
+    </div>
+  </section>
+  <section class="sect" id="pgdSect" aria-labelledby="hPgd" style="display:none">
+    <h2 id="hPgd">Acta y captura del sorteo físico</h2>
+    <p class="ssub">El sorteo es 100 % físico y presencial: aquí solo se transcribe el papelito que sale de cada pelota. La página no elige jugadores ni grupos, no baraja listas y no propone asignaciones. Todo queda como borrador local de este navegador; en esta etapa no se escribe nada en Supabase.</p>
+    <div class="hud pgd-panel" id="pgdPanel">
+      <div id="pgdBody" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+<script>
+// Stub de solo lectura con la misma forma que admin_registrations().
+const NOMBRES_AV = ['Pepito de Avanzados','Alejandra Montes de Oca','Bruno','Carlos Eduardo Villaseñor','Diana Reyes','Emiliano Zúñiga Barrera','Fernanda Ruiz','Gustavo','Hilda Marisol Contreras','Iván Pérez','Jorge Luis Hernández Ocampo','Karla','Luis Ángel Domínguez','María José Aguilar','Néstor','Omar Sebastián Trujillo','Paola Jiménez','Quetzalli Ramírez Nava','Ricardo'];
+const NOMBRES_NOV = ['Ana Sofía','Beto','Cristina Malvaez','Daniel','Erika Paulina Solís','Fabián'];
+function mk(list, edcat, off){
+  return list.map((n,i)=>({registration_id:'r'+(off+i),public_code:'FI27-'+String(off+i).padStart(3,'0'),
+    nickname_snapshot:n,edition_category_id:edcat,registration_status:'CONFIRMED',
+    payment_status:(i%7===0?'WAIVED':'CONFIRMED')}));
+}
+const ROWS = mk(NOMBRES_AV,4,1).concat(mk(NOMBRES_NOV,1,101))
+  .concat([{registration_id:'rX',public_code:'FI27-900',nickname_snapshot:'No pagó todavía',edition_category_id:4,registration_status:'CONFIRMED',payment_status:'PENDING'},
+           {registration_id:'rY',public_code:'FI27-901',nickname_snapshot:'Solo prerregistro',edition_category_id:4,registration_status:'PRE_REGISTERED',payment_status:'CONFIRMED'}]);
+window.SB_CATALOG = {
+  getAllEditions: async () => [{id:27,name:'Torneo FI 27-1',slug:'27-1',status:'ACTIVE'},{id:26,name:'Torneo FI 26-2',slug:'26-2',status:'CLOSED'}],
+  getEditionCategories: async () => [{id:4,code:'AVANZADO_OPEN',name:'Avanzado / Open'},{id:1,code:'NOVATO',name:'Novato'}],
+  _cachedEdition: () => ({id:27,name:'Torneo FI 27-1',slug:'27-1'})
+};
+window.SB_ADMIN = { fetchAdminRegistrations: async () => ROWS.map(r => ({...r})) };
+window.SB_LOG = { error: (c,e) => console.error(c,e), op: () => {} };
+</script>
+<script src="supabase/pre-group-print.js?v=121"></script>
+<script src="supabase/pre-group-draw-capture.js?v=116"></script>
+<script>window.SB_PRE_GROUP_PRINT.mount(27);window.SB_PRE_GROUP_DRAW.mount();</script>
+</body>
+</html>

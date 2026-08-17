@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Directorio general · Torneo de Ping Pong FI</title>
+<meta name="description" content="Buscador general del Torneo de Ping Pong FI: jugadores, facultades, carreras, categorías y grupos en un solo lugar." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @font-face{font-family:'HN Display';src:url('assets/fonts/HeadingNow-86BoldItalic.otf') format('opentype');font-weight:600 900;font-style:normal;font-display:swap}
+  @font-face{font-family:'Heading Now 6';src:url('assets/fonts/HeadingNow-67Extrabold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+  @font-face{font-family:'Heading Now 6';src:url('assets/fonts/HeadingNow-68Heavy.otf') format('opentype');font-weight:900;font-style:normal;font-display:swap}
+  @font-face{font-family:'Heading Now 7';src:url('assets/fonts/HeadingNow-74Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Heading Now 7';src:url('assets/fonts/HeadingNow-75Medium.otf') format('opentype');font-weight:500;font-style:normal;font-display:swap}
+</style>
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/perfil-jugador.css?v=132">
+<link rel="stylesheet" href="css/directorio.css?v=9">
+<link rel="stylesheet" href="css/mobile-fit.css?v=45">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/navbar-fi.css?v=2">
+</head>
+<body class="pjx dirx">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top fi-nav" data-fi-nav data-active="directorio" aria-label="Principal"></nav>
+
+<main class="wrap dirx-wrap" id="contenido">
+  <section class="dx-hero" aria-label="Buscador general" data-screen-label="Buscador general">
+    <div class="dx-hl">
+      <div class="dx-giant" aria-hidden="true">DIRECTORIO</div>
+      <div class="dx-head">
+        <div class="dx-kicker" id="dxKicker">Torneo de Ping Pong FI</div>
+        <h1>Directorio <span class="dx-em">general</span></h1>
+        <p class="dx-lede">Un solo buscador para todo el torneo: jugadores, facultades y categorías. Escribe lo que busques o explora por bloques.</p>
+      </div>
+      <div class="dx-searchwrap">
+        <div class="dx-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          <input type="search" id="dxQ" placeholder="Apodo, facultad, carrera, categoría o grupo…" autocomplete="off" aria-label="Buscar en el directorio" />
+          <button type="button" class="dx-x" id="dxX" aria-label="Limpiar búsqueda" hidden>×</button>
+        </div>
+        <div class="dx-tries" id="dxTries" hidden></div>
+      </div>
+      <div class="dx-scopes" id="dxScopes" role="tablist" aria-label="Qué buscar"></div>
+      <div class="dx-metarow">
+        <span class="dx-meta" id="dxMeta" aria-live="polite"></span>
+        <button type="button" class="dx-btn" id="dxReload">Actualizar</button>
+      </div>
+    </div>
+    <aside class="dx-hr" aria-label="Resumen del directorio">
+      <div class="dx-stat"><b id="dxNPlayers">—</b><span>Jugadores</span></div>
+      <div class="dx-stat"><b id="dxNFacs">—</b><span>Facultades</span></div>
+      <div class="dx-stat"><b id="dxNCats">—</b><span>Categorías</span></div>
+    </aside>
+  </section>
+
+  <nav class="dx-edsel" id="dxEdSel" aria-label="Elegir edición" hidden></nav>
+
+  <div class="state" id="dxState" aria-live="polite"><span class="spin" aria-hidden="true">◌</span> Cargando directorio…</div>
+  <div id="dxResults"></div>
+</main>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/directory.js"></script>
+<script src="supabase/groups.js"></script>
+<script src="supabase/logo-resolver.js"></script>
+<script src="supabase/public-links.js"></script>
+<script src="supabase/player-card.js?v=99"></script>
+<script src="supabase/pre-group-roster.js?v=106"></script>
+<script src="supabase/participants.js?v=histdir3"></script>
+<script src="supabase/ui.js"></script>
+<script src="navbar-fi.js?v=1"></script>
+<script src="supabase/debug-panel.js"></script>
+
+<script src="directorio.js?v=12"></script>
+</body>
+</html>

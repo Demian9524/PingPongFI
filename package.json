@@ -1,0 +1,24 @@
+{
+  "name": "torneo-ping-pong-fi",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Sitio estático del Torneo de Ping Pong FI + integración Supabase. El package.json existe SOLO para herramientas de calidad; el sitio no usa bundler.",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server . -p 5173 -c-1 -o Pagina\\ Torneo.html",
+    "serve": "http-server . -p 5173 -c-1",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:staging": "node tests/staging.mjs",
+    "lint": "eslint supabase tests"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8",
+    "jsdom": "^25.0.1",
+    "http-server": "^14.1.1",
+    "eslint": "^9.17.0",
+    "@playwright/test": "^1.49.1"
+  }
+}

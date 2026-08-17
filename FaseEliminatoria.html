@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fase eliminatoria · Centro de control</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<style>
+  .who{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .fe-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:6px 0 14px}
+  .fe-head h1{font-family:var(--disp);font-weight:800;font-style:italic;font-size:34px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
+  .fe-head h1 .r{color:var(--red2)}
+  .fe-head p{color:var(--muted);font-size:13px;max-width:720px;margin-top:6px;text-wrap:pretty}
+  .fe-head .fe-side{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .fe-tabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .fe-tab{display:flex;flex-direction:column;gap:3px;text-align:left;padding:10px 16px;border:1px solid var(--line2);border-radius:9px;background:var(--panel);color:var(--muted);cursor:pointer;min-width:184px}
+  .fe-tab b{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--text)}
+  .fe-tab small{font-family:var(--mono);font-size:9.5px;letter-spacing:.9px;text-transform:uppercase}
+  .fe-tab:hover{background:var(--raise)}
+  .fe-tab.on{border-color:var(--red2);background:var(--red-soft)}
+  .fe-tab.on b{color:var(--red2)}
+  .fe-tools{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .fe-stage{position:relative;margin:14px 0 26px;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:var(--bg);height:calc(100vh - 268px);min-height:540px}
+  .fe-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:var(--bg)}
+  .fe-stage iframe.on{display:block}
+  .fe-load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);pointer-events:none}
+  .fe-load[hidden]{display:none}
+  body.fe-full .fe-stage{position:fixed;inset:0;z-index:90;margin:0;border-radius:0;height:100vh}
+  body.fe-full .fe-exit{position:fixed;z-index:91;right:16px;bottom:16px;display:inline-flex}
+  .fe-exit{display:none}
+  .fe-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:0 0 4px}
+  .fe-step{border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--raise)}
+  .fe-step b{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;display:block}
+  .fe-step small{color:var(--muted);font-size:12px;line-height:1.5;display:block;margin-top:3px}
+  .fe-step i{font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:1.4px;color:var(--gold)}
+  @media(max-width:820px){.fe-stage{height:calc(100vh - 300px)}.fe-tab{min-width:0;flex:1 1 140px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top" data-site-nav data-active="" data-admin="off" aria-label="Principal">
+  <template data-nav-right>
+    <a class="btn btn-ghost" href="ControlTorneo.html">‹ Centro de control</a>
+    <a class="btn btn-ghost" href="TableroGrupos.html">Tablero de grupos</a>
+  </template>
+</nav>
+
+<main class="wrap" id="contenido">
+  <div class="fe-head">
+    <div>
+      <h1>Fase <span class="r">eliminatoria</span></h1>
+      <p>Todo lo del bracket en un solo lugar: preparar e imprimir los papeles del sorteo, capturar lo que salió de las pelotas y editar la llave a conveniencia antes de publicarla. El sorteo es físico; aquí solo se prepara, se captura y se publica.</p>
+    </div>
+    <div class="fe-side">
+      <button class="btn btn-ghost" id="feReload" type="button">Actualizar vista</button>
+      <button class="btn btn-ghost" id="feFull" type="button">Pantalla completa</button>
+      <a class="btn btn-ghost" id="feNewTab" href="PreparacionEliminatoria.html" target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+    </div>
+  </div>
+
+  <div class="fe-steps">
+    <div class="fe-step"><i>Paso 1</i><b>Preparar</b><small>Bombos 1 · 2 · 3 al momento, formato del reglamento y los cuatro imprimibles: papeletas, cajas de posiciones, lista maestra y acta.</small></div>
+    <div class="fe-step"><i>Paso 2</i><b>Capturar</b><small>En «Editar el bracket» registras cada emparejamiento tal como salió de las pelotas.</small></div>
+    <div class="fe-step"><i>Paso 3</i><b>Armar y publicar</b><small>Edita la llave a conveniencia —rondas, tarjetas, pases directos, marcadores visuales— y publícala cuando esté lista.</small></div>
+  </div>
+
+  <div class="fe-tabs" role="tablist" aria-label="Secciones de la fase eliminatoria">
+    <button class="fe-tab on" type="button" role="tab" aria-selected="true" data-tab="prep" data-src="PreparacionEliminatoria.html?embed=1"><b>Preparación y sorteo</b><small>Bombos · imprimibles</small></button>
+    <button class="fe-tab" type="button" role="tab" aria-selected="false" data-tab="bracket" data-src="BracketAdmin.html?embed=1"><b>Editar el bracket</b><small>Borrador · publicar</small></button>
+    <button class="fe-tab" type="button" role="tab" aria-selected="false" data-tab="publico" data-src="BracketPublico.html?embed=1"><b>Vista pública</b><small>Como lo ve la gente</small></button>
+  </div>
+
+  <div class="fe-stage" id="feStage">
+    <div class="fe-load" id="feLoad"><span class="spin" aria-hidden="true">◌</span> Cargando…</div>
+  </div>
+  <button class="btn btn-main fe-exit" id="feExit" type="button">Salir de pantalla completa</button>
+
+  <p class="metaline" style="margin:0 0 40px">Cada pestaña es la herramienta completa, con tu misma sesión de organizador. Los imprimibles se abren en una pestaña aparte para poder guardarlos como PDF.</p>
+</main>
+
+<script src="supabase/nav.js"></script>
+<script>
+(function(){
+  'use strict';
+  var KEY = 'fase_elim_tab';
+  var stage = document.getElementById('feStage');
+  var load = document.getElementById('feLoad');
+  var newTab = document.getElementById('feNewTab');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.fe-tab'));
+  var frames = {};
+
+  function show(key){
+    var tab = tabs.filter(function(t){ return t.dataset.tab === key; })[0] || tabs[0];
+    key = tab.dataset.tab;
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.classList.toggle('on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    Object.keys(frames).forEach(function(k){ frames[k].classList.toggle('on', k === key); });
+    if (!frames[key]){
+      load.hidden = false;
+      var f = document.createElement('iframe');
+      f.src = tab.dataset.src;
+      f.title = tab.querySelector('b').textContent;
+      f.allow = 'fullscreen';
+      f.setAttribute('allowfullscreen', '');
+      f.className = 'on';
+      f.addEventListener('load', function(){ load.hidden = true; });
+      frames[key] = f;
+      stage.appendChild(f);
+    } else {
+      load.hidden = true;
+    }
+    newTab.href = tab.dataset.src.replace('?embed=1', '');
+    try { localStorage.setItem(KEY, key); } catch(e){}
+  }
+
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ show(t.dataset.tab); }); });
+
+  document.getElementById('feReload').addEventListener('click', function(){
+    var on = tabs.filter(function(t){ return t.classList.contains('on'); })[0];
+    var f = on && frames[on.dataset.tab];
+    if (f){ load.hidden = false; f.src = f.src; }
+  });
+  function full(on){
+    document.body.classList.toggle('fe-full', on);
+    document.getElementById('feFull').textContent = on ? 'Salir de pantalla completa' : 'Pantalla completa';
+    Object.keys(frames).forEach(function(k){
+      try { frames[k].contentWindow.postMessage({ type:'fi:host-full', on: !!on }, '*'); } catch(e){}
+    });
+  }
+  document.getElementById('feFull').addEventListener('click', function(){ full(!document.body.classList.contains('fe-full')); });
+  document.getElementById('feExit').addEventListener('click', function(){ full(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && document.body.classList.contains('fe-full')) full(false); });
+  // La herramienta incrustada (editor del bracket) pide la pantalla completa del
+  // contenedor: dentro del iframe, «fixed» solo llega al borde del iframe.
+  window.addEventListener('message', function(e){
+    var d = e.data;
+    if (d && d.type === 'fi:embed-full') full(!!d.on);
+  });
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch(e){}
+  show((location.hash || '').replace('#', '') || saved || 'prep');
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js').catch(function(){});</script>
+</body>
+</html>

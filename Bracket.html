@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bracket · Torneo de Ping Pong FI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/supabase-pages.css">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/bracket.css">
+<link rel="manifest" href="manifest.webmanifest">
+<style>html.embed nav.top,html.embed .skip-link,html.embed .bk-hero{display:none!important}html.embed .wrap{padding-top:10px}</style>
+<script>if(location.search.indexOf('embed=1')>=0)document.documentElement.classList.add('embed');</script>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<nav class="top" data-site-nav data-active="bracket" aria-label="Principal"></nav>
+
+<main class="wrap" id="contenido">
+  <header class="bk-hero">
+    <span class="kick">Fase final · FI 2027-1</span>
+    <h1>Cuadro <span class="r">eliminatorio</span></h1>
+    <p>Octavos, cuartos, semifinal y la gran final rumbo al puerquito dorado. Los nombres aparecen cuando la organización publica la fase eliminatoria.</p>
+  </header>
+
+  <div class="notice" id="bkNotice" role="status" style="margin-top:18px;display:none">
+    <div><b>Cuadro aún no publicado</b>
+    El bracket se mostrará cuando la organización cierre la fase de grupos y publique la llave. Mientras tanto revisa los
+    <a href="Resultados.html" style="color:var(--gold)">resultados de grupos</a>.</div>
+  </div>
+
+  <div class="bk-stage-wrap" role="region" aria-label="Cuadro eliminatorio" tabindex="0">
+    <div class="bk-stage" id="bkStage"></div>
+  </div>
+  <div class="bk-meta">
+    <span class="pub" id="bkPub">—</span>
+    <span class="metaline" id="bkUpdated"></span>
+    <span class="metaline" style="margin-left:auto">El tercer lugar se juega solo si la organización lo confirma</span>
+  </div>
+
+  <section class="bkl" aria-labelledby="hList">
+    <h3 id="hList">Partidos de la fase final</h3>
+    <p class="sub">Detalle de cada cruce con marcador por sets. Octavos y cuartos a mejor de 3 · semifinales y final a mejor de 5.</p>
+    <div id="bkList"></div>
+  </section>
+
+  <section class="bkl" aria-labelledby="hHist" style="margin-bottom:70px">
+    <h3 id="hHist">Bracket histórico · FI 2026-2</h3>
+    <p class="sub" id="histSub">Cargando datos históricos…</p>
+    <div class="bk-stage-wrap" role="region" aria-label="Bracket histórico" tabindex="0" id="bkHistWrap" style="display:none">
+      <div class="bk-stage" id="bkHistStage"></div>
+    </div>
+  </section>
+</main>
+
+<script src="supabase/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<script src="supabase/logger.js"></script>
+<script src="supabase/validation.js"></script>
+<script src="supabase/client.js"></script>
+<script src="supabase/catalog.js"></script>
+<script src="supabase/bracket.js"></script>
+<script src="supabase/results.js"></script>
+<script src="supabase/admin.js"></script>
+<script src="supabase/ui.js"></script>
+<script src="supabase/nav.js"></script>
+<script src="supabase/debug-panel.js"></script>
+<script src="supabase/bracket-v2.js"></script>
+<script src="supabase/bracket-admin.js"></script>
+<script>
+(function(){
+  'use strict';
+  const BK=window.BKV2;
+  let state=BK.load();
+  window.__BK_STATE=state;
+  let publishedRemote=null;
+
+  function isAdmin(){ return document.body.classList.contains('bk-admin'); }
+  function visibleState(){
+    if(isAdmin()) return state;                       // el organizador ve su borrador
+    if(publishedRemote) return publishedRemote;       // datos reales del backend
+    if(state.published) return state;                 // borrador publicado (demo local)
+    return BK.emptyState();                           // vacío «Por definir»
+  }
+  function renderAll(){
+    const vs=visibleState();
+    BK.renderStage(document.getElementById('bkStage'),vs,{editionLabel:'FI · 2027-1'});
+    BK.renderList(document.getElementById('bkList'),vs);
+    const empty=!publishedRemote&&!state.published&&!isAdmin();
+    document.getElementById('bkNotice').style.display=empty?'':'none';
+    const pub=document.getElementById('bkPub');
+    if(publishedRemote){pub.textContent='Publicado · datos oficiales';pub.className='pub on';}
+    else if(state.published){pub.textContent='Publicado · borrador local (demo)';pub.className='pub on';}
+    else if(isAdmin()){pub.textContent='Borrador sin publicar';pub.className='pub draft';}
+    else {pub.textContent='Aún no publicado';pub.className='pub';}
+    document.getElementById('bkUpdated').textContent=state.updatedAt&&(isAdmin()||state.published)?'Actualizado '+new Date(state.updatedAt).toLocaleString('es-MX'):'';
+  }
+
+  BK.onChange(renderAll);
+  window.BKADMIN.init({state,rerender:renderAll});
+  new MutationObserver(renderAll).observe(document.body,{attributes:true,attributeFilter:['class']});
+  renderAll();
+
+  (async()=>{
+    try{ publishedRemote=await BK.fetchPublished(); if(publishedRemote) renderAll(); }catch(e){}
+    const histSub=document.getElementById('histSub');
+    try{
+      const hist=await window.SB_BRACKET.fetchHistoricalBracket('fi-2026-2-historico');
+      if(hist&&hist.length){
+        document.getElementById('bkHistWrap').style.display='';
+        BK.renderStage(document.getElementById('bkHistStage'),BK.stateFromRounds(hist),{editionLabel:'FI · 2026-2',centerLabel:'Gran final'});
+        histSub.textContent='Datos reales de la edición 2026-2. Ningún nombre ni marcador es inventado.';
+      } else histSub.textContent='No hay datos de bracket histórico disponibles públicamente todavía.';
+    }catch(e){ window.SB_LOG&&window.SB_LOG.error('BRK-002',e); histSub.textContent='No se pudo cargar el bracket histórico.'; }
+  })();
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

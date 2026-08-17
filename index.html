@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Copa Concreto — Exploración de diseño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Saira+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800&family=Saira:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Archivo:wght@600;700;800;900&family=Anton&family=DM+Serif+Display:ital@0;1&family=Orbitron:wght@600;700;800;900&family=Alfa+Slab+One&family=Ultra&family=Limelight&family=Special+Elite&family=Bungee&family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: Inter, system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script src="image-slot.js"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="esports.jsx"></script>
+<script type="text/babel" src="blueprint.jsx"></script>
+<script type="text/babel" src="editorial.jsx"></script>
+<script type="text/babel" src="scoreboard.jsx"></script>
+<script type="text/babel" src="sportsbook.jsx"></script>
+<script type="text/babel" src="vintage.jsx"></script>
+<script type="text/babel" data-presets="react">
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    <DesignCanvas>
+      <DCSection id="dir-esports" title="Dirección 0 · Esports / Battle Royale — variaciones de color" subtitle="Mismo dashboard gamer en 5 paletas basadas en la Facultad de Ingeniería (rojo carmesí, azul marino, oro UNAM) más la eléctrica original. Comparan color, tono y opacidad. Diseño original — arrastra tus imágenes en los espacios marcados.">
+        <DCArtboard id="fn-carmesi" label="① Carmesí FI · rojo de la facultad sobre oscuro" width={1536} height={1030}>
+          <FNHome theme="carmesi" />
+        </DCArtboard>
+        <DCArtboard id="fn-claro" label="② Carmesí claro · fondo claro, riel rojo (como la web FI)" width={1536} height={1030}>
+          <FNHome theme="claro" />
+        </DCArtboard>
+        <DCArtboard id="fn-unam" label="③ Azul-Oro UNAM · institucional, dorado del escudo" width={1536} height={1030}>
+          <FNHome theme="unam" />
+        </DCArtboard>
+        <DCArtboard id="fn-nocturno" label="④ Nocturno neón · negro profundo, rojo neón (alta opacidad)" width={1536} height={1030}>
+          <FNHome theme="nocturno" />
+        </DCArtboard>
+        <DCArtboard id="fn-electrico" label="⑤ Eléctrico · azul + morado (versión original)" width={1536} height={1030}>
+          <FNHome theme="electrico" />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="dir-blueprint" title="Dirección 1 · Pizarrón Técnico" subtitle="Plano de ingeniería: papel concreto, retícula fina, tinta negra y rojo FI. Hecha para la Facultad de Ingeniería. El torneo manda; las apuestas son una nota al margen.">
+        <DCArtboard id="bp-home" label="General · marcador, calendario y posiciones" width={1440} height={900}>
+          <BPHome />
+        </DCArtboard>
+        <DCArtboard id="bp-bracket" label="Llaves · mejores terceros + esquema" width={1440} height={900}>
+          <BPBracket />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="dir-editorial" title="Dirección 2 · Editorial Deportivo" subtitle="Revista de deportes: papel crema, titulares enormes, fotografía protagonista. La crónica del día con posiciones y llaves muy tipográficas. Apuestas = ‘La Quiniela’, discreta.">
+        <DCArtboard id="ed-home" label="Portada · crónica del partido en vivo" width={1440} height={900}>
+          <EDHome />
+        </DCArtboard>
+        <DCArtboard id="ed-bracket" label="Llaves · el camino a la final" width={1440} height={900}>
+          <EDBracket />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="dir-led" title="Dirección 3 · Marcador LED" subtitle="Tablero de estadio: fondo negro, dígitos LED, neón por categoría. Energía y legibilidad a distancia — sirve también para proyectar en el lugar. ‘La grada’ es la apuesta, secundaria.">
+        <DCArtboard id="led-home" label="En vivo · marcador gigante + posiciones" width={1440} height={900}>
+          <LEDHome />
+        </DCArtboard>
+        <DCArtboard id="led-bracket" label="Llaves · mejores terceros + bracket neón" width={1440} height={900}>
+          <LEDBracket />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="dir-sportsbook" title="Dirección 4 · Casa de apuestas (estilo app)" subtitle="Versión enfocada en apuestas, por si quieres que ese gancho sea protagonista. Fondo dark, cards a todo color por categoría. Exploración previa.">
+        <DCArtboard id="sb-home" label="Home · cards 100% color por categoría" width={1440} height={2100}>
+          <SportsbookHome />
+        </DCArtboard>
+        <DCArtboard id="sb-match" label="Partido en vivo · solo ¿quién gana?" width={1440} height={1350}>
+          <SportsbookMatch />
+        </DCArtboard>
+        <DCArtboard id="sb-cat" label="Categoría Avanzado · todo en rojo" width={1440} height={1400}>
+          <SportsbookCategory />
+        </DCArtboard>
+      </DCSection>
+      <DCSection id="dir-vintage" title="Dirección 5 · Cartoon vintage (alterna)" subtitle="Estética animación años 30–60. Halftone, ribbons, ornamentación, papel envejecido — diseño original. Exploración previa.">
+        <DCArtboard id="vt-home" label="Home · Cartel del día + Grupos" width={1440} height={1280}>
+          <VintageHome />
+        </DCArtboard>
+        <DCArtboard id="vt-bets" label="Casa de apuestas · Cuotas vintage" width={1440} height={1280}>
+          <VintageBets />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+</script>
+</body>
+</html>
