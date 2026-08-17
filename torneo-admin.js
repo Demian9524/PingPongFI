@@ -195,8 +195,6 @@
               <input class="adm-input pad-l" id="adm-cuota" type="number" min="0" step="10" inputmode="numeric">
             </div>
           </div>
-          <p class="adm-hint" style="margin:-4px 0 2px">Pagos confirmados / cupos por categoría:</p>
-          ${paidRows}
         </div>
 
         <div class="adm-mode" id="adm-mode-manual">
@@ -209,6 +207,9 @@
           </div>
           <p class="adm-hint" style="margin-top:-2px">En modo manual la cifra no depende de los pagos; se reparte directo según los porcentajes.</p>
         </div>
+
+        <p class="adm-hint" style="margin:2px 0 2px">Pagos confirmados / cupos por categoría (se muestra siempre en la página pública, en cualquier modo de bolsa):</p>
+        ${paidRows}
 
         <div class="adm-readout">
           <span class="rl2">Bolsa actual</span>
