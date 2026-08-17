@@ -280,7 +280,11 @@
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); } catch(e){}
       if (window.SB && window.SB.rpc){
         window.SB.rpc('admin_save_site_setting', { p_key: STORAGE_KEY, p_value: c }).then(({ error }) => {
-          if (error && window.SB_UI) window.SB_UI.toast('No se guardó en el servidor: ' + error.message, 'error');
+          if (error){
+            console.error('[torneo-admin] No se guardó en Supabase:', error.message);
+            if (window.SB_UI) window.SB_UI.toast('No se guardó en el servidor (¿ya corriste el SQL de site_settings?): ' + error.message, 'error');
+            else alert('No se guardó en el servidor: ' + error.message + '\n¿Ya ejecutaste sql/PROPUESTA_site_settings_publico.sql en Supabase?');
+          }
         });
       }
     };
