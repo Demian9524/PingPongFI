@@ -7,8 +7,11 @@
 //   · on    → visible con su contenido real
 //   · empty → visible pero VACÍA: muestra el aviso «aún no se publica»
 //   · off   → oculta por completo
-// Alcance real: este navegador. Para apagarlas para todos los visitantes hace
-// falta una bandera en Supabase (ver BACKEND_RPC_PENDING.md).
+// Alcance: global. Se guardan en Supabase (tabla site_settings, RPC
+// admin_save_site_setting — sql/PROPUESTA_site_settings_publico.sql) y se
+// cachean en localStorage solo para pintar sin parpadeo mientras carga la
+// red. Cualquier visitante, en cualquier navegador o dispositivo, ve el
+// mismo valor una vez que el organizador guarda.
 (function(global){
   'use strict';
   const KEY = 'torneo_sections_cfg_v1';
@@ -51,6 +54,24 @@
   function write(cfg){
     try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch(e){}
     if (global.applySectionVisibility) global.applySectionVisibility();
+    if (global.SB && global.SB.rpc){
+      global.SB.rpc('admin_save_site_setting', { p_key: KEY, p_value: cfg }).then(({ error }) => {
+        if (error && global.SB_UI) global.SB_UI.toast('No se guardó en el servidor: ' + error.message, 'error');
+      });
+    }
+  }
+
+  // Trae el valor real del servidor (para todos los visitantes, no solo
+  // este navegador) y refresca cache local + la página pública si cambió.
+  async function syncFromServer(){
+    if (!global.SB) return;
+    try {
+      const { data, error } = await global.SB.from('site_settings').select('value').eq('key', KEY).maybeSingle();
+      if (error || !data) return;
+      const merged = Object.assign({}, DEFAULTS, data.value || {});
+      try { localStorage.setItem(KEY, JSON.stringify(merged)); } catch(e){}
+      if (global.applySectionVisibility) global.applySectionVisibility();
+    } catch(e){}
   }
   function stateLabel(id){
     const s = STATES.filter(x => x.id === id)[0];
@@ -97,5 +118,6 @@
     });
   }
 
-  global.SB_PUBLIC_SECTIONS = { mount, read, KEY, SECTIONS, STATES, DEFAULTS };
+  global.SB_PUBLIC_SECTIONS = { mount, read, syncFromServer, KEY, SECTIONS, STATES, DEFAULTS };
+  syncFromServer().then(() => { if (document.getElementById('secVisBody')) mount(); });
 })(typeof window !== 'undefined' ? window : globalThis);
