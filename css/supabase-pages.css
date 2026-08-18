@@ -106,6 +106,30 @@ nav.top{position:sticky;top:0;z-index:50;background:rgba(19,19,24,0.9);backdrop-
 select.filter{background:#0a0a0e;border:1px solid var(--line2);border-radius:9px;color:var(--text);
   font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;height:46px;padding:0 12px;outline:none;min-height:44px}
 
+/* ap-filter: botón + panel desplegable de filtros (Facultad/Categoría) */
+.ap-filters{position:relative}
+.ap-filter-btn{display:inline-flex;align-items:center;gap:9px;appearance:none;border:1px solid var(--line2);
+  background:var(--raise);color:var(--text);font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.1em;
+  text-transform:uppercase;height:46px;min-height:44px;padding:0 16px;cursor:pointer;border-radius:9px;transition:.15s var(--cut)}
+.ap-filter-btn:hover,.ap-filter-btn.is-open{border-color:var(--gold)}
+.ap-filter-ic{width:15px;height:11px;flex:0 0 auto;position:relative}
+.ap-filter-ic::before,.ap-filter-ic::after{content:'';position:absolute;left:0;right:0;height:2px;background:currentColor}
+.ap-filter-ic::before{top:0}
+.ap-filter-ic::after{bottom:0;left:3px;right:3px}
+.ap-filter-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;
+  background:var(--gold);color:#131318;font-size:11px;font-weight:800;border-radius:9px}
+.ap-filter-panel{position:absolute;z-index:20;top:calc(100% + 8px);right:0;left:auto;width:min(420px,calc(100vw - 40px));
+  background:var(--panel2);border:1px solid var(--line2);border-radius:9px;box-shadow:0 16px 34px rgba(0,0,0,0.5);padding:18px}
+.ap-filter-grid{display:grid;grid-template-columns:1fr;gap:12px;align-items:center}
+.ap-filter-grid select.filter{width:100%}
+.ap-filter-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line2)}
+.ap-filter-close{appearance:none;border:1px solid var(--line2);background:none;color:var(--text);cursor:pointer;
+  font-family:var(--disp);font-weight:800;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;height:38px;padding:0 18px;border-radius:7px}
+.ap-filter-close:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:640px){
+  .ap-filter-panel{position:fixed;left:16px;right:16px;top:auto;bottom:16px;width:auto;max-height:70vh;overflow:auto}
+}
+
 /* estados */
 .state{margin-top:34px;text-align:center;color:var(--muted);font-size:14px;padding:44px 20px}
 .state b{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;letter-spacing:0.03em;

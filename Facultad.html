@@ -689,18 +689,51 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
           <input type="text" id="facSearch" placeholder="Buscar por apodo o carrera…" aria-label="Buscar" autocomplete="off" />
         </div>
-        <select class="filter" id="facCat" aria-label="Filtrar por categoría"></select>
-        <select class="filter" id="facCareer" aria-label="Filtrar por carrera"></select>
-        <select class="filter" id="facGroup" aria-label="Filtrar por grupo"></select>
-        <label class="wa-inline"><input type="checkbox" id="facMat" /> Solo con partidos</label>
-        <label class="wa-inline"><input type="checkbox" id="facWa" /> Solo con WhatsApp</label>
-        <button class="btn btn-ghost" id="facClear" type="button">Limpiar</button>
+        <div class="ap-filters">
+          <button class="ap-filter-btn" id="facFilterBtn" type="button" aria-expanded="false" aria-controls="facFilterPanel">
+            <span class="ap-filter-ic"></span><span>Filtros</span><span class="ap-filter-badge" id="facFilterBadge" hidden>0</span>
+          </button>
+          <div class="ap-filter-panel" id="facFilterPanel" hidden>
+            <div class="ap-filter-grid">
+              <select class="filter" id="facCat" aria-label="Filtrar por categoría"></select>
+              <select class="filter" id="facCareer" aria-label="Filtrar por carrera"></select>
+              <select class="filter" id="facGroup" aria-label="Filtrar por grupo"></select>
+              <label class="wa-inline"><input type="checkbox" id="facMat" /> Solo con partidos</label>
+              <label class="wa-inline"><input type="checkbox" id="facWa" /> Solo con WhatsApp</label>
+            </div>
+            <div class="ap-filter-footer">
+              <button class="btn btn-ghost" id="facClear" type="button">Limpiar</button>
+              <button class="ap-filter-close" id="facFilterClose" type="button">Cerrar</button>
+            </div>
+          </div>
+        </div>
       </div>
       <p class="metaline" id="facShown" aria-live="polite"></p>
       <div class="cards" id="facList"></div>
     </div>
   </div>
 </main>
+<script>
+(function(){
+  var btn=document.getElementById('facFilterBtn'),panel=document.getElementById('facFilterPanel'),
+    close=document.getElementById('facFilterClose'),badge=document.getElementById('facFilterBadge');
+  if(!btn||!panel) return;
+  function setOpen(open){
+    panel.hidden=!open; btn.classList.toggle('is-open',open); btn.setAttribute('aria-expanded',String(open));
+  }
+  btn.addEventListener('click',function(){ setOpen(panel.hidden); });
+  if(close) close.addEventListener('click',function(){ setOpen(false); });
+  function updateBadge(){
+    var n=0;
+    panel.querySelectorAll('select.filter').forEach(function(s){ if(s.value) n++; });
+    panel.querySelectorAll('input[type="checkbox"]').forEach(function(c){ if(c.checked) n++; });
+    badge.hidden=!n; badge.textContent=String(n);
+  }
+  panel.addEventListener('change',updateBadge);
+  var clearBtn=document.getElementById('facClear');
+  if(clearBtn) clearBtn.addEventListener('click',function(){ setTimeout(updateBadge,0); });
+})();
+</script>
 
 <div class="pod-info-modal" id="facPodInfoModal" hidden>
   <div class="pod-info-card">
