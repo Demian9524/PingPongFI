@@ -286,16 +286,15 @@ body.dirx select.dx-sel option{background:#1d160e;color:var(--dx-cream)}
     clip-path:polygon(0 7px,7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%)}
   .dx-pcards .fn-card{padding:10px 10px 10px 57px;min-height:74px;
     clip-path:polygon(0 7px,7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%)}
-  .dx-grid.facs .fn-portrait,.dx-pcards .fn-portrait{left:10px;top:50%;transform:translateY(calc(-50% - 3px));width:42px;height:42px}
+  .dx-grid.facs .fn-portrait{left:10px;top:50%;transform:translateY(calc(-50% - 3px));width:42px;height:42px}
+  .dx-pcards .fn-portrait{left:10px;top:50%;transform:translateY(calc(-50% + 1px));width:42px;height:42px}
   .dx-grid.facs .fn-portrait img,.dx-grid.facs .fn-mono,.dx-pcards .fn-portrait img,.dx-pcards .fn-mono{width:42px;height:42px}
   .dx-grid.facs .fn-portrait .fac-wrap{width:38px;height:38px}
   .dx-grid.facs .fn-portrait .fac-item{width:38px;height:38px}
   .dx-pcards .fn-portrait .fac-wrap{width:31.5px;height:31.5px}
-  .dx-pcards .fn-portrait .fac-item{width:31.5px;height:31.5px}
   .dx-grid.facs .fn-portrait .fac-flip{width:38px;height:38px;margin-left:-19px;margin-top:-19px}
-  .dx-pcards .fn-portrait .fac-flip{width:31.5px;height:31.5px;margin-left:-15.75px;margin-top:-15.75px}
+  .dx-pcards .fn-portrait .fac-flip{width:42px;height:42px;margin-left:-21px;margin-top:-21px}
   .dx-grid.facs .fn-portrait .fac-face{width:38px;height:38px}
-  .dx-pcards .fn-portrait .fac-face{width:31.5px;height:31.5px}
   .dx-grid.facs .fn-mono,.dx-pcards .fn-mono{font-size:18px;border-width:1.5px}
   .dx-grid.facs .fn-tier,.dx-pcards .fn-tier{top:5px;right:5px;font-size:6.5px;letter-spacing:0.08em;padding:2px 6px;
     clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%)}
@@ -312,11 +311,9 @@ body.dirx select.dx-sel option{background:#1d160e;color:var(--dx-cream)}
   .dx-grid.facs .fn-portrait .fac-wrap{width:38px;height:38px}
   .dx-grid.facs .fn-portrait .fac-item{width:38px;height:38px}
   .dx-pcards .fn-portrait .fac-wrap{width:28.5px;height:28.5px}
-  .dx-pcards .fn-portrait .fac-item{width:28.5px;height:28.5px}
   .dx-grid.facs .fn-portrait .fac-flip{width:38px;height:38px;margin-left:-19px;margin-top:-19px}
-  .dx-pcards .fn-portrait .fac-flip{width:28.5px;height:28.5px;margin-left:-14.25px;margin-top:-14.25px}
+  .dx-pcards .fn-portrait .fac-flip{width:38px;height:38px;margin-left:-19px;margin-top:-19px}
   .dx-grid.facs .fn-portrait .fac-face{width:38px;height:38px}
-  .dx-pcards .fn-portrait .fac-face{width:28.5px;height:28.5px}
   .dx-grid.facs .fn-name,.dx-pcards .fn-name{font-size:16.4px}
   .dx-grid.facs .fn-career,.dx-pcards .fn-career{font-size:6.1px}
   .dx-grid.facs .fn-lastedition,.dx-pcards .fn-lastedition{font-size:5.8px}

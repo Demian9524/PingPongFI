@@ -95,7 +95,7 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
   html body .fi-nav .nav-in{height:84px;gap:8px;padding:12px}
   html body.fi-nav-body{padding-top:84px}
   html body .fi-nav .brand{gap:8px}
-  html body .fi-nav .logo-main{height:64px}
+  html body .fi-nav .logo-main{height:60px}
   html body .fi-nav .logo-fi{display:none}
   html body .fi-nav .logo-div{display:none}
   html body .fi-nav .nav-right{gap:8px}
@@ -105,6 +105,6 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
   html body .fi-nav .logo-gif{display:none}
 }
 @media (max-width:400px){
-  html body .fi-nav .logo-main{height:64px}
+  html body .fi-nav .logo-main{height:60px}
   html body .fi-nav .btn{font-size:10.5px;padding:9px 12px}
 }
