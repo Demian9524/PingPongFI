@@ -200,7 +200,9 @@
     }
   }
 
+  let _lastHeaderRow = null;
   function renderHeader(row){
+    _lastHeaderRow = row;
     const nickname = row.nickname || row.nickname_snapshot || 'Jugador';
     document.title = nickname + ' · Perfil de jugador · Torneo de Ping Pong FI';
     $('#pjDesc').setAttribute('content', 'Perfil público de ' + nickname + ' en el Torneo de Ping Pong FI: facultad, carrera, categoría, grupo y estadísticas oficiales.');
@@ -279,7 +281,8 @@
 
     const waSlot = $('#pjWaSlot');
     waSlot.textContent = '';
-    const waUrl = row._waUrl || row.whatsapp_url;
+    const phonesVisible = !window.PHONE_VISIBILITY || window.PHONE_VISIBILITY.show;
+    const waUrl = phonesVisible ? (row._waUrl || row.whatsapp_url) : null;
     if (waUrl){
       const a = el('a', 'wa');
       const icon = el('img', 'wa-icon');
@@ -1021,6 +1024,10 @@
   $('#pjBack').addEventListener('click', () => {
     if (document.referrer) history.back(); else location.href = 'Directorio.html';
   });
+
+  if (window.PHONE_VISIBILITY_ON_CHANGE){
+    window.PHONE_VISIBILITY_ON_CHANGE(() => { if (_lastHeaderRow) renderHeader(_lastHeaderRow); });
+  }
 
   load();
 })();

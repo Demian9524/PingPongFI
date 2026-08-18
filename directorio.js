@@ -28,7 +28,7 @@
   const PLAYER_CAT_ORDER = { avanzado: 0, intermedio: 1, principiante: 2 };
 
   const state = {
-    rows: [], edcats: [], index: null, mode: 'general', editionLabel: '', histCounts: null,
+    rows: [], edcats: [], allFacs: [], index: null, mode: 'general', editionLabel: '', histCounts: null,
     q: '', scope: 'todo', cat: '', fac: '', car: '', grp: '', wa: '',
     expanded: false, loadedAt: null, filterOpen: false
   };
@@ -82,14 +82,21 @@
   // Las CATEGORÍAS no se derivan de las inscripciones: se toman del catálogo de
   // la edición (edition_categories vía catalog.js, ya resuelto en
   // participants.js) para que aparezcan todas aunque una todavía no tenga
-  // jugadores confirmados. Facultades, carreras y grupos sí salen de las filas.
-  function buildIndex(rows, edcats){
+  // jugadores confirmados. Las FACULTADES tampoco se derivan solo de las
+  // inscripciones: se seedean con el catálogo completo (allFacs, vía
+  // catalog.js) para que aparezcan TODAS, tengan o no jugadores. Carreras y
+  // grupos sí salen únicamente de las filas.
+  function buildIndex(rows, edcats, allFacs){
     const cats = new Map(), facs = new Map(), cars = new Map(), grps = new Map();
     (edcats || []).forEach(c => {
       const key = String(c.code || c.name || '');
       if (!key) return;
       cats.set(key, { code: c.code || '', name: catLabel(c.name || c.code),
         key: catKeyOf(c.name, c.code), n: 0, groups: new Set() });
+    });
+    (allFacs || []).forEach(f => {
+      if (!f.code) return;
+      facs.set(f.code, { code: f.code, name: f.name || f.code, n: 0, cars: new Set() });
     });
     rows.forEach(r => {
       const ck = String(r.category_code || r._catName || '');
@@ -451,7 +458,7 @@
     }
     if (show('facultades') && facs.length){
       const { sec, body } = secShell('dxSecFacs', 'Facultades',
-        facs.length + ' de ' + idx.facs.length + ' con jugadores');
+        plural(facs.length, 'facultad', 'facultades'));
       const g = el('div', 'dx-grid facs');
       facs.forEach(f => g.appendChild(facTile(f)));
       body.appendChild(g);
@@ -647,6 +654,7 @@
       const res = await window.SB_PARTICIPANTS.fetchEnrichedDirectory();
       const ed = res.edition || {};
       state.edcats = (res.edcats || []).slice();
+      state.allFacs = await window.SB_CATALOG.getFaculties().catch(() => []);
       let rows = res.rows || [];
       if (state.mode === 'general'){
         try { rows = await fetchGeneralRoster(); }
@@ -661,7 +669,7 @@
       }
       window.SB_LOG && window.SB_LOG.op('DIR', 'directorio-' + state.mode, performance.now() - t0, true);
       state.rows = decorate(rows.slice());
-      state.index = buildIndex(state.rows, state.edcats);
+      state.index = buildIndex(state.rows, state.edcats, state.allFacs);
       state.loadedAt = new Date();
       const edName = ed.name || ed.slug || '';
       const edShort = (String(ed.slug || ed.name || '').match(/(\d{4})\s*-\s*(\d+)/) || [])[0] || edName;

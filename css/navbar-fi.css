@@ -38,7 +38,7 @@ html body .fi-nav .socials{display:flex;gap:12px;color:var(--fi-muted)}
 html body .fi-nav .socials a{color:var(--fi-muted);transition:color .15s}
 html body .fi-nav .socials a:hover{color:var(--fi-red2)}
 html body .fi-nav .btn{font-family:var(--fi-disp);font-weight:800;font-size:16px;letter-spacing:0.07em;text-transform:uppercase;
-  padding:13px 24px;display:inline-flex;align-items:center;gap:8px;transition:.15s var(--fi-cut);border-radius:0;
+  padding:13px 24px;display:inline-flex;align-items:center;gap:8px;transition:.15s var(--fi-cut);border-radius:0;min-height:0;
   clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
 html body .fi-nav .btn-gray{background:linear-gradient(180deg,#43434b,#26262c);color:#f2f2f4;border:1px solid rgba(255,255,255,0.12);box-shadow:0 6px 18px -7px rgba(0,0,0,0.6)}
 html body .fi-nav .btn-gray:hover{filter:brightness(1.14)}
@@ -87,7 +87,7 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
 @media (max-width:860px){
   html body .fi-nav .nav-in{gap:16px;height:70px;padding:0 16px}
   html body.fi-nav-body{padding-top:70px}
-  html body .fi-nav .logo-main{height:52px}
+  html body .fi-nav .logo-main{height:58px}
   html body .fi-nav .hamburger{display:flex}
 }
 @media (max-width:640px){
@@ -95,7 +95,7 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
   html body .fi-nav .nav-in{height:84px;gap:8px;padding:12px}
   html body.fi-nav-body{padding-top:84px}
   html body .fi-nav .brand{gap:8px}
-  html body .fi-nav .logo-main{height:40px}
+  html body .fi-nav .logo-main{height:64px}
   html body .fi-nav .logo-fi{display:none}
   html body .fi-nav .logo-div{display:none}
   html body .fi-nav .nav-right{gap:8px}
@@ -105,6 +105,6 @@ html body .fi-nav .mob-reg{color:#f3f3f5}
   html body .fi-nav .logo-gif{display:none}
 }
 @media (max-width:400px){
-  html body .fi-nav .logo-main{height:56px}
+  html body .fi-nav .logo-main{height:64px}
   html body .fi-nav .btn{font-size:10.5px;padding:9px 12px}
 }

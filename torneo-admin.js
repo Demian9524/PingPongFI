@@ -223,6 +223,15 @@
           <span class="adm-fill-note" id="adm-fill-over">—</span>
         </div>
       </div>
+
+      <div class="admin-sec">
+        <span class="sec-t">Privacidad</span>
+        <div class="seg-tog" id="adm-phone-vis">
+          <button data-vis="hide">Ocultos</button>
+          <button data-vis="show">Visibles</button>
+        </div>
+        <p class="adm-hint">Controla si el botón de WhatsApp/teléfono se muestra en el perfil público de cada jugador. Aplica a todo el sitio de inmediato.</p>
+      </div>
     </div>
     <div class="adm-foot">
       <button class="adm-btn ghost" id="adm-reset">Restablecer</button>
@@ -313,6 +322,22 @@
     $('adm-manual').value = c.manualTotal;
     setMode(c.mode || 'auto', false);
     refreshDerived();
+    setPhoneVis(window.PHONE_VISIBILITY ? window.PHONE_VISIBILITY.show : false, false);
+  }
+
+  function setPhoneVis(show, apply){
+    document.querySelectorAll('#adm-phone-vis button').forEach(b => b.classList.toggle('on', (b.dataset.vis === 'show') === !!show));
+    if (apply && window.PHONE_VISIBILITY){
+      window.PHONE_VISIBILITY.show = show;
+      window.PHONE_VISIBILITY_SAVE();
+      flashSaved();
+    }
+  }
+  document.querySelectorAll('#adm-phone-vis button').forEach(b => {
+    b.onclick = () => setPhoneVis(b.dataset.vis === 'show', true);
+  });
+  if (window.PHONE_VISIBILITY_READY){
+    window.PHONE_VISIBILITY_READY.then(() => setPhoneVis(window.PHONE_VISIBILITY.show, false));
   }
 
   function setMode(mode, apply){
