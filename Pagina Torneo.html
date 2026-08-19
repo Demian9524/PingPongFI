@@ -1519,7 +1519,10 @@
   .mob-reg{color:#f3f3f5!important}
   #mobileMenu .mob-link{font-family:'HN Display','Saira Condensed',sans-serif!important}
 
-  html,body{overflow-x:hidden}
+  /* overflow-x:clip (no :hidden) — en Chrome de Android, overflow-x:hidden en
+     html Y body convierte al body en contenedor de scroll y el scroll de la
+     página se corta a media altura. clip recorta igual sin crear scroller. */
+  html,body{overflow-x:clip;max-width:100%}
   @media (max-width:1180px){
     .main{grid-template-columns:1fr}
     .catmeta{display:none}
