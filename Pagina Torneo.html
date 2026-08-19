@@ -1927,14 +1927,14 @@
   @media (max-width:960px){
     .piggy-body{grid-template-columns:minmax(0,1fr);gap:18px;padding:18px}
     .piggy-body{display:flex;flex-direction:column}
-    .piggy-body .piggy-meta{order:1}
-    .piggy-body .piggy-side{order:2}
-    .piggy-stage{max-width:230px}
+    .piggy-body .piggy-side{order:1}
+    .piggy-body .piggy-meta{order:2}
+    .piggy-stage{max-width:300px}
     .big-pool .big-val{font-size:54px}
     .big-cur{font-size:20px}
   }
   @media (max-width:520px){
-    .piggy-stage{max-width:210px}
+    .piggy-stage{max-width:270px}
     .xlab b{font-size:8.5px;margin-bottom:2px}
     .xlab span{font-size:15px}
     .big-pool{padding:14px 16px;flex-direction:column;align-items:flex-start;gap:12px}
@@ -3626,13 +3626,19 @@
   }
   var cd=document.getElementById('heroCountdown');
   var rt=document.getElementById('rtPopup');
+  var settled=false;
   function avoidCountdown(){
     el.style.bottom='';
-    if(el.hidden){ if(rt) rt.style.bottom=''; return; }
+    if(el.hidden){ if(rt) rt.style.bottom=''; settled=true; return; }
+    var overlap=false;
     if(cd){
-      var a=el.getBoundingClientRect(), b=cd.getBoundingClientRect();
-      var overlap = a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
-      if(overlap){ el.style.bottom=Math.max(22, window.innerHeight-b.top+14)+'px'; }
+      var b=cd.getBoundingClientRect();
+      /* una vez el countdown queda muy por encima del viewport, ya no puede
+         volver a solaparse en un scroll hacia abajo: dejar de medir en cada scroll */
+      if(b.bottom < -20){ settled=true; }
+      var a=el.getBoundingClientRect();
+      overlap = a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
+      if(overlap){ el.style.bottom=Math.max(22, window.innerHeight-b.top+14)+'px'; settled=false; }
     }
     if(rt && !rt.hidden){
       var waRect=el.getBoundingClientRect();
@@ -3640,11 +3646,18 @@
       rt.style.bottom=((window.innerHeight-waRect.top)+gap)+'px';
     }
   }
+  var ticking=false;
+  function onScrollOrResize(force){
+    if(settled && !force) return;
+    if(ticking) return;
+    ticking=true;
+    requestAnimationFrame(function(){ avoidCountdown(); ticking=false; });
+  }
   apply();
   avoidCountdown();
-  window.__waAvoidCountdown = avoidCountdown;
-  window.addEventListener('resize', avoidCountdown);
-  window.addEventListener('scroll', avoidCountdown, {passive:true});
+  window.__waAvoidCountdown = function(){ settled=false; onScrollOrResize(true); };
+  window.addEventListener('resize', function(){ settled=false; onScrollOrResize(true); });
+  window.addEventListener('scroll', onScrollOrResize, {passive:true});
   window.addEventListener('storage', function(e){ if(e.key===KEY){ apply(); avoidCountdown(); } });
   if(window.SB){
     window.SB.from('site_settings').select('value').eq('key',KEY).maybeSingle().then(function(res){
