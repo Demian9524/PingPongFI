@@ -1929,12 +1929,12 @@
     .piggy-body{display:flex;flex-direction:column}
     .piggy-body .piggy-side{order:1}
     .piggy-body .piggy-meta{order:2}
-    .piggy-stage{max-width:300px}
+    .piggy-stage{max-width:360px}
     .big-pool .big-val{font-size:54px}
     .big-cur{font-size:20px}
   }
   @media (max-width:520px){
-    .piggy-stage{max-width:270px}
+    .piggy-stage{max-width:330px}
     .xlab b{font-size:8.5px;margin-bottom:2px}
     .xlab span{font-size:15px}
     .big-pool{padding:14px 16px;flex-direction:column;align-items:flex-start;gap:12px}
@@ -3538,8 +3538,8 @@
   .wa-pop-icon{display:block;width:100%;height:100%;transition:transform .18s var(--cut)}
   @media(prefers-reduced-motion:reduce){#waPopup{transition:none}}
   .wa-pop-icon:hover{transform:scale(1.07)}
-  .wa-pop-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 6px rgba(80,220,110,0.28));
-    animation:waPulse 2.6s ease-in-out infinite}
+  .wa-pop-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 8px rgba(80,220,110,0.32))}
+  @media(min-width:0){}
   @keyframes waPulse{0%,100%{filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 4px rgba(80,220,110,0.2))}50%{filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 10px rgba(120,240,150,0.45))}}
   @media(prefers-reduced-motion:reduce){.wa-pop-icon img{animation:none}}
   .wa-pop-close{position:absolute;top:-11px;right:-11px;z-index:1;appearance:none;border:0;background:transparent;
@@ -3557,8 +3557,9 @@
     transition:transform .18s var(--cut),opacity .18s var(--cut)}
   #rtPopup.show{opacity:1;transform:none;pointer-events:auto}
   #rtPopup[hidden]{display:none}
+  #waPopup.auto-hidden,#rtPopup.auto-hidden{opacity:0!important;pointer-events:none!important;transform:translateY(16px) scale(0.9)!important}
   @media(prefers-reduced-motion:reduce){#rtPopup{transition:none}}
-  .rt-pop-badge{position:relative;width:168px;height:168px}
+  .rt-pop-badge{position:relative;width:130px;height:130px}
   .rt-pop-icon{display:block;width:100%;height:100%;transition:transform .18s var(--cut)}
   .rt-pop-icon:hover{transform:scale(1.07)}
   .rt-pop-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 6px rgba(237,187,82,0.28))}
@@ -3569,8 +3570,8 @@
   .rt-pop-close:hover{transform:scale(1.15);color:var(--red2)}
   .rt-pop-close:active{transform:scale(0.92)}
   @media (max-width:480px){
-    #rtPopup{right:14px;bottom:172px}
-    .rt-pop-badge{width:145px;height:145px}
+    #rtPopup{right:14px;bottom:150px}
+    .rt-pop-badge{width:112px;height:112px}
   }
 </style>
 <div id="rtPopup">
@@ -3626,8 +3627,18 @@
   }
   var cd=document.getElementById('heroCountdown');
   var rt=document.getElementById('rtPopup');
+  /* estos avisos flotantes solo tienen sentido cerca del hero (arriba de la
+     página); más abajo tapan widgets como Bolsa del torneo / Restauremos las
+     mesas, así que se ocultan solos pasado ese punto */
+  var deepMarker=document.getElementById('premios');
   var settled=false;
   function avoidCountdown(){
+    if(deepMarker){
+      var deep = window.scrollY > (deepMarker.offsetTop - window.innerHeight*0.5);
+      el.classList.toggle('auto-hidden', deep);
+      if(rt) rt.classList.toggle('auto-hidden', deep);
+      if(deep){ return; }
+    }
     el.style.bottom='';
     if(el.hidden){ if(rt) rt.style.bottom=''; settled=true; return; }
     var overlap=false;
