@@ -40,7 +40,7 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v237';
+const CACHE = 'torneo-fi-v238';
 const STATIC = [
   'Pagina Torneo.html', 'Registro.html', 'Directorio.html', 'Grupos.html',
   'Resultados.html', 'Bracket.html', 'PerfilJugador.html', 'Facultad.html',
