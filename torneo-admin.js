@@ -210,6 +210,8 @@
 
         <p class="adm-hint" style="margin:2px 0 2px">Pagos confirmados / cupos por categoría (se muestra siempre en la página pública, en cualquier modo de bolsa):</p>
         ${paidRows}
+        <button class="adm-btn ghost" id="adm-sync-regs" type="button" style="flex:none;width:100%">Sincronizar desde inscripciones</button>
+        <p class="adm-hint" id="adm-sync-msg" aria-live="polite"></p>
 
         <div class="adm-readout">
           <span class="rl2">Bolsa actual</span>
@@ -423,6 +425,57 @@
   document.querySelectorAll('#adm-mode button').forEach(b => {
     b.onclick = () => setMode(b.dataset.mode, true);
   });
+
+  // Sincroniza pagos/cupos reales desde las inscripciones (admin_registrations()),
+  // en vez de que el staff los teclee a mano. Cuenta TODAS las inscripciones por
+  // categoría (cupos) y las que tengan pago CONFIRMED/WAIVED (pagos confirmados).
+  const CODE_MAP = [
+    { key:'avanzado', test:/AVANZ/ },
+    { key:'intermedio', test:/INTERMEDI/ },
+    { key:'principiante', test:/PRINCIP/ }
+  ];
+  function catKeyFor(code){
+    const up = String(code||'').toUpperCase();
+    const m = CODE_MAP.find(m => m.test.test(up));
+    return m ? m.key : null;
+  }
+  const syncBtn = document.getElementById('adm-sync-regs');
+  const syncMsg = document.getElementById('adm-sync-msg');
+  if (syncBtn) syncBtn.onclick = async () => {
+    if (!window.SB){ if (syncMsg) syncMsg.textContent = 'Supabase no disponible.'; return; }
+    syncBtn.disabled = true;
+    const prevLabel = syncBtn.textContent;
+    syncBtn.textContent = 'Sincronizando…';
+    try {
+      let edId = null;
+      if (window.SB_CATALOG && window.SB_CATALOG.getActiveEdition){
+        const ed = await window.SB_CATALOG.getActiveEdition();
+        edId = ed && ed.id;
+      }
+      const { data, error } = await window.SB.rpc('admin_registrations', { p_edition_id: edId });
+      if (error) throw error;
+      const totals = { avanzado:0, intermedio:0, principiante:0 };
+      const paid = { avanzado:0, intermedio:0, principiante:0 };
+      (data || []).forEach(r => {
+        const key = catKeyFor(r.category_code);
+        if (!key) return;
+        totals[key]++;
+        const st = String(r.payment_status||'').toUpperCase();
+        if (st === 'CONFIRMED' || st === 'WAIVED') paid[key]++;
+      });
+      CATS.forEach(cat => {
+        $('adm-tot-'+cat).value = totals[cat];
+        $('adm-paid-'+cat).value = paid[cat];
+      });
+      commit();
+      if (syncMsg) syncMsg.textContent = 'Sincronizado ✓ — ' + (data||[]).length + ' inscripciones leídas.';
+    } catch(e){
+      if (syncMsg) syncMsg.textContent = 'No se pudo sincronizar: ' + (e && e.message || e);
+    } finally {
+      syncBtn.disabled = false;
+      syncBtn.textContent = prevLabel;
+    }
+  };
 
   // open/close
   function open(){ ov.classList.add('open'); panel.classList.add('open'); fillInputs(); }

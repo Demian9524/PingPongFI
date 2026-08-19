@@ -1606,7 +1606,7 @@
     .nav-in{height:84px;gap:8px;padding:12px 0}
     body{padding-top:84px}
     .brand{gap:8px}
-    .logo-main{height:64px}
+    .logo-main{height:60px}
     .logo-fi{display:none!important}
     .logo-div{display:none}
     .brand .bt{font-size:14px}
@@ -1763,7 +1763,7 @@
     .cta-bolsa .money-wrap{width:44px;height:30px;margin:0}
     .cta-bolsa .money-wrap img{width:66px}
     .gcard{flex:0 0 480px}
-    .logo-main{height:64px}
+    .logo-main{height:60px}
     .btn{font-size:10.5px;padding:9px 12px}
     .catbar .clbl small{display:none}
     .seg button{font-size:9.5px;padding:8px 2px;letter-spacing:0}
@@ -1790,29 +1790,27 @@
     background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s var(--cut)}
   .pool-info-close:hover{color:var(--text);background:rgba(255,255,255,0.06)}
   .prize-piggy .live-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;font-weight:700}
-  .prize-piggy .live-dot{width:7px;height:7px;border-radius:50%;background:#3cf07e;box-shadow:0 0 10px #3cf07e;animation:liveDot 1.4s ease-in-out infinite}
-  @keyframes liveDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+  .prize-piggy .live-dot{width:7px;height:7px;border-radius:50%;background:#3cf07e;box-shadow:0 0 8px #3cf07e}
 
-  .piggy-body{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px;padding:20px 24px 18px}
-  /* Banner llamativo — "Aprieta el puerquito" */
-  .piggy-cta-banner{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:14px;min-width:0;
-    padding:11px 18px;margin-bottom:0;
-    background:linear-gradient(95deg,rgba(233,196,106,0.22) 0%,rgba(60,40,15,0.45) 50%,rgba(233,196,106,0.22) 100%);
-    border:1px solid rgba(233,196,106,0.55);border-radius:10px;position:relative;overflow:hidden}
-  .piggy-cta-banner::before{content:"";position:absolute;inset:0;
-    background:linear-gradient(110deg,transparent 35%,rgba(255,235,180,0.18) 50%,transparent 65%);
-    animation:bannerShine 3.2s ease-in-out infinite;pointer-events:none}
-  @keyframes bannerShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-  .piggy-cta-banner .arrow{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--gold);animation:arrowBob 1.1s ease-in-out infinite alternate}
-  .piggy-cta-banner .arrow.right{transform:scaleX(-1)}
-  @keyframes arrowBob{0%{transform:translateX(0)}100%{transform:translateX(6px)}}
-  .piggy-cta-banner .arrow.right{animation:arrowBobRev 1.1s ease-in-out infinite alternate}
-  @keyframes arrowBobRev{0%{transform:scaleX(-1) translateX(0)}100%{transform:scaleX(-1) translateX(6px)}}
-  .piggy-cta-banner .txt{font-family:var(--disp);font-weight:800;font-style:italic;font-size:18px;letter-spacing:0.04em;text-transform:uppercase;color:var(--gold);text-shadow:0 0 14px rgba(233,196,106,0.55);text-align:center;min-width:0;flex:1}
-  .piggy-cta-banner .txt em{font-style:normal;color:#fff;background:linear-gradient(180deg,#ffd96a,#bf8e2a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .piggy-cta-banner .sub{display:block;font-family:var(--mono);font-size:10px;letter-spacing:2px;color:#cfb98a;font-weight:500;text-transform:uppercase;font-style:normal;margin-top:3px}
+  .piggy-body{display:grid;grid-template-columns:minmax(300px,0.8fr) minmax(0,1.45fr);gap:44px;align-items:center;padding:26px 28px 22px}
+  .piggy-side{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .piggy-stage-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
+  .piggy-halo{position:absolute;inset:-10%;background:radial-gradient(circle at 50% 42%,rgba(237,187,82,0.22),transparent 65%);pointer-events:none;z-index:0}
+  .piggy-rings{position:absolute;inset:6%;pointer-events:none;z-index:0;opacity:0.06;
+    background:repeating-radial-gradient(circle at 50% 46%,transparent 0,transparent 18%,var(--gold) 18.4%,transparent 19%)}
+  .piggy-shadow{position:absolute;left:50%;bottom:2%;width:46%;height:5%;transform:translateX(-50%);
+    background:radial-gradient(closest-side,rgba(0,0,0,0.55),transparent);pointer-events:none;z-index:0}
+  .piggy-tap-hint{background:none;border:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;
+    font-family:inherit;transition:transform .26s var(--cut)}
+  .piggy-tap-hint:hover{transform:translateY(-1px)}
+  .piggy-tap-hint:focus-visible{outline:2px solid var(--gold);outline-offset:6px;border-radius:6px}
+  .piggy-tap-main{font-family:var(--disp);font-weight:800;font-style:italic;font-size:16px;letter-spacing:0.03em;text-transform:uppercase;color:var(--gold);text-shadow:0 0 12px rgba(233,196,106,0.4)}
+  .piggy-tap-sub{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+  .piggy-tap-arrow{width:15px;height:15px;color:var(--gold);margin-top:1px}
+  @media(prefers-reduced-motion:no-preference){.piggy-3d:hover{transform:scale(1.03)}}
+  .piggy-3d{transition:transform .26s var(--cut)}
 
-  .piggy-stage{position:relative;width:100%;max-width:480px;aspect-ratio:1448/1086;margin:0 auto;
+  .piggy-stage{position:relative;width:100%;max-width:530px;aspect-ratio:1448/1086;margin:0 auto;z-index:1;
     display:flex;align-items:center;justify-content:center;overflow:visible}
   .piggy-3d{position:relative;width:100%;height:100%;
     cursor:pointer;outline:none;display:flex;align-items:center;justify-content:center}
@@ -1873,67 +1871,90 @@
   .blab-pr b{color:#caf4d8;text-shadow:0 1px 2px rgba(4,40,18,0.85),0 0 8px rgba(78,214,130,0.55),0 0 14px rgba(78,214,130,0.35)}
   .blab-pr span{color:#e0f8e8;text-shadow:0 2px 5px rgba(2,30,12,0.95),0 0 10px rgba(78,214,130,0.7),0 0 22px rgba(78,214,130,0.45)}
 
-  .piggy-meta{display:flex;flex-direction:column;gap:14px;justify-content:center}
-  .big-pool{padding:18px 22px;background:linear-gradient(135deg,rgba(233,196,106,0.18),rgba(40,25,8,0.42));
-    border:1px solid rgba(233,196,106,0.42);border-radius:10px;position:relative;overflow:hidden}
+  .piggy-meta{display:flex;flex-direction:column;gap:16px;justify-content:center}
+  .big-pool{padding:20px 24px;background:linear-gradient(135deg,rgba(233,196,106,0.2),rgba(40,25,8,0.46));
+    border:1px solid rgba(233,196,106,0.42);border-radius:10px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:space-between;gap:18px}
   .big-pool::before{content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 80% 20%,rgba(255,210,120,0.18),transparent 55%);pointer-events:none}
+    background:radial-gradient(circle at 80% 20%,rgba(255,210,120,0.2),transparent 55%);pointer-events:none}
+  .big-pool-left{position:relative;min-width:0}
   .big-pool .big-lbl{display:block;font-family:var(--font-section, var(--disp));font-size:14px;letter-spacing:3px;
     color:var(--gold);text-transform:uppercase;margin-bottom:6px;opacity:0.9;font-weight:800}
-  .big-pool .big-val{display:block;font-family:var(--disp);font-weight:800;font-size:42px;
+  .big-val-row{display:flex;align-items:baseline;gap:9px}
+  .big-pool .big-val{display:block;font-family:var(--disp);font-weight:800;font-size:74px;
     letter-spacing:0.01em;color:var(--gold);line-height:1;
-    text-shadow:0 0 22px rgba(233,196,106,0.5);font-variant-numeric:tabular-nums}
-  .big-pool .big-sub{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
-    color:var(--muted);margin-top:9px}
-  .big-pool .big-sub b{color:var(--text);font-weight:700}
+    text-shadow:0 0 26px rgba(233,196,106,0.55);font-variant-numeric:tabular-nums}
+  .big-cur{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+  .big-cuota{display:block;font-family:var(--mono);font-size:13px;letter-spacing:0.5px;color:var(--muted);margin-top:10px}
+  .big-cuota b{color:var(--text);font-weight:700}
+  .pay-ring-block{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .pay-ring-wrap{position:relative;width:92px;height:92px;filter:drop-shadow(0 0 10px rgba(237,187,82,0.25))}
+  .pay-ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .pay-ring-track{fill:none;stroke:#231708;stroke-width:8}
+  .pay-ring-fill{fill:none;stroke:var(--gold);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .6s ease-out}
+  @media(prefers-reduced-motion:reduce){.pay-ring-fill{transition:none}}
+  .pay-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:800;font-size:19px;color:var(--gold)}
+  .pay-ring-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:1.8px;color:var(--muted);text-transform:uppercase}
+  .pay-ring-count{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--text);text-transform:uppercase}
+  .pay-ring-rest{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;color:var(--dim)}
 
-  .cat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .cat-card{padding:11px 12px;background:linear-gradient(135deg,color-mix(in srgb,var(--cat) 18%,transparent),rgba(255,255,255,0.03) 65%);border:1px solid color-mix(in srgb,var(--cat) 34%,var(--line));
-    border-radius:8px;border-left:3px solid var(--cat);position:relative;overflow:hidden}
-  .cat-card .cc-name{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;
+  .dist-bar{display:flex;height:16px;border-radius:0;overflow:hidden;gap:2px}
+  .dist-seg{width:var(--w);display:flex;align-items:center;justify-content:center;position:relative;
+    clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%)}
+  .dist-seg span{font-family:var(--mono);font-size:9.5px;font-weight:700;color:#0d0704;letter-spacing:0.5px}
+  .dist-seg[data-cat="avanzado"]{background:#dd3b2c}
+  .dist-seg[data-cat="intermedio"]{background:#3a63f0}
+  .dist-seg[data-cat="principiante"]{background:#37bb66}
+  .dist-seg.is-tight span{position:absolute;top:-16px;color:var(--text)}
+
+  .cat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .cat-card{padding:16px 18px;background:linear-gradient(135deg,color-mix(in srgb,var(--cat) 14%,transparent),rgba(15,10,8,0.55) 65%);border:1px solid color-mix(in srgb,var(--cat) 34%,var(--line));
+    border-radius:6px;border-top:3px solid var(--cat);position:relative;overflow:hidden}
+  .cat-card .cc-name{display:block;font-family:var(--mono);font-size:13px;letter-spacing:0.8px;
     color:var(--cat);text-transform:uppercase;font-weight:700}
-  .cat-card .cc-amt{display:block;font-family:var(--disp);font-weight:800;font-size:18px;
-    letter-spacing:0.02em;color:var(--text);margin-top:5px;font-variant-numeric:tabular-nums}
-  .cat-card .cc-meta{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:3px;letter-spacing:0.5px}
+  .cat-card .cc-amt{display:block;font-family:var(--disp);font-weight:800;font-size:30px;
+    letter-spacing:0.02em;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums}
+  .cat-card .cc-meta{display:block;font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:5px;letter-spacing:0.3px}
   .cat-card[data-cat="avanzado"]{--cat:#dd3b2c}
   .cat-card[data-cat="intermedio"]{--cat:#3a63f0}
   .cat-card[data-cat="principiante"]{--cat:#37bb66}
 
-  .meta-foot{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--dim);
-    text-transform:uppercase;text-align:center;padding-top:4px}
-  .meta-foot b{color:var(--gold);font-weight:700}
+  .meta-foot{font-family:var(--mono);font-size:11.5px;letter-spacing:1px;color:var(--dim);opacity:0.7;
+    text-transform:uppercase;text-align:center;padding-top:2px}
+  .meta-foot b{color:var(--gold);font-weight:700;opacity:1}
 
   @media (max-width:960px){
-    .piggy-body{grid-template-columns:minmax(0,1fr);gap:14px;padding:16px}
-    .piggy-stage{max-width:360px}
-    .big-pool .big-val{font-size:36px}
-    .piggy-cta-banner .txt{font-size:15px}
-    .piggy-cta-banner .arrow{font-size:18px}
+    .piggy-body{grid-template-columns:minmax(0,1fr);gap:18px;padding:18px}
+    .piggy-body{display:flex;flex-direction:column}
+    .piggy-body .piggy-meta{order:1}
+    .piggy-body .piggy-side{order:2}
+    .piggy-stage{max-width:230px}
+    .big-pool .big-val{font-size:54px}
+    .big-cur{font-size:20px}
   }
   @media (max-width:520px){
-    .piggy-stage{max-width:380px}
+    .piggy-stage{max-width:210px}
     .xlab b{font-size:8.5px;margin-bottom:2px}
     .xlab span{font-size:15px}
-    .big-pool{padding:12px 14px}
+    .big-pool{padding:14px 16px;flex-direction:column;align-items:flex-start;gap:12px}
     .big-pool .big-lbl{font-size:9.5px;letter-spacing:2.2px}
-    .big-pool .big-val{font-size:26px}
-    .big-pool .big-sub{font-size:9px;letter-spacing:0.8px;line-height:1.5;word-spacing:-1px}
-    .cat-cards{grid-template-columns:1fr;gap:6px}
-    .cat-card{padding:8px 10px}
-    .cat-card .cc-name{font-size:9.5px;letter-spacing:1.4px}
-    .cat-card .cc-amt{font-size:18px}
-    .cat-card .cc-sub{font-size:9px;letter-spacing:0.6px}
-    .piggy-cta-banner{padding:8px 12px;gap:8px;flex-wrap:wrap}
-    .piggy-cta-banner .arrow{display:none}
-    .piggy-cta-banner .txt{font-size:12px;line-height:1.15;flex:1 1 auto}
-    .piggy-cta-banner .sub{font-size:7.5px;letter-spacing:1.2px;margin-top:1px}
-    .piggy-cta-banner .arrow{font-size:13px}
+    .big-pool .big-val{font-size:40px}
+    .big-cur{font-size:16px}
+    .pay-ring-block{flex-direction:row;align-self:stretch;justify-content:flex-start;gap:12px}
+    .pay-ring-wrap{width:68px;height:68px}
+    .pay-ring-pct{font-size:15px}
+    .pay-ring-track,.pay-ring-fill{stroke-width:7}
+    .pay-ring-text{text-align:left}
+    .cat-cards{grid-template-columns:1fr;gap:8px}
+    .cat-card{padding:12px 14px}
+    .cat-card .cc-name{font-size:12px}
+    .cat-card .cc-amt{font-size:24px}
     /* Header de la sección más compacto y permite que el live-tag baje */
     .prize-piggy .ph{padding:10px 13px;flex-wrap:wrap;gap:8px}
     .prize-piggy .ph h3{font-size:14px;line-height:1.05}
     .prize-piggy .live-tag{font-size:8.5px;letter-spacing:1.5px}
-    .prize-piggy .piggy-body{padding:6px 10px 10px;gap:8px}
-    .piggy-cta-banner .txt{max-width:100%}
+    .prize-piggy .piggy-body{padding:12px 10px 14px;gap:14px}
   }
 </style>
 
@@ -2367,68 +2388,357 @@
         <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg></span>
         <h3>Bolsa del Torneo</h3>
         <button type="button" class="pool-info-btn" aria-haspopup="dialog" aria-label="Información sobre la bolsa del torneo" onclick="document.getElementById('poolInfoOv').classList.add('show')">i</button>
-        <span class="live-tag"><span class="live-dot"></span>En vivo</span>
+        <span class="live-tag"><span class="live-dot"></span>Actualizado</span>
       </div>
       <div class="piggy-body">
-        <div class="piggy-cta-banner" onclick="document.getElementById('piggy3d').click()" style="cursor:pointer">
-          <span class="arrow">»</span>
-          <div class="txt"><em>Aprieta el puerquito</em> para ver los premios
-            <span class="sub">Bolsa total · Distribución por categoría · En vivo</span>
-          </div>
-          <span class="arrow right">»</span>
-        </div>
-        <div class="piggy-stage">
-          <div class="piggy-3d" id="piggy3d" tabindex="0" role="button" aria-label="Voltear puerquito para ver distribución del premio">
-            <div class="piggy-rot-stack" id="piggyRotStack">
-              <img class="piggy-rot-img active" data-i="0" src="assets/piggy-rot-00.png?v=2" alt="" />
-              <img class="piggy-rot-img" data-i="1" src="assets/piggy-rot-05.png" alt="" />
-              <img class="piggy-rot-img" data-i="2" src="assets/piggy-rot-10.png" alt="" />
-              <img class="piggy-rot-img" data-i="3" src="assets/piggy-rot-20.png" alt="" />
-              <img class="piggy-rot-img" data-i="4" src="assets/piggy-rot-30.png" alt="" />
-              <img class="piggy-rot-img" data-i="5" src="assets/piggy-rot-40.png" alt="" />
-              <img class="piggy-rot-img" data-i="6" src="assets/piggy-rot-50.png" alt="" />
-              <img class="piggy-rot-img" data-i="7" src="assets/piggy-rot-60.png" alt="" />
-              <img class="piggy-rot-img" data-i="8" src="assets/piggy-rot-70.png" alt="" />
-              <img class="piggy-rot-img" data-i="9" src="assets/piggy-rot-80.png" alt="" />
-              <img class="piggy-rot-img" data-i="10" src="assets/piggy-rot-90.png" alt="" />
-              <div class="piggy-cavity" id="piggyCavity">
-                <img class="piggy-cavity-img" id="piggyCavityImg" src="assets/piggy-fill-50.png" alt="" />
-                <div class="belly-chart" id="bellyChart"></div>
-                <img class="piggy-extra piggy-extra-25" id="piggyExtra25" src="assets/extra-25.png" alt="" />
-                <img class="piggy-extra piggy-extra-15" id="piggyExtra15" src="assets/extra-15.png" alt="" />
-                <img class="piggy-extra piggy-extra-10" id="piggyExtra10" src="assets/extra-10.png" alt="" />
-                <img class="piggy-extra piggy-extra-5" id="piggyExtra5" src="assets/extra-5.png" alt="" />
+        <div class="piggy-side">
+          <div class="piggy-stage-wrap">
+            <div class="piggy-halo" aria-hidden="true"></div>
+            <div class="piggy-rings" aria-hidden="true"></div>
+            <div class="piggy-stage">
+              <div class="piggy-3d" id="piggy3d" tabindex="0" role="button" aria-label="Ver premios y desglose de la bolsa">
+                <div class="piggy-rot-stack" id="piggyRotStack">
+                  <img class="piggy-rot-img active" data-i="0" src="assets/piggy-rot-00.png?v=2" alt="" />
+                  <img class="piggy-rot-img" data-i="1" src="assets/piggy-rot-05.png" alt="" />
+                  <img class="piggy-rot-img" data-i="2" src="assets/piggy-rot-10.png" alt="" />
+                  <img class="piggy-rot-img" data-i="3" src="assets/piggy-rot-20.png" alt="" />
+                  <img class="piggy-rot-img" data-i="4" src="assets/piggy-rot-30.png" alt="" />
+                  <img class="piggy-rot-img" data-i="5" src="assets/piggy-rot-40.png" alt="" />
+                  <img class="piggy-rot-img" data-i="6" src="assets/piggy-rot-50.png" alt="" />
+                  <img class="piggy-rot-img" data-i="7" src="assets/piggy-rot-60.png" alt="" />
+                  <img class="piggy-rot-img" data-i="8" src="assets/piggy-rot-70.png" alt="" />
+                  <img class="piggy-rot-img" data-i="9" src="assets/piggy-rot-80.png" alt="" />
+                  <img class="piggy-rot-img" data-i="10" src="assets/piggy-rot-90.png" alt="" />
+                  <div class="piggy-cavity" id="piggyCavity">
+                    <img class="piggy-cavity-img" id="piggyCavityImg" src="assets/piggy-fill-50.png" alt="" />
+                    <div class="belly-chart" id="bellyChart"></div>
+                    <img class="piggy-extra piggy-extra-25" id="piggyExtra25" src="assets/extra-25.png" alt="" />
+                    <img class="piggy-extra piggy-extra-15" id="piggyExtra15" src="assets/extra-15.png" alt="" />
+                    <img class="piggy-extra piggy-extra-10" id="piggyExtra10" src="assets/extra-10.png" alt="" />
+                    <img class="piggy-extra piggy-extra-5" id="piggyExtra5" src="assets/extra-5.png" alt="" />
+                  </div>
+                </div>
               </div>
             </div>
+            <div class="piggy-shadow" aria-hidden="true"></div>
           </div>
+          <button type="button" class="piggy-tap-hint" onclick="document.getElementById('piggy3d').click()">
+            <span class="piggy-tap-main">Aprieta el puerquito</span>
+            <span class="piggy-tap-sub">Ver premios y desglose</span>
+            <svg class="piggy-tap-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
         </div>
         <div class="piggy-meta">
           <div class="big-pool">
-            <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Bolsa total</small>
-            <b class="big-val" id="poolTotal">$0</b>
-            <small class="big-sub"><b id="poolPaid">0</b> de <span id="poolTotalPlayers">60</span> pagos confirmados · Cuota <b id="poolCuota">$35 MXN</b></small>
+            <div class="big-pool-left">
+              <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Bolsa total</small>
+              <div class="big-val-row"><b class="big-val" id="poolTotal">$0</b><span class="big-cur">MXN</span></div>
+              <small class="big-cuota">Cuota por jugador: <b id="poolCuota">$35 MXN</b></small>
+            </div>
+            <div class="pay-ring-block">
+              <div class="pay-ring-wrap" id="payRingWrap" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-label="0 de 4 pagos confirmados">
+                <svg viewBox="0 0 100 100">
+                  <circle class="pay-ring-track" cx="50" cy="50" r="42"/>
+                  <circle class="pay-ring-fill" id="payRingFill" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+                </svg>
+                <div class="pay-ring-pct" id="payRingPct">0%</div>
+              </div>
+              <div class="pay-ring-text">
+                <div class="pay-ring-lbl">Pagos confirmados</div>
+                <div class="pay-ring-count" id="payRingCount">0 de 0</div>
+                <div class="pay-ring-rest" id="payRingRest">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="dist-bar" id="distBar">
+            <div class="dist-seg" data-cat="avanzado" style="--w:35%"><span>35%</span></div>
+            <div class="dist-seg" data-cat="intermedio" style="--w:35%"><span>35%</span></div>
+            <div class="dist-seg" data-cat="principiante" style="--w:30%"><span>30%</span></div>
           </div>
           <div class="cat-cards">
             <div class="cat-card" data-cat="avanzado">
               <small class="cc-name">Avanzados · 50%</small>
               <b class="cc-amt" id="amtAvanzado">$0</b>
-              <small class="cc-meta"><span id="paidAvanzado">0</span> / <span id="totAvanzado">12</span> pagados</small>
+              <small class="cc-meta"><span id="paidAvanzado">0</span> de <span id="totAvanzado">12</span> pagos confirmados</small>
             </div>
             <div class="cat-card" data-cat="intermedio">
               <small class="cc-name">Intermedios · 30%</small>
               <b class="cc-amt" id="amtIntermedio">$0</b>
-              <small class="cc-meta"><span id="paidIntermedio">0</span> / <span id="totIntermedio">24</span> pagados</small>
+              <small class="cc-meta"><span id="paidIntermedio">0</span> de <span id="totIntermedio">24</span> pagos confirmados</small>
             </div>
             <div class="cat-card" data-cat="principiante">
               <small class="cc-name">Principiantes · 20%</small>
               <b class="cc-amt" id="amtPrincipiante">$0</b>
-              <small class="cc-meta"><span id="paidPrincipiante">0</span> / <span id="totPrincipiante">24</span> pagados</small>
+              <small class="cc-meta"><span id="paidPrincipiante">0</span> de <span id="totPrincipiante">24</span> pagos confirmados</small>
             </div>
           </div>
           <div class="meta-foot">Distribución fija por categoría · La bolsa crece con cada pago confirmado</div>
         </div>
       </div>
     </section>
+
+    <style>
+      .rt-section{margin-top:24px}
+      .rt-section .ph{position:relative}
+      .rt-section .ph .ic{color:var(--red2);display:flex}
+      .rt-section .ph::after{content:'';position:absolute;left:44px;bottom:-1px;width:44px;height:2px;background:var(--red2)}
+      .rt-body{display:grid;grid-template-columns:280px 1fr;gap:0;align-items:stretch}
+      .rt-pig{position:relative;display:flex;align-items:center;justify-content:center;min-height:280px;overflow:hidden;
+        background:linear-gradient(180deg,var(--panel),var(--bg2))}
+      .rt-pig-motif{position:absolute;inset:12% 8%;color:#fff;opacity:0.045;pointer-events:none}
+      .rt-pig-shadow{position:absolute;left:50%;bottom:16px;width:52%;height:16px;transform:translateX(-50%);
+        background:radial-gradient(closest-side,rgba(0,0,0,0.55),transparent);pointer-events:none}
+      .rt-pig img{position:relative;z-index:1;width:100%;max-width:300px;filter:drop-shadow(0 16px 20px rgba(0,0,0,0.55)) drop-shadow(0 0 26px rgba(237,187,82,0.14))}
+      .rt-content{min-width:0;padding:20px 26px 22px;display:flex;flex-direction:column;gap:16px}
+      .rt-intro{min-width:0;width:100%;max-width:none}
+      .rt-kicker{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;font-weight:700;display:block}
+      .rt-title{font-family:var(--disp);font-weight:800;font-style:italic;font-size:24px;line-height:1.08;letter-spacing:0.01em;text-transform:uppercase;color:var(--text);margin-top:6px;white-space:nowrap}
+      .rt-sub{font-size:15px;color:var(--text);line-height:1.3;font-weight:500;margin-top:8px}
+      .rt-desc{font-size:13.5px;line-height:1.35;color:var(--muted);max-width:none;margin-top:10px}
+      .rt-progress-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+      .rt-amt small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+      .rt-amt b{font-family:var(--disp);font-weight:800;font-size:34px;color:var(--gold)}
+      .rt-amt-goal{text-align:right}
+      .rt-amt-goal b{color:var(--text)}
+      .rt-bar{margin-top:9px;height:17px;background:linear-gradient(180deg,#100c09,#1c140c);border:1px solid rgba(237,187,82,0.35);overflow:hidden;position:relative;
+        clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+      .rt-bar-fill{height:100%;width:6px;background:linear-gradient(90deg,var(--red2),var(--amber),var(--gold));box-shadow:0 0 12px rgba(237,187,82,0.45) inset;transition:width 1.1s var(--cut)}
+      .rt-bar.is-complete .rt-bar-fill{background:linear-gradient(90deg,#2c9b52,#5ee08d)}
+      @media(prefers-reduced-motion:reduce){.rt-bar-fill{transition:none}}
+      .rt-progress-bottom{display:flex;justify-content:space-between;margin-top:7px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:0.5px}
+      .rt-pct{color:var(--gold);font-weight:700}
+      .rt-goal-reached{margin-top:2px;font-family:var(--disp);font-weight:800;font-style:italic;font-size:16px;color:#5ee08d}
+      .rt-strip{display:flex;background:rgba(0,0,0,0.2);border:1px solid var(--line2);min-height:74px}
+      .rt-ind{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;text-align:center;position:relative}
+      .rt-ind+.rt-ind::before{content:'';position:absolute;left:0;top:16%;bottom:16%;width:1px;background:var(--line2)}
+      .rt-ind-ic svg{width:20px;height:20px;color:var(--red2)}
+      .rt-ind small{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+      .rt-ind b{font-family:var(--disp);font-weight:800;font-size:14.5px;color:var(--text);text-transform:uppercase}
+      .rt-note{display:flex;gap:12px;align-items:center;padding:11px 15px;background:rgba(237,187,82,0.05);border:1px solid rgba(237,187,82,0.25);border-left:3px solid var(--gold);min-height:60px}
+      .rt-note-ic svg{width:19px;height:19px;color:var(--gold);flex:0 0 auto}
+      .rt-note b{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:var(--gold);display:block}
+      .rt-note p{margin-top:3px;font-size:12.5px;color:var(--text);line-height:1.35}
+      .rt-actions{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px;align-items:stretch}
+      .rt-btn{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;
+        display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 20px;border:none;text-decoration:none;cursor:pointer;transition:.15s var(--cut);
+        clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+      .rt-btn svg{width:18px;height:18px;flex:0 0 auto}
+      .rt-btn-main{background:linear-gradient(180deg,var(--amber),var(--gold));color:#17130d}
+      .rt-btn-main:hover{filter:brightness(1.08)}
+      .rt-btn-ghost{background:rgba(255,255,255,0.02);border:1.5px solid rgba(246,239,226,0.35);color:var(--text)}
+      .rt-btn-ghost:hover{border-color:var(--text);background:rgba(255,255,255,0.06)}
+      .rt-btn-ghost span{display:flex;flex-direction:column;gap:1px;align-items:flex-start}
+      .rt-btn-ghost small{font-family:var(--body);font-size:10px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)}
+      .rt-btn-donors{background:rgba(0,0,0,0.18);border:1.5px solid color-mix(in srgb,var(--red2) 40%,var(--line2));color:var(--text)}
+      .rt-btn-donors:hover{border-color:var(--gold);background:rgba(255,255,255,0.05)}
+      .rt-btn-donors span{display:flex;flex-direction:column;gap:1px;align-items:flex-start}
+      .rt-btn-donors small{font-family:var(--body);font-size:10px;font-weight:500;text-transform:none;letter-spacing:0;color:color-mix(in srgb,var(--gold) 70%,var(--muted))}
+      @media(max-width:900px){.rt-actions{grid-template-columns:1fr 1fr}.rt-actions .rt-btn-main{grid-column:1 / -1}}
+      @media(max-width:900px){.rt-body{grid-template-columns:1fr}.rt-pig{min-height:220px}.rt-pig img{max-width:190px}}
+      @media(max-width:640px){.rt-title{white-space:normal}.rt-actions{grid-template-columns:1fr!important}.rt-btn{width:100%;justify-content:center;text-align:center}.rt-btn-ghost span{align-items:center}}
+      @media(max-width:1080px){.rt-title{white-space:normal}}
+      .rt-donors{display:none}
+      .rtd-modal{position:fixed;inset:0;z-index:240;display:flex;align-items:center;justify-content:center;background:rgba(10,8,8,0.78);padding:20px}
+      .rtd-modal[hidden]{display:none}
+      .rtd-card{width:min(880px,96vw);max-height:80vh;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(180deg,var(--panel),var(--bg2));
+        border:1px solid var(--line2);border-radius:6px;padding:26px 28px 30px;position:relative;color:var(--text)}
+      .rtd-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:rgba(255,255,255,0.04);
+        color:var(--muted);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s var(--cut)}
+      .rtd-close:hover{color:var(--text);background:rgba(255,255,255,0.08)}
+      .rtd-head h4{font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:0.01em;padding-right:40px;text-transform:uppercase}
+      .rtd-summary{margin-top:6px;font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--gold)}
+      .rtd-tabs{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+      .rtd-tab{flex:1 1 180px;font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.04em;text-transform:uppercase;
+        padding:10px 14px;border:1.5px solid var(--line2);border-radius:6px;background:rgba(255,255,255,0.03);color:var(--muted);transition:.15s var(--cut)}
+      .rtd-tab.is-active{color:#17130d;background:linear-gradient(180deg,var(--amber),var(--gold));border-color:var(--gold)}
+      .rtd-panel{display:none;margin-top:16px}
+      .rtd-panel.is-active{display:block}
+      .rtd-row{display:grid;grid-template-columns:34px 1fr 100px 90px 110px;gap:10px;align-items:center;padding:9px 6px;border-top:1px solid var(--line2);font-size:13px}
+      .rtd-row:first-child{border-top:none}
+      .rtd-row.rtd-head-row{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;border-top:none;padding-bottom:6px}
+      .rtd-rank{font-family:var(--disp);font-weight:800;color:var(--muted)}
+      .rtd-row:nth-child(2) .rtd-rank{color:var(--gold)}
+      .rtd-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+      .rtd-amt{font-family:var(--mono);color:var(--gold);font-weight:700;white-space:normal;word-break:break-word;line-height:1.3}
+      .rtd-count,.rtd-date{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+      .rtd-empty{padding:20px 6px;font-size:13px;color:var(--muted)}
+      @media(max-width:640px){
+        .rtd-modal{padding:0}
+        .rtd-card{width:100%;height:100%;max-height:none;border-radius:0;padding:20px 16px 26px}
+        .rtd-row{grid-template-columns:24px 1fr;grid-template-areas:"rank name" "rank amt" "rank meta";row-gap:2px}
+        .rtd-row.rtd-head-row{display:none}
+        .rtd-rank{grid-area:rank}.rtd-name{grid-area:name}.rtd-amt{grid-area:amt}
+        .rtd-count,.rtd-date{grid-area:meta;font-size:10.5px}
+        .rtd-row{padding:10px 4px}
+      }
+      .rt-modal{position:fixed;inset:0;z-index:240;display:flex;align-items:center;justify-content:center;background:rgba(10,8,8,0.78);padding:20px}
+      .rt-modal[hidden]{display:none}
+      .rt-modal-card{width:min(920px,96vw);max-height:90vh;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(180deg,var(--panel),var(--bg2));
+        border:1px solid var(--line2);border-radius:6px;padding:26px 28px 30px;position:relative;color:var(--text)}
+      .rt-modal-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);background:rgba(255,255,255,0.04);
+        color:var(--muted);font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s var(--cut)}
+      .rt-modal-close:hover{color:var(--text);background:rgba(255,255,255,0.08)}
+      .rt-modal-head h4{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:0.01em;padding-right:40px}
+      .rt-modal-head p{margin-top:8px;font-size:14px;color:var(--muted);line-height:1.5}
+      .rt-tabs{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+      .rt-tab{flex:1 1 200px;font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;
+        padding:11px 14px;border:1.5px solid var(--line2);border-radius:6px;background:rgba(255,255,255,0.03);color:var(--muted);transition:.15s var(--cut)}
+      .rt-tab.is-active{color:#17130d;background:linear-gradient(180deg,var(--amber),var(--gold));border-color:var(--gold)}
+      .rt-tab[data-tab="aportar"].is-active{background:linear-gradient(180deg,#4bc978,#2c9b52);border-color:#37bb66;color:#0d1f13}
+      .rt-panel{display:none;margin-top:18px}
+      .rt-panel.is-active{display:block}
+      .rt-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+      .rt-card{border:1px solid var(--line2);border-left:3px solid var(--amber);border-radius:6px;padding:12px 14px;background:rgba(255,255,255,0.02)}
+      .rt-card-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+      .rt-card-name{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--text)}
+      .rt-card-price{font-family:var(--mono);font-size:12.5px;color:var(--gold);font-weight:700;white-space:nowrap}
+      .rt-card-meta{margin-top:3px;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:0.5px}
+      .rt-card-use{margin-top:6px;font-size:12.5px;line-height:1.4;color:var(--muted)}
+      .rt-card-where{margin-top:4px;font-size:11px;color:var(--dim)}
+      .rt-card-link{margin-top:8px;display:inline-flex;font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;
+        color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(237,187,82,0.4)}
+      .rt-card-link:hover{color:#fff;border-color:#fff}
+      .rt-price-note{margin-top:14px;font-size:12.5px;color:var(--dim);line-height:1.5;font-style:italic}
+      .rt-aportar-lead{font-size:14px;color:var(--text);line-height:1.5}
+      .rt-aportar-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+      .rt-aportar-grid h5{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;color:#5ee08d}
+      .rt-aportar-grid ul,.rt-otros ul{margin-top:6px;padding-left:18px;font-size:13px;color:var(--muted);line-height:1.6}
+      .rt-otros{margin-top:16px;border-top:1px dashed var(--line2);padding-top:14px}
+      .rt-otros h5{font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;color:#5ee08d}
+      .rt-hint{margin-top:14px;font-size:12.5px;color:var(--muted);font-style:italic}
+      .rt-budget{margin-top:22px;border:1px solid var(--line2);border-radius:6px;padding:16px 18px;background:rgba(237,187,82,0.05)}
+      .rt-budget-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+      .rt-budget-row span{font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+      .rt-budget-row b{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--gold)}
+      .rt-budget p{margin-top:6px;font-size:12.5px;color:var(--dim)}
+      .rt-transparency{margin-top:16px;font-size:11.5px;color:var(--dim);line-height:1.5;font-style:italic}
+      .rt-pdf-btn-modal{margin-top:18px;display:flex;width:100%;justify-content:center;text-align:center}
+      @media(max-width:640px){
+        .rt-modal{padding:0}
+        .rt-modal-card{width:100%;height:100%;max-height:none;border-radius:0;padding:20px 16px 26px}
+        .rt-cards{grid-template-columns:1fr}
+        .rt-aportar-grid{grid-template-columns:1fr}
+        .rt-tab{font-size:11.5px;padding:10px}
+      }
+    </style>
+    <section class="hud hud-red panel rt-section" id="restauracion">
+      <div class="ph">
+        <span class="ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/><path d="M3 20l3.6-1 8-8-2.6-2.6-8 8-1 3.6z"/></svg></span>
+        <h3>Restauremos las Mesas</h3>
+      </div>
+      <div class="rt-body">
+        <div class="rt-pig">
+          <svg class="rt-pig-motif" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="42" width="84" height="7"/><line x1="20" y1="49" x2="20" y2="76"/><line x1="80" y1="49" x2="80" y2="76"/><line x1="50" y1="30" x2="50" y2="42"/></svg>
+          <img src="assets/piggy-repair.png?v=4" alt="Cerdito reparador con casco y herramientas" />
+          <div class="rt-pig-shadow" aria-hidden="true"></div>
+        </div>
+        <div class="rt-content">
+          <div class="rt-intro">
+            <span class="rt-kicker">Proyecto comunitario</span>
+            <h4 class="rt-title">Dos mesas. Una meta. Una comunidad.</h4>
+            <p class="rt-sub">Ayúdanos a devolverle vida a las 2 mesas de ping pong de la Facultad.</p>
+            <p class="rt-desc">Queremos retirar la pintura dañada, emparejar la superficie, reparar los huecos, recuperar las líneas y protegerlas para que vuelvan a verse y jugarse mejor.</p>
+          </div>
+          <div class="rt-progress">
+            <div class="rt-progress-top">
+              <div class="rt-amt"><small>Recaudado</small><b id="rtCurrent">$0</b></div>
+              <div class="rt-amt rt-amt-goal"><small>Meta</small><b>$1,500</b></div>
+            </div>
+            <div class="rt-bar" id="rtBar"><div class="rt-bar-fill" id="rtBarFill"></div></div>
+            <div class="rt-progress-bottom"><span id="rtRemaining">$1,500 restantes</span><span class="rt-pct" id="rtPct">0% completado</span></div>
+            <div class="rt-goal-reached" id="rtGoalReached" hidden>Meta alcanzada</div>
+          </div>
+          <div class="rt-strip">
+            <div class="rt-ind"><span class="rt-ind-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></span><small>Meta</small><b>$1,500</b></div>
+            <div class="rt-ind"><span class="rt-ind-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="3"/><line x1="6" y1="12" x2="6" y2="19"/><line x1="18" y1="12" x2="18" y2="19"/><line x1="12" y1="7" x2="12" y2="9"/></svg></span><small>Mesas</small><b>2 por reparar</b></div>
+            <div class="rt-ind"><span class="rt-ind-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="2.6"/><circle cx="16" cy="8" r="2.6"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 19c0-3 2.5-5 5-5s5 2 5 5"/></svg></span><small>Proyecto</small><b>Comunitario</b></div>
+          </div>
+          <div class="rt-note">
+            <span class="rt-note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+            <div><b>No todo aporte tiene que ser dinero</b><p>También puedes ayudarnos con materiales o prestarnos herramientas que tengas en casa.</p></div>
+          </div>
+          <div class="rt-actions">
+            <button type="button" class="rt-btn rt-btn-main" id="rtOpenModal" aria-haspopup="dialog" aria-controls="rtModal">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="12" height="17" rx="1"/><path d="M9 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+              Ver materiales y formas de ayudar
+            </button>
+            <a class="rt-btn rt-btn-ghost" id="rtPdfBtnMain" href="docs/guia-restauracion-mesas.pdf" download>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a1 1 0 00-1 1v18a1 1 0 001 1h10a1 1 0 001-1V8z"/><path d="M14 2v6h6"/><line x1="12" y1="12" x2="12" y2="18"/><path d="M9.5 15.5L12 18l2.5-2.5"/></svg>
+              <span>Descargar plan completo<small>Materiales, presupuesto y cómo ayudar</small></span>
+            </a>
+            <button type="button" class="rt-btn rt-btn-donors" id="rtOpenDonorsModal" aria-haspopup="dialog" aria-controls="rtDonorsModal">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="2.6"/><circle cx="16" cy="8" r="2.6"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 19c0-3 2.5-5 5-5s5 2 5 5"/></svg>
+              <span>Ver donadores<small>Lista completa y top donadores</small></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="rtd-modal" id="rtDonorsModal" hidden role="dialog" aria-modal="true" aria-label="Donadores de la comunidad">
+      <div class="rtd-card">
+        <button type="button" class="rtd-close" id="rtDonorsModalClose" aria-label="Cerrar">×</button>
+        <div class="rtd-head">
+          <h4>Donadores de la comunidad</h4>
+          <p class="rtd-summary" id="rtDonorsSummary">$0 RECAUDADO · 0 DONADORES</p>
+        </div>
+        <div class="rtd-tabs" role="tablist">
+          <button type="button" class="rtd-tab is-active" data-rtd-tab="todos" role="tab" aria-selected="true">Todos</button>
+          <button type="button" class="rtd-tab" data-rtd-tab="top" role="tab" aria-selected="false">Top donadores</button>
+        </div>
+        <div class="rtd-panel is-active" data-rtd-panel="todos">
+          <div class="rtd-row rtd-head-row"><span></span><span>Nombre</span><span>Total</span><span>Aportes</span><span>Última fecha</span></div>
+          <div id="rtdListTodos"></div>
+        </div>
+        <div class="rtd-panel" data-rtd-panel="top">
+          <div class="rtd-row rtd-head-row"><span></span><span>Nombre</span><span>Total</span><span>Aportes</span><span>Última fecha</span></div>
+          <div id="rtdListTop"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-modal" id="rtModal" hidden role="dialog" aria-modal="true" aria-label="Materiales para la reparación">
+      <div class="rt-modal-card">
+        <button type="button" class="rt-modal-close" id="rtModalClose" aria-label="Cerrar">×</button>
+        <div class="rt-modal-head">
+          <h4><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;vertical-align:-3px;margin-right:8px;color:var(--gold)"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>Materiales para la Reparación</h4>
+          <p>Antes de comprar algo, queremos aprovechar lo que la comunidad ya pueda tener en casa.</p>
+        </div>
+        <div class="rt-tabs" role="tablist">
+          <button type="button" class="rt-tab is-active" data-tab="comprar" role="tab" aria-selected="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px"><path d="M3 4h2l2.4 12.2a2 2 0 002 1.8h7.2a2 2 0 002-1.7L18 8H6"/><circle cx="9" cy="20" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="20" r="1.4" fill="currentColor" stroke="none"/></svg>Hay que comprar</button>
+          <button type="button" class="rt-tab" data-tab="aportar" role="tab" aria-selected="false"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;vertical-align:-2px;margin-right:6px"><path d="M4 11l8-7 8 7"/><path d="M6 10v9a1 1 0 001 1h10a1 1 0 001-1v-9"/></svg>Puedes aportar / prestar</button>
+        </div>
+        <div class="rt-panels">
+          <div class="rt-panel is-active" data-panel="comprar">
+            <div class="rt-cards" id="rtCards"></div>
+            <p class="rt-price-note">Los precios son aproximados y sirven únicamente como referencia. Antes de comprar se buscará la opción presencial más barata disponible (Home Depot, Sodimac, Sayer, Comex, tlapalerías, ferreterías locales o papelerías).</p>
+          </div>
+          <div class="rt-panel" data-panel="aportar">
+            <p class="rt-aportar-lead"><strong>¿Tienes algo de esto en casa?</strong> Puedes prestarlo o donarlo y así reducimos lo que tenemos que comprar.</p>
+            <div class="rt-aportar-grid">
+              <div><h5>Herramientas</h5><ul><li>Brochas</li><li>Rodillos</li><li>Charolas para pintura</li><li>Cepillo de alambre</li><li>Espátulas</li><li>Regla metálica larga o perfil recto</li><li>Cubetas</li><li>Recipientes de plástico</li></ul></div>
+              <div><h5>Materiales</h5><ul><li>Lijas #80</li><li>Lijas #120</li><li>Lijas #220</li><li>Cinta masking</li><li>Pintura blanca para exterior</li><li>Resanador para concreto</li></ul></div>
+              <div><h5>Limpieza</h5><ul><li>Detergente</li><li>Trapos</li><li>Playeras viejas</li><li>Escoba</li><li>Bolsas para basura</li><li>Cubetas</li></ul></div>
+              <div><h5>Seguridad</h5><ul><li>Guantes</li><li>Lentes de seguridad</li><li>Cubrebocas N95</li><li>Respirador para vapores orgánicos</li></ul></div>
+            </div>
+            <div class="rt-otros">
+              <h5>Otros aportes</h5>
+              <ul><li>Tiempo para ayudar a reparar</li><li>Transporte para recoger materiales</li><li>Conseguir descuentos</li><li>Contactos de tlapalerías/pinturerías</li><li>Herramientas prestadas</li></ul>
+            </div>
+            <p class="rt-hint">Antes de comprar cualquier cosa preguntaremos en la comunidad si alguien ya la tiene.</p>
+          </div>
+        </div>
+        <div class="rt-budget">
+          <div class="rt-budget-row"><span>Presupuesto aproximado</span><b>$1,300 – $1,500</b></div>
+          <p>Para reparar <b>2 mesas</b>. El costo puede bajar si conseguimos materiales prestados o donados.</p>
+        </div>
+        <p class="rt-transparency">Todo el dinero reunido será utilizado para la reparación de las mesas. Si conseguimos materiales donados o gastamos menos de lo esperado, se actualizará la cantidad necesaria.</p>
+        <a class="rt-btn rt-btn-ghost rt-pdf-btn-modal" href="docs/guia-restauracion-mesas.pdf" download>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H7a1 1 0 00-1 1v18a1 1 0 001 1h10a1 1 0 001-1V8z"/><path d="M14 2v6h6"/><line x1="12" y1="12" x2="12" y2="18"/><path d="M9.5 15.5L12 18l2.5-2.5"/></svg>
+          Descargar plan completo
+        </a>
+      </div>
+    </div>
 
     <div class="pool-info-ov" id="poolInfoOv" role="dialog" aria-modal="true" aria-label="Información de la bolsa del torneo" onclick="if(event.target===this)this.classList.remove('show')">
       <div class="pool-info-box">
@@ -2924,8 +3234,24 @@
       });
     }
     const cap = c => c[0].toUpperCase() + c.slice(1);
-    const fmt = n => '$' + Math.round(n).toLocaleString('es-MX');
+    const fmt = n => {
+      const cents = Math.round((+n || 0) * 100);
+      const isInt = cents % 100 === 0;
+      return '$' + (cents / 100).toLocaleString('es-MX', { minimumFractionDigits: isInt ? 0 : 2, maximumFractionDigits: 2 });
+    };
     const CAT_LBL = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
+    // Reparto exacto en centavos (método de mayor residuo) — evita que la
+    // suma de las tres categorías redondeadas difiera de la bolsa total.
+    function splitPoolCents(totalCents, pcts, order){
+      const raw = order.map(k => ({ k, exact: totalCents * pcts[k] }));
+      const withFloor = raw.map(r => ({ ...r, floor: Math.floor(r.exact) }));
+      const used = withFloor.reduce((s, r) => s + r.floor, 0);
+      let remainder = totalCents - used;
+      const withFrac = withFloor.map(r => ({ ...r, frac: r.exact - r.floor })).sort((a,b) => b.frac - a.frac);
+      const result = {};
+      withFrac.forEach((r, i) => { result[r.k] = r.floor + (i < remainder ? 1 : 0); });
+      return result;
+    }
 
     function computedTotal(){
       if (cfg.mode === 'manual') return Math.max(0, +cfg.manualTotal || 0);
@@ -3010,18 +3336,57 @@
       }
       requestAnimationFrame(tick);
     }
+    const PAY_RING_R = 42;
+    const PAY_RING_CIRC = 2 * Math.PI * PAY_RING_R;
+    let payRingCur = 0;
+    function renderPayRing(totalPaid, totalPlayers){
+      const wrap = document.getElementById('payRingWrap');
+      const fill = document.getElementById('payRingFill');
+      const pctEl = document.getElementById('payRingPct');
+      const countEl = document.getElementById('payRingCount');
+      const restEl = document.getElementById('payRingRest');
+      if (!wrap || !fill) return;
+      const paid = Math.max(0, totalPaid || 0);
+      const total = Math.max(0, totalPlayers || 0);
+      const ratio = total > 0 ? Math.min(1, paid / total) : 0;
+      const pct = Math.round(ratio * 100);
+      wrap.setAttribute('aria-valuemax', total);
+      wrap.setAttribute('aria-valuenow', paid);
+      wrap.setAttribute('aria-label', paid + ' de ' + total + ' pagos confirmados');
+      pctEl.textContent = pct + '%';
+      countEl.textContent = paid + ' de ' + total;
+      restEl.textContent = total > 0 && paid >= total ? 'Todos confirmados' : 'Faltan ' + Math.max(0, total - paid);
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      fill.style.transition = reduceMotion ? 'none' : '';
+      fill.setAttribute('stroke-dasharray', PAY_RING_CIRC.toFixed(1));
+      fill.setAttribute('stroke-dashoffset', (PAY_RING_CIRC * (1 - ratio)).toFixed(1));
+    }
+    function renderDistBar(pcts){
+      const order = ['avanzado','intermedio','principiante'];
+      order.forEach(cat => {
+        const seg = document.querySelector('.dist-seg[data-cat="'+cat+'"]');
+        if (!seg) return;
+        const pct = Math.round(pcts[cat] * 100);
+        seg.style.setProperty('--w', pct + '%');
+        seg.classList.toggle('is-tight', pct < 12);
+        const span = seg.querySelector('span'); if (span) span.textContent = pct + '%';
+      });
+    }
     function render(){
       const totalPaid = cfg.paid.avanzado + cfg.paid.intermedio + cfg.paid.principiante;
       const totalPool = computedTotal();
       const totalPlayers = cfg.totals.avanzado + cfg.totals.intermedio + cfg.totals.principiante;
       animateCounter('poolTotal', totalPool, true);
-      animateCounter('poolPaid', totalPaid, false);
       updateFill(totalPool);
-      const tp = document.getElementById('poolTotalPlayers'); if (tp) tp.textContent = totalPlayers;
       // cuota en el subtítulo
       const cuotaEl = document.getElementById('poolCuota'); if (cuotaEl) cuotaEl.textContent = fmt(cfg.cuota) + ' MXN';
-      for (const cat of ['avanzado','intermedio','principiante']){
-        animateCounter('amt' + cap(cat), totalPool * cfg.pcts[cat], true);
+      renderPayRing(totalPaid, totalPlayers);
+      renderDistBar(cfg.pcts);
+      const order = ['avanzado','intermedio','principiante'];
+      const totalCents = Math.round(totalPool * 100);
+      const splitCents = splitPoolCents(totalCents, cfg.pcts, order);
+      for (const cat of order){
+        animateCounter('amt' + cap(cat), splitCents[cat] / 100, true);
         const p = document.getElementById('paid' + cap(cat)); if (p) p.textContent = cfg.paid[cat];
         const tot = document.getElementById('tot' + cap(cat)); if (tot) tot.textContent = cfg.totals[cat];
         // etiqueta "Avanzados · 50%"
@@ -3166,11 +3531,12 @@
 <style>
   #waPopup{position:fixed;right:22px;bottom:22px;z-index:8000;display:flex;flex-direction:column;align-items:center;gap:6px;
     opacity:0;transform:translateY(16px) scale(0.9);pointer-events:none;
-    transition:transform .4s var(--cut),opacity .4s var(--cut)}
+    transition:transform .18s var(--cut),opacity .18s var(--cut)}
   #waPopup.show{opacity:1;transform:none;pointer-events:auto}
   #waPopup[hidden]{display:none}
   .wa-pop-badge{position:relative;width:160px;height:160px}
   .wa-pop-icon{display:block;width:100%;height:100%;transition:transform .18s var(--cut)}
+  @media(prefers-reduced-motion:reduce){#waPopup{transition:none}}
   .wa-pop-icon:hover{transform:scale(1.07)}
   .wa-pop-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 6px rgba(80,220,110,0.28));
     animation:waPulse 2.6s ease-in-out infinite}
@@ -3186,7 +3552,59 @@
     #waPopup{right:14px;bottom:14px}
     .wa-pop-badge{width:135px;height:135px}
   }
+  #rtPopup{position:fixed;right:22px;bottom:202px;z-index:8000;display:flex;flex-direction:column;align-items:center;gap:6px;
+    opacity:0;transform:translateY(16px) scale(0.9);pointer-events:none;
+    transition:transform .18s var(--cut),opacity .18s var(--cut)}
+  #rtPopup.show{opacity:1;transform:none;pointer-events:auto}
+  #rtPopup[hidden]{display:none}
+  @media(prefers-reduced-motion:reduce){#rtPopup{transition:none}}
+  .rt-pop-badge{position:relative;width:168px;height:168px}
+  .rt-pop-icon{display:block;width:100%;height:100%;transition:transform .18s var(--cut)}
+  .rt-pop-icon:hover{transform:scale(1.07)}
+  .rt-pop-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 6px rgba(237,187,82,0.28))}
+  .rt-pop-close{position:absolute;top:-11px;right:-11px;z-index:1;appearance:none;border:0;background:transparent;
+    padding:0;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#fff;
+    transition:transform .15s var(--cut),color .15s var(--cut)}
+  .rt-pop-close svg{display:block;width:22px;height:22px;fill:currentColor;filter:drop-shadow(1px 2px 0 rgba(0,0,0,0.6))}
+  .rt-pop-close:hover{transform:scale(1.15);color:var(--red2)}
+  .rt-pop-close:active{transform:scale(0.92)}
+  @media (max-width:480px){
+    #rtPopup{right:14px;bottom:172px}
+    .rt-pop-badge{width:145px;height:145px}
+  }
 </style>
+<div id="rtPopup">
+  <div class="rt-pop-badge">
+    <a class="rt-pop-icon" href="#restauracion" aria-label="Ir a Restauremos las mesas">
+      <img src="assets/arreglemos-mesas-popup.png?v=2" alt="Arreglemos las mesas" />
+    </a>
+    <button type="button" class="rt-pop-close" aria-label="Cerrar aviso"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></button>
+  </div>
+</div>
+<script>
+(function(){
+  var el=document.getElementById('rtPopup');
+  if(!el) return;
+  var KEY='torneo_sections_cfg_v1';
+  function apply(){
+    var cfg; try{cfg=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){cfg={};}
+    if(cfg && cfg.rtpopup==='off'){ el.hidden=true; el.classList.remove('show'); if(window.__waAvoidCountdown) window.__waAvoidCountdown(); return; }
+    el.hidden=false;
+    el.classList.add('show');
+    if(window.__waAvoidCountdown) window.__waAvoidCountdown();
+  }
+  apply();
+  window.addEventListener('storage', function(e){ if(e.key===KEY) apply(); });
+  if(window.SB){
+    window.SB.from('site_settings').select('value').eq('key',KEY).maybeSingle().then(function(res){
+      if(res.error||!res.data||!res.data.value) return;
+      try{ localStorage.setItem(KEY, JSON.stringify(res.data.value)); }catch(e){}
+      apply();
+    });
+  }
+  el.querySelector('.rt-pop-close').addEventListener('click', function(){ el.classList.remove('show'); });
+})();
+</script>
 <div id="waPopup">
   <div class="wa-pop-badge">
     <a class="wa-pop-icon" href="https://chat.whatsapp.com/KlF6bCXvd9VLAqaO8bJBBU" target="_blank" rel="noopener noreferrer" aria-label="Únete a la comunidad de WhatsApp del torneo">
@@ -3199,24 +3617,47 @@
 (function(){
   var el=document.getElementById('waPopup');
   if(!el) return;
-  var cfg; try{cfg=JSON.parse(localStorage.getItem('torneo_sections_cfg_v1')||'{}');}catch(e){cfg={};}
-  if(cfg && (cfg.whatsapp==='off' || cfg.whatsapp==='empty')){ el.hidden=true; return; }
-  var cd=document.getElementById('heroCountdown');
-  function avoidCountdown(){
-    if(!cd) return;
-    el.style.bottom='';
-    var a=el.getBoundingClientRect(), b=cd.getBoundingClientRect();
-    var overlap = a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
-    if(overlap){ el.style.bottom=Math.max(22, window.innerHeight-b.top+14)+'px'; }
+  var KEY='torneo_sections_cfg_v1';
+  function apply(){
+    var cfg; try{cfg=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){cfg={};}
+    if(cfg && (cfg.whatsapp==='off' || cfg.whatsapp==='empty')){ el.hidden=true; el.classList.remove('show'); return; }
+    el.hidden=false;
+    el.classList.add('show');
   }
+  var cd=document.getElementById('heroCountdown');
+  var rt=document.getElementById('rtPopup');
+  function avoidCountdown(){
+    el.style.bottom='';
+    if(el.hidden){ if(rt) rt.style.bottom=''; return; }
+    if(cd){
+      var a=el.getBoundingClientRect(), b=cd.getBoundingClientRect();
+      var overlap = a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top;
+      if(overlap){ el.style.bottom=Math.max(22, window.innerHeight-b.top+14)+'px'; }
+    }
+    if(rt && !rt.hidden){
+      var waRect=el.getBoundingClientRect();
+      var gap=14;
+      rt.style.bottom=((window.innerHeight-waRect.top)+gap)+'px';
+    }
+  }
+  apply();
   avoidCountdown();
+  window.__waAvoidCountdown = avoidCountdown;
   window.addEventListener('resize', avoidCountdown);
   window.addEventListener('scroll', avoidCountdown, {passive:true});
-  setTimeout(function(){ el.classList.add('show'); }, 2200);
+  window.addEventListener('storage', function(e){ if(e.key===KEY){ apply(); avoidCountdown(); } });
+  if(window.SB){
+    window.SB.from('site_settings').select('value').eq('key',KEY).maybeSingle().then(function(res){
+      if(res.error||!res.data||!res.data.value) return;
+      try{ localStorage.setItem(KEY, JSON.stringify(res.data.value)); }catch(e){}
+      apply();
+      avoidCountdown();
+    });
+  }
   el.querySelector('.wa-pop-close').addEventListener('click', function(e){
     e.preventDefault();
     el.classList.remove('show');
-    setTimeout(function(){ el.hidden=true; }, 400);
+    setTimeout(function(){ el.hidden=true; }, 200);
   });
 })();
 </script>
@@ -3289,6 +3730,173 @@
   const ctaTweakRoot = document.createElement('div');
   document.body.appendChild(ctaTweakRoot);
   ReactDOM.createRoot(ctaTweakRoot).render(<CtaTweaks />);
+</script>
+<script>
+(function(){
+  // Config compartida con el Centro de control (supabase/repair-fund-admin.js):
+  // localStorage 'torneo_repair_fund_v1' + Supabase site_settings. Edítala
+  // desde ControlTorneo.html → "Restauremos las mesas".
+  const STORAGE_KEY = 'torneo_repair_fund_v1';
+  const DEFAULTS = { current: 0, goal: 1500, donors: [] };
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e){}
+  const repairFund = window.REPAIR_FUND = {
+    current: (saved && saved.current != null) ? saved.current : DEFAULTS.current,
+    goal: (saved && saved.goal != null) ? saved.goal : DEFAULTS.goal,
+    donors: (saved && Array.isArray(saved.donors)) ? saved.donors : []
+  };
+  const REPAIR_PLAN_PDF = "docs/guia-restauracion-mesas.pdf";
+  document.querySelectorAll('#rtPdfBtnMain,.rt-pdf-btn-modal').forEach(function(a){ a.href = REPAIR_PLAN_PDF; });
+
+  const MATERIALS = [
+    {name:'Cepillo de alambre',qty:'1',price:'$39–49',use:'Quitar restos de pintura desprendida.',where:'Sodimac / Home Depot / tlapalería',link:'https://www.homedepot.com.mx/p/byp-cepillo-de-alambre-no-64-de-27-x-5-x-3-cm-cal64-269475'},
+    {name:'Lijas #80',qty:'3 hojas',price:'$47',use:'Bajar bordes y desniveles fuertes.',where:'Home Depot',link:'https://www.homedepot.com.mx/p/fandeli-lija-de-agua-grado-80-de-28-x-23-cm-51-741731'},
+    {name:'Lijas #120',qty:'3 hojas',price:'$47',use:'Emparejar la superficie.',where:'Home Depot',link:'https://www.homedepot.com.mx/p/fandeli-lija-de-agua-grado-120-de-28-x-23-cm-00053-744107'},
+    {name:'Lijas #220',qty:'2 hojas',price:'$29',use:'Acabado fino de resanes y bordes.',where:'Home Depot',link:'https://www.homedepot.com.mx/p/fandeli-lija-de-agua-grado-220-de-28-x-23-cm-370e01-747408'},
+    {name:'Resanador para concreto',qty:'1 (Sika 230 ml)',price:'$79',use:'Rellenar pequeños huecos reales.',where:'Sodimac',link:'https://www.sodimac.com.mx/sodimac-mx/product/202649/Resanador-0.23-L/202649'},
+    {name:'Cinta masking',qty:'2 rollos',price:'$76 total',use:'Marcar las líneas blancas.',where:'Home Depot / papelería / tlapalería',link:'https://www.homedepot.com.mx/p/tuk-cinta-masking-18-cm-x-50-m-beige-tuck-277706-277706'},
+    {name:'Pintura blanca exterior',qty:'~1 litro',price:'$99–120',use:'Repintar las líneas blancas.',where:'Sayer Magicolor',link:'https://ferrelandmx.com/producto/pintura-magicolor-blanco-1l-sayer-4-anos/'},
+    {name:'Rodillo de 4"',qty:'1',price:'$63',use:'Aplicar el acabado transparente.',where:'Home Depot',link:'https://www.homedepot.com.mx/p/hdx-rodillo-4-economico-c-amarzon-4-195491'},
+    {name:'Sellador transparente mate',qty:'2 L para las dos mesas',price:'$670–812 total',use:'Proteger del sol, lluvia y desgaste — el material más importante.',where:'Sayer Floor Crete Easy Clear',link:'https://sayerbalderas.com/product/easy-clear/'},
+    {name:'Protección (N95 + lentes)',qty:'2 piezas N95',price:'$75 + $19–26 c/u',use:'Protección al raspar y lijar.',where:'Home Depot',link:'https://www.homedepot.com.mx/p/3m-cubrebocas-blanco-2-piezas-8210p2-dc-mx-500204'}
+  ];
+  const cardsWrap = document.getElementById('rtCards');
+  if (cardsWrap) cardsWrap.innerHTML = MATERIALS.map(function(m){
+    return '<div class="rt-card"><div class="rt-card-top"><span class="rt-card-name">'+m.name+'</span><span class="rt-card-price">'+m.price+'</span></div>'+
+      '<div class="rt-card-meta">Cantidad: '+m.qty+'</div><p class="rt-card-use">'+m.use+'</p><p class="rt-card-where">'+m.where+'</p>'+
+      '<a class="rt-card-link" href="'+m.link+'" target="_blank" rel="noopener noreferrer">Ver producto ↗</a></div>';
+  }).join('');
+
+  function money(n){ return '$' + Math.round(n).toLocaleString('es-MX'); }
+  function fmtDate(iso){
+    if (!iso) return '—';
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return '—';
+    return d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
+  }
+  function aggregateDonors(){
+    const map = new Map();
+    (repairFund.donors || []).forEach(function(d, i){
+      if (!d) return;
+      const isAnon = !!d.anonymous;
+      const key = isAnon ? ('__anon_' + i) : (d.name || '').trim().toLowerCase();
+      if (!key) return;
+      if (!map.has(key)) map.set(key, { name: isAnon ? 'Donador anónimo' : (d.name || '').trim(), anonymous: isAnon, total: 0, count: 0, lastDate: null, items: [] });
+      const e = map.get(key);
+      const rawAmt = d.amount;
+      const numAmt = Number(rawAmt);
+      const isMoney = rawAmt !== '' && rawAmt != null && isFinite(numAmt) && String(rawAmt).trim() !== '' && !isNaN(numAmt);
+      if (isMoney) e.total += numAmt;
+      else if (rawAmt) e.items.push(String(rawAmt));
+      e.count += 1;
+      if (d.date && (!e.lastDate || d.date > e.lastDate)) e.lastDate = d.date;
+    });
+    return Array.from(map.values());
+  }
+  function donorsMoneySum(){
+    return aggregateDonors().reduce(function(a,d){ return a + (d.total || 0); }, 0);
+  }
+  let barRevealed = false;
+  function renderFund(){
+    document.querySelector('.rt-amt-goal b').textContent = money(repairFund.goal);
+    const currentTotal = (Number(repairFund.extra) || 0) + donorsMoneySum();
+    const pct = Math.max(0, Math.min(100, (currentTotal / repairFund.goal) * 100));
+    const done = currentTotal >= repairFund.goal;
+    document.getElementById('rtCurrent').textContent = money(currentTotal);
+    document.getElementById('rtPct').textContent = Math.round(pct) + '% completado';
+    document.getElementById('rtRemaining').hidden = done;
+    document.getElementById('rtGoalReached').hidden = !done;
+    if (!done) document.getElementById('rtRemaining').textContent = money(Math.max(0, repairFund.goal - currentTotal)) + ' restantes';
+    document.getElementById('rtBar').classList.toggle('is-complete', done);
+    const fill = document.getElementById('rtBarFill');
+    const setWidth = function(){ fill.style.width = pct > 0 ? pct + '%' : '6px'; };
+    const bar = document.getElementById('rtBar');
+    if (barRevealed) { setWidth(); }
+    else if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting){ barRevealed = true; setWidth(); io.disconnect(); } });
+      }, {threshold:0.4});
+      io.observe(bar);
+    } else { barRevealed = true; setWidth(); }
+    renderDonors();
+  }
+  function renderDonors(){
+    const donors = aggregateDonors();
+    const byTotal = donors.slice().sort(function(a,b){ return b.total - a.total; });
+    const byDate = donors.slice().sort(function(a,b){ return (b.lastDate || '').localeCompare(a.lastDate || ''); });
+
+    function amtLabel(d){
+      const parts = [];
+      if (d.total > 0) parts.push(money(d.total));
+      if (d.items.length) parts.push(d.items.join(', '));
+      return parts.length ? parts.join(' + ') : '—';
+    }
+    const summary = document.getElementById('rtDonorsSummary');
+    summary.textContent = money((Number(repairFund.extra) || 0) + donorsMoneySum()) + ' RECAUDADO · ' + donors.length + (donors.length === 1 ? ' DONADOR' : ' DONADORES');
+    function rowsHtml(list){
+      if (!list.length) return '<p class="rtd-empty">Aún no hay donadores registrados.</p>';
+      return list.map(function(d,i){
+        return '<div class="rtd-row"><span class="rtd-rank">' + String(i+1).padStart(2,'0') + '</span>' +
+          '<span class="rtd-name">' + d.name.replace(/</g,'&lt;') + '</span>' +
+          '<span class="rtd-amt">' + amtLabel(d).replace(/</g,'&lt;') + '</span>' +
+          '<span class="rtd-count">' + d.count + (d.count === 1 ? ' aporte' : ' aportes') + '</span>' +
+          '<span class="rtd-date">' + fmtDate(d.lastDate) + '</span></div>';
+      }).join('');
+    }
+    document.getElementById('rtdListTodos').innerHTML = rowsHtml(byDate);
+    document.getElementById('rtdListTop').innerHTML = rowsHtml(byTotal);
+  }
+  window.RESTORE_FUND_RENDER = renderFund;
+  renderFund();
+
+  const donorsModal = document.getElementById('rtDonorsModal');
+  const donorsOpenBtn = document.getElementById('rtOpenDonorsModal');
+  const donorsCloseBtn = document.getElementById('rtDonorsModalClose');
+  let donorsLastFocus = null;
+  function openDonorsModal(){ donorsLastFocus = document.activeElement; donorsModal.hidden = false; document.body.style.overflow = 'hidden'; donorsCloseBtn.focus(); }
+  function closeDonorsModal(){ donorsModal.hidden = true; document.body.style.overflow = ''; if (donorsLastFocus) donorsLastFocus.focus(); }
+  donorsOpenBtn.addEventListener('click', openDonorsModal);
+  donorsCloseBtn.addEventListener('click', closeDonorsModal);
+  donorsModal.addEventListener('click', function(e){ if (e.target === donorsModal) closeDonorsModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !donorsModal.hidden) closeDonorsModal(); });
+  document.querySelectorAll('.rtd-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.rtd-tab').forEach(function(t){ t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.rtd-panel').forEach(function(p){ p.classList.remove('is-active'); });
+      tab.classList.add('is-active'); tab.setAttribute('aria-selected','true');
+      document.querySelector('.rtd-panel[data-rtd-panel="' + tab.dataset.rtdTab + '"]').classList.add('is-active');
+    });
+  });
+
+  if (window.SB){
+    window.SB.from('site_settings').select('value').eq('key', STORAGE_KEY).maybeSingle().then(function(res){
+      if (res.error || !res.data || !res.data.value) return;
+      Object.assign(repairFund, res.data.value);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(repairFund)); } catch(e){}
+      renderFund();
+    });
+  }
+
+  const modal = document.getElementById('rtModal');
+  const openBtn = document.getElementById('rtOpenModal');
+  const closeBtn = document.getElementById('rtModalClose');
+  let lastFocus = null;
+  function openModal(){ lastFocus = document.activeElement; modal.hidden = false; document.body.style.overflow = 'hidden'; closeBtn.focus(); }
+  function closeModal(){ modal.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  document.querySelectorAll('.rt-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.rt-tab').forEach(function(t){ t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.rt-panel').forEach(function(p){ p.classList.remove('is-active'); });
+      tab.classList.add('is-active'); tab.setAttribute('aria-selected','true');
+      document.querySelector('.rt-panel[data-panel="'+tab.dataset.tab+'"]').classList.add('is-active');
+    });
+  });
+})();
 </script>
 </body>
 </html>
