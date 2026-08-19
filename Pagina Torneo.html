@@ -2079,8 +2079,8 @@
       <header class="hero" id="inicio">
         <div class="hero-slides" id="heroSlides">
           <div class="hero-slide is-active" data-slide="0">
-            <div class="hero-bg-img" style="background-image:url('assets/hero-park.png?v=2')"></div>
-            <img class="hero-character" src="assets/person-gta.png" alt="" />
+            <div class="hero-bg-img" style="background-image:url('assets/opt/hero-park.jpg?v=2')"></div>
+            <img class="hero-character" src="assets/opt/person-gta.png" alt="" />
           </div>
         </div>
         <div class="hero-darken"></div>
@@ -2403,18 +2403,18 @@
               <div class="piggy-3d" id="piggy3d" tabindex="0" role="button" aria-label="Ver premios y desglose de la bolsa">
                 <div class="piggy-rot-stack" id="piggyRotStack">
                   <img class="piggy-rot-img active" data-i="0" src="assets/opt/piggy-rot-00.png?v=2" alt="" />
-                  <img class="piggy-rot-img" data-i="1" data-src="assets/opt/piggy-rot-05.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="2" data-src="assets/opt/piggy-rot-10.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="3" data-src="assets/opt/piggy-rot-20.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="4" data-src="assets/opt/piggy-rot-30.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="5" data-src="assets/opt/piggy-rot-40.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="6" data-src="assets/opt/piggy-rot-50.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="7" data-src="assets/opt/piggy-rot-60.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="8" data-src="assets/opt/piggy-rot-70.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="9" data-src="assets/opt/piggy-rot-80.png" decoding="async" loading="lazy" alt="" />
-                  <img class="piggy-rot-img" data-i="10" data-src="assets/opt/piggy-rot-90.png" decoding="async" loading="lazy" alt="" />
+                  <img class="piggy-rot-img" data-i="1" src="assets/opt/piggy-rot-05.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="2" src="assets/opt/piggy-rot-10.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="3" src="assets/opt/piggy-rot-20.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="4" src="assets/opt/piggy-rot-30.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="5" src="assets/opt/piggy-rot-40.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="6" src="assets/opt/piggy-rot-50.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="7" src="assets/opt/piggy-rot-60.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="8" src="assets/opt/piggy-rot-70.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="9" src="assets/opt/piggy-rot-80.png" decoding="async" alt="" />
+                  <img class="piggy-rot-img" data-i="10" src="assets/opt/piggy-rot-90.png" decoding="async" alt="" />
                   <div class="piggy-cavity" id="piggyCavity">
-                    <img class="piggy-cavity-img" id="piggyCavityImg" data-src="assets/opt/piggy-fill-50.png" decoding="async" loading="lazy" alt="" />
+                    <img class="piggy-cavity-img" id="piggyCavityImg" src="assets/opt/piggy-fill-50.png" decoding="async" alt="" />
                     <div class="belly-chart" id="bellyChart"></div>
                     <img class="piggy-extra piggy-extra-25" id="piggyExtra25" src="assets/extra-25.png" alt="" />
                     <img class="piggy-extra piggy-extra-15" id="piggyExtra15" src="assets/extra-15.png" alt="" />
@@ -2493,7 +2493,10 @@
       .rt-pig-shadow{position:absolute;left:50%;bottom:16px;width:52%;height:16px;transform:translateX(-50%);
         background:radial-gradient(closest-side,rgba(0,0,0,0.55),transparent);pointer-events:none}
       .rt-pig img{position:relative;z-index:1;width:100%;max-width:300px;filter:drop-shadow(0 16px 20px rgba(0,0,0,0.55)) drop-shadow(0 0 26px rgba(237,187,82,0.14))}
-      .rt-content{min-width:0;padding:20px 26px 22px;display:flex;flex-direction:column;gap:16px}
+      /* prefijo propio: css/reglas-torneo.css ya define .rt-content como scroller
+         (overflow-y:auto + overscroll-behavior:contain) y en movil se tragaba el
+         gesto de scroll dentro de este widget */
+      .rtm-content{min-width:0;padding:20px 26px 22px;display:flex;flex-direction:column;gap:16px}
       .rt-intro{min-width:0;width:100%;max-width:none}
       .rt-kicker{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;font-weight:700;display:block}
       .rt-title{font-family:var(--disp);font-weight:800;font-style:italic;font-size:24px;line-height:1.08;letter-spacing:0.01em;text-transform:uppercase;color:var(--text);margin-top:6px;white-space:nowrap}
@@ -2518,10 +2521,10 @@
       .rt-ind-ic svg{width:20px;height:20px;color:var(--red2)}
       .rt-ind small{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;color:var(--gold);text-transform:uppercase}
       .rt-ind b{font-family:var(--disp);font-weight:800;font-size:14.5px;color:var(--text);text-transform:uppercase}
-      .rt-note{display:flex;gap:12px;align-items:center;padding:11px 15px;background:rgba(237,187,82,0.05);border:1px solid rgba(237,187,82,0.25);border-left:3px solid var(--gold);min-height:60px}
-      .rt-note-ic svg{width:19px;height:19px;color:var(--gold);flex:0 0 auto}
-      .rt-note b{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:var(--gold);display:block}
-      .rt-note p{margin-top:3px;font-size:12.5px;color:var(--text);line-height:1.35}
+      .rtm-note{display:flex;gap:12px;align-items:center;padding:11px 15px;background:rgba(237,187,82,0.05);border:1px solid rgba(237,187,82,0.25);border-left:3px solid var(--gold);min-height:60px}
+      .rtm-note-ic svg{width:19px;height:19px;color:var(--gold);flex:0 0 auto}
+      .rtm-note b{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:var(--gold);display:block}
+      .rtm-note p{margin-top:3px;font-size:12.5px;color:var(--text);line-height:1.35}
       .rt-actions{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:14px;align-items:stretch}
       .rt-btn{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;
         display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 20px;border:none;text-decoration:none;cursor:pointer;transition:.15s var(--cut);
@@ -2636,7 +2639,7 @@
           <img src="assets/opt/piggy-repair.png?v=4" alt="Cerdito reparador con casco y herramientas" />
           <div class="rt-pig-shadow" aria-hidden="true"></div>
         </div>
-        <div class="rt-content">
+        <div class="rtm-content">
           <div class="rt-intro">
             <span class="rt-kicker">Proyecto comunitario</span>
             <h4 class="rt-title">Dos mesas. Una meta. Una comunidad.</h4>
@@ -2657,8 +2660,8 @@
             <div class="rt-ind"><span class="rt-ind-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="3"/><line x1="6" y1="12" x2="6" y2="19"/><line x1="18" y1="12" x2="18" y2="19"/><line x1="12" y1="7" x2="12" y2="9"/></svg></span><small>Mesas</small><b>2 por reparar</b></div>
             <div class="rt-ind"><span class="rt-ind-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="2.6"/><circle cx="16" cy="8" r="2.6"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 19c0-3 2.5-5 5-5s5 2 5 5"/></svg></span><small>Proyecto</small><b>Comunitario</b></div>
           </div>
-          <div class="rt-note">
-            <span class="rt-note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+          <div class="rtm-note">
+            <span class="rtm-note-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
             <div><b>No todo aporte tiene que ser dinero</b><p>También puedes ayudarnos con materiales o prestarnos herramientas que tengas en casa.</p></div>
           </div>
           <div class="rt-actions">
@@ -3130,14 +3133,14 @@
   /* Hero loading-screen slide rotator */
   (function(){
     const slides = [
-      { bg: 'assets/hero-park.png?v=2',   person: 'assets/person-1-cut.png' },
-      { bg: 'assets/hero-court.png',  person: 'assets/person-2-cut.png' },
-      { bg: 'assets/hero-office2.png', person: 'assets/person-3-cut.png' },
-      { bg: 'assets/hero-night.png',  person: 'assets/person-4-cut.png?v=2' },
-      { bg: 'assets/hero-unam.png',   person: 'assets/person-5-cut.png' },
-      { bg: 'assets/hero-fi.png',     person: 'assets/person-6-cut.png?v=2' },
-      { bg: 'assets/hero-papeleria.png', person: 'assets/person-rata.png' },
-      { bg: 'assets/hero-tacos.png?v=2', person: 'assets/person-tacos.png?v=4' }
+      { bg: 'assets/opt/hero-park.jpg?v=2',   person: 'assets/opt/person-1-cut.png' },
+      { bg: 'assets/opt/hero-court.jpg',  person: 'assets/opt/person-2-cut.png' },
+      { bg: 'assets/opt/hero-office2.jpg', person: 'assets/opt/person-3-cut.png' },
+      { bg: 'assets/opt/hero-night.jpg',  person: 'assets/opt/person-4-cut.png?v=2' },
+      { bg: 'assets/opt/hero-unam.jpg',   person: 'assets/opt/person-5-cut.png' },
+      { bg: 'assets/opt/hero-fi.jpg',     person: 'assets/opt/person-6-cut.png?v=2' },
+      { bg: 'assets/opt/hero-papeleria.jpg', person: 'assets/opt/person-rata.png' },
+      { bg: 'assets/opt/hero-tacos.jpg?v=2', person: 'assets/opt/person-tacos.png?v=4' }
     ];
     const stage = document.getElementById('heroSlides');
     const dotsHost = document.getElementById('heroDots');
@@ -3292,10 +3295,7 @@
         lvl = fillLevelFor(t);
         src = 'assets/opt/piggy-fill-' + lvl + '.png';
       }
-      /* mientras el puerquito no se abra, el relleno queda en data-src: no se
-         descarga 1.4 MB de PNG que nadie ve todavia */
-      if (img.getAttribute('data-src') != null){ img.setAttribute('data-src', src); }
-      else if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+      if (img.getAttribute('src') !== src) img.setAttribute('src', src);
       const pctRaw = (t / FILL_FULL) * 100;
       window.PIGGY_FILL_PCT = Math.max(0, Math.min(100, Math.round(pctRaw)));
       window.PIGGY_FILL_LVL = lvl;
@@ -3657,12 +3657,6 @@
   var deepMarker=document.getElementById('premios');
   var settled=false;
   function avoidCountdown(){
-    if(deepMarker){
-      var deep = window.scrollY > (deepMarker.offsetTop - window.innerHeight*0.5);
-      el.classList.toggle('auto-hidden', deep);
-      if(rt) rt.classList.toggle('auto-hidden', deep);
-      if(deep){ return; }
-    }
     el.style.bottom='';
     if(el.hidden){ if(rt) rt.style.bottom=''; settled=true; return; }
     var overlap=false;
