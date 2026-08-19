@@ -40,7 +40,12 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v238';
+const CACHE = 'torneo-fi-v239';
+// v239 · PerfilJugador: se corrige la fila de trofeos DUPLICADA e intermitente —
+// dos llamadas concurrentes a renderPlayerTrophies (el header se re-renderiza al
+// resolverse la visibilidad del teléfono) limpiaban antes de su await y ambas
+// insertaban después. Token de generación + limpieza previa al insert.
+// perfil-jugador.js ?v=118.
 const STATIC = [
   'Pagina Torneo.html', 'Registro.html', 'Directorio.html', 'Grupos.html',
   'Resultados.html', 'Bracket.html', 'PerfilJugador.html', 'Facultad.html',
@@ -51,7 +56,7 @@ const STATIC = [
   'supabase/registration.js', 'supabase/registro-bridge.js',
   'torneo-bracket-render.js', 'torneo-bracket-dust.js?v=226', 'bracket-admin-ui.js?v=202', 'bracket-admin-slot.js', 'supabase/bracket-config.js',
   'supabase/pre-group-roster.js?v=106', 'supabase/pre-group-admin.js?v=93', 'supabase/pre-group-print.js?v=121', 'supabase/pre-group-draw-capture.js?v=116', 'supabase/format-engine.js?v=124', 'supabase/format-advisor.js?v=125', 'supabase/public-sections-admin.js?v=128', 'supabase/control-torneo-v2.js?v=119', 'torneo-groups-live.js?v=123', 'torneo-bombos-live.js?v=123',
-  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=102', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=117',
+  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=102', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=118',
   'assets/logo-fi-vector.svg?v=116', 'assets/logo-torneo-27-1-print.png?v=121'
 ];
 // v186 · Los cuadros guardados con la geometria anterior (nodo 196 px) se
