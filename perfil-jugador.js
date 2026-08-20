@@ -141,17 +141,30 @@
     return title + ' de ' + category + ' · ' + edition;
   }
 
+  // Se puede llamar varias veces (p.ej. al re-renderizar el header cuando cambia
+  // la visibilidad del teléfono). Sin un guardia, dos llamadas concurrentes
+  // limpiaban ANTES de su await y ambas insertaban después → fila de trofeos
+  // duplicada de forma intermitente. Token de generación + limpieza justo antes
+  // de insertar lo evita.
+  let _trophySeq = 0;
+  function clearTrophyRows(){
+    document.querySelectorAll('[data-pj-trophy-row]').forEach(n => n.remove());
+    const legacy = document.getElementById('pjTrophyRow');
+    if (legacy) legacy.remove();
+  }
   async function renderPlayerTrophies(playerRef){
-    const previous = document.getElementById('pjTrophyRow');
-    if (previous) previous.remove();
+    const seq = ++_trophySeq;
+    clearTrophyRows();
     if (!playerRef || !window.SB_TROPHIES) return;
 
     try {
       const trophies = await window.SB_TROPHIES.fetchPlayerTrophies(playerRef);
+      if (seq !== _trophySeq) return; // otra llamada más reciente manda
       if (!trophies.length) return;
 
       const trophyRow = el('div', 'pjx-trophy-row');
       trophyRow.id = 'pjTrophyRow';
+      trophyRow.setAttribute('data-pj-trophy-row', '1');
       trophyRow.setAttribute('aria-label', trophies.length === 1 ? '1 trofeo ganado' : trophies.length + ' trofeos ganados');
 
       trophies.forEach(t => {
@@ -191,6 +204,8 @@
         trophyRow.appendChild(card);
       });
 
+      if (seq !== _trophySeq) return;
+      clearTrophyRows();
       const actions = document.getElementById('pjx-id-actions') || document.querySelector('.pjx-id-actions');
       if (actions) actions.insertAdjacentElement('afterend', trophyRow);
       else $('#pjName').insertAdjacentElement('afterend', trophyRow);
