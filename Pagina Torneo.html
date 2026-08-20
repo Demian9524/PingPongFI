@@ -2084,11 +2084,50 @@
       <!-- HERO -->
       <header class="hero" id="inicio">
         <div class="hero-slides" id="heroSlides">
-          <div class="hero-slide is-active" data-slide="0">
-            <div class="hero-bg-img" style="background-image:url('assets/hero-park.png?v=2')"></div>
-            <img class="hero-character" src="assets/person-gta.png" alt="" />
-          </div>
         </div>
+        <script>
+        /* Hero: se construye AQUÍ mismo (antes de pintar) con orden aleatorio,
+           así nunca se alcanza a ver un slide fijo al recargar. */
+        (function(){
+          const slides = window.HERO_SLIDES = [
+            { bg: 'assets/hero-park.png?v=2',      person: 'assets/person-1-cut.png' },
+            { bg: 'assets/hero-court.png',         person: 'assets/person-2-cut.png' },
+            { bg: 'assets/hero-office2.png',       person: 'assets/person-3-cut.png' },
+            { bg: 'assets/hero-night.png',         person: 'assets/person-4-cut.png?v=2' },
+            { bg: 'assets/hero-unam.png',          person: 'assets/person-5-cut.png' },
+            { bg: 'assets/hero-fi.png',            person: 'assets/person-6-cut.png?v=2' },
+            { bg: 'assets/hero-papeleria.png',     person: 'assets/person-rata.png' },
+            { bg: 'assets/hero-tacos.png?v=2',     person: 'assets/person-tacos.png?v=4' }
+          ];
+          /* Orden completamente barajado: se recorren TODOS los slides antes de
+             repetir cualquiera. El par fondo+persona y su data-slide (que manda
+             las animaciones y encuadres del CSS) nunca se separan. */
+          function shuffle(n, avoidFirst){
+            const a = Array.from({length:n}, (_, i) => i);
+            for (let i = a.length - 1; i > 0; i--){
+              const j = Math.floor(Math.random() * (i + 1));
+              [a[i], a[j]] = [a[j], a[i]];
+            }
+            if (a.length > 1 && a[0] === avoidFirst){ [a[0], a[1]] = [a[1], a[0]]; }
+            return a;
+          }
+          let prev = -1;
+          try { prev = parseInt(localStorage.getItem('torneo_hero_last_slide'), 10); } catch(e){}
+          const order = window.HERO_ORDER = shuffle(slides.length, isNaN(prev) ? -1 : prev);
+          try { localStorage.setItem('torneo_hero_last_slide', String(order[0])); } catch(e){}
+
+          const stage = document.getElementById('heroSlides');
+          slides.forEach((s, i) => {
+            const el = document.createElement('div');
+            el.className = 'hero-slide' + (i === order[0] ? ' is-active' : '');
+            el.dataset.slide = i;
+            el.innerHTML =
+              '<div class="hero-bg-img" style="background-image:url(\''+s.bg+'\')"></div>' +
+              '<img class="hero-character" src="'+s.person+'" alt="" />';
+            stage.appendChild(el);
+          });
+        })();
+        </script>
         <div class="hero-darken"></div>
         <div class="hero-vignette"></div>
         <div class="hero-grain"></div>
@@ -3144,62 +3183,61 @@
 <script>
   /* Hero loading-screen slide rotator */
   (function(){
-    const slides = [
-      { bg: 'assets/hero-park.png?v=2',   person: 'assets/person-1-cut.png' },
-      { bg: 'assets/hero-court.png',  person: 'assets/person-2-cut.png' },
-      { bg: 'assets/hero-office2.png', person: 'assets/person-3-cut.png' },
-      { bg: 'assets/hero-night.png',  person: 'assets/person-4-cut.png?v=2' },
-      { bg: 'assets/hero-unam.png',   person: 'assets/person-5-cut.png' },
-      { bg: 'assets/hero-fi.png',     person: 'assets/person-6-cut.png?v=2' },
-      { bg: 'assets/hero-papeleria.png', person: 'assets/person-rata.png' },
-      { bg: 'assets/hero-tacos.png?v=2', person: 'assets/person-tacos.png?v=4' }
-    ];
     const stage = document.getElementById('heroSlides');
     const dotsHost = document.getElementById('heroDots');
-    if (!stage || !slides.length) return;
+    if (!stage) return;
+    const els = [...stage.children];
+    if (!els.length) return;
 
-    // Build any missing slide DOM
-    stage.innerHTML = '';
-    slides.forEach((s, i) => {
-      const el = document.createElement('div');
-      el.className = 'hero-slide' + (i === 0 ? ' is-active' : '');
-      el.dataset.slide = i;
-      el.innerHTML =
-        '<div class="hero-bg-img" style="background-image:url(\''+s.bg+'\')"></div>' +
-        '<img class="hero-character" src="'+s.person+'" alt="" />';
-      stage.appendChild(el);
-    });
+    // Orden barajado creado al construir el hero (arriba, inline). Se recorre
+    // completo antes de repetir cualquier slide; al cerrar el ciclo se vuelve
+    // a barajar evitando que el primero repita al ultimo mostrado.
+    let order = (window.HERO_ORDER || []).slice();
+    if (order.length !== els.length) order = els.map((_, i) => i);
+    let pos = 0;
 
-    // Build dots
-    if (dotsHost) {
+    function reshuffle(){
+      const last = order[order.length - 1];
+      const a = els.map((_, i) => i);
+      for (let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      if (a.length > 1 && a[0] === last){ [a[0], a[1]] = [a[1], a[0]]; }
+      order = a;
+    }
+
+    if (dotsHost){
       dotsHost.innerHTML = '';
-      slides.forEach((_, i) => {
+      els.forEach((_, i) => {
         const d = document.createElement('span');
-        if (i === 0) d.className = 'on';
+        if (i === order[0]) d.className = 'on';
         dotsHost.appendChild(d);
       });
     }
-
-    if (slides.length < 2) return; // nothing to rotate
-    let cur = 0;
-    const els = [...stage.children];
     const dotEls = dotsHost ? [...dotsHost.children] : [];
     const numEl = document.getElementById('heroNextNum');
-    if (numEl) numEl.textContent = '1/' + els.length;
-    function go(n){
-      els[cur].classList.remove('is-active');
-      if (dotEls[cur]) dotEls[cur].classList.remove('on');
-      cur = (n + els.length) % els.length;
-      els[cur].classList.add('is-active');
-      if (dotEls[cur]) dotEls[cur].classList.add('on');
-      if (numEl) numEl.textContent = (cur + 1) + '/' + els.length;
+    function paint(){
+      const idx = order[pos];
+      els.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+      dotEls.forEach((d, i) => d.classList.toggle('on', i === idx));
+      if (numEl) numEl.textContent = (pos + 1) + '/' + els.length;
     }
-    let timer = setInterval(() => go(cur + 1), 8000);
+    paint();
+    if (els.length < 2) return;
+
+    function next(){
+      pos++;
+      if (pos >= order.length){ reshuffle(); pos = 0; }
+      try { localStorage.setItem('torneo_hero_last_slide', String(order[pos])); } catch(e){}
+      paint();
+    }
+    let timer = setInterval(next, 8000);
     const btn = document.getElementById('heroNext');
     if (btn) btn.addEventListener('click', () => {
       clearInterval(timer);
-      go(cur + 1);
-      timer = setInterval(() => go(cur + 1), 8000);
+      next();
+      timer = setInterval(next, 8000);
     });
   })();
 </script>
