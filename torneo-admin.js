@@ -208,7 +208,7 @@
           <p class="adm-hint" style="margin-top:-2px">En modo manual la cifra no depende de los pagos; se reparte directo según los porcentajes.</p>
         </div>
 
-        <p class="adm-hint" style="margin:2px 0 2px">Pagos confirmados / cupos por categoría (se muestra siempre en la página pública, en cualquier modo de bolsa):</p>
+        <p class="adm-hint" style="margin:2px 0 2px">Pagos confirmados / registros totales por categoría (se sincronizan solos cada vez que se abre el Centro de control; aquí solo se corrigen a mano si hace falta):</p>
         ${paidRows}
         <button class="adm-btn ghost" id="adm-sync-regs" type="button" style="flex:none;width:100%">Sincronizar desde inscripciones</button>
         <p class="adm-hint" id="adm-sync-msg" aria-live="polite"></p>

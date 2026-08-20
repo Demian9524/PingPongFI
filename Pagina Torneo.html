@@ -2508,17 +2508,17 @@
             <div class="cat-card" data-cat="avanzado">
               <small class="cc-name">Avanzados · 50%</small>
               <b class="cc-amt" id="amtAvanzado">$0</b>
-              <small class="cc-meta"><span id="paidAvanzado">0</span> de <span id="totAvanzado">12</span> pagos confirmados</small>
+              <small class="cc-meta"><span id="paidAvanzado">0</span> pagados · <span id="totAvanzado">0</span> registrados</small>
             </div>
             <div class="cat-card" data-cat="intermedio">
               <small class="cc-name">Intermedios · 30%</small>
               <b class="cc-amt" id="amtIntermedio">$0</b>
-              <small class="cc-meta"><span id="paidIntermedio">0</span> de <span id="totIntermedio">24</span> pagos confirmados</small>
+              <small class="cc-meta"><span id="paidIntermedio">0</span> pagados · <span id="totIntermedio">0</span> registrados</small>
             </div>
             <div class="cat-card" data-cat="principiante">
               <small class="cc-name">Principiantes · 20%</small>
               <b class="cc-amt" id="amtPrincipiante">$0</b>
-              <small class="cc-meta"><span id="paidPrincipiante">0</span> de <span id="totPrincipiante">24</span> pagos confirmados</small>
+              <small class="cc-meta"><span id="paidPrincipiante">0</span> pagados · <span id="totPrincipiante">0</span> registrados</small>
             </div>
           </div>
           <div class="meta-foot">Distribución fija por categoría · La bolsa crece con cada pago confirmado</div>
@@ -3246,7 +3246,9 @@
   (function initPrizePool(){
     const DEFAULTS = {
       cuota: 35,                       // 35 MXN por participante (confirmado)
-      totals: { avanzado: 12, intermedio: 24, principiante: 24 },
+      // Registros por categoría: los publica el panel de control con los datos
+      // reales de la base (no son cupos ni cifras inventadas).
+      totals: { avanzado: 0, intermedio: 0, principiante: 0 },
       pcts:   { avanzado: 0.50, intermedio: 0.30, principiante: 0.20 },
       // Pagos confirmados: PENDIENTE. Arrancan en 0 para no publicar cifras
       // inventadas; los captura la organización desde el panel de admin.
@@ -3414,7 +3416,8 @@
       wrap.setAttribute('aria-label', paid + ' de ' + total + ' pagos confirmados');
       pctEl.textContent = pct + '%';
       countEl.textContent = paid + ' de ' + total;
-      restEl.textContent = total > 0 && paid >= total ? 'Todos confirmados' : 'Faltan ' + Math.max(0, total - paid);
+      restEl.textContent = total <= 0 ? '—'
+        : (paid >= total ? 'Todos confirmados' : 'Faltan ' + Math.max(0, total - paid) + ' de ' + total + ' registros');
       const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       fill.style.transition = reduceMotion ? 'none' : '';
       fill.setAttribute('stroke-dasharray', PAY_RING_CIRC.toFixed(1));

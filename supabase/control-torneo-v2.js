@@ -67,6 +67,10 @@
       // Pago vigente (último registro de payments), no «hubo algún confirmado»:
       // es la misma regla que usa el tablero de grupos para la elegibilidad.
       payConflicts = window.SB_PAYMENTS ? await window.SB_PAYMENTS.reconcile(rows) : [];
+      // Bolsa pública: se publican los conteos REALES (registros por categoría y
+      // pagos confirmados) cada vez que un organizador abre este panel, para que
+      // la sección del puerquito nunca quede con cifras viejas.
+      syncPrizePoolCounts(rows).catch(e => window.SB_LOG && window.SB_LOG.error('CTL-BOLSA', e));
       try {
         groups = window.SB_GROUPS.groupRows(await window.SB_GROUPS.fetchGroups(edcats.map(c => c.id)));
       } catch(e){ groups = []; window.SB_LOG && window.SB_LOG.error('CTL-003', e); }
@@ -95,6 +99,37 @@
       st.appendChild(document.createTextNode('No se pudieron obtener los datos del torneo. (código CTL-002)'));
       $('#kpiRow').appendChild(st);
     }
+  }
+
+  // ── Bolsa del torneo: publica conteos reales en site_settings ──────────
+  const PRIZE_KEY = 'torneo_prize_cfg_v1';
+  const PRIZE_CATS = [
+    { k:'avanzado',     t:/AVANZ/ },
+    { k:'intermedio',   t:/INTERMEDI/ },
+    { k:'principiante', t:/PRINCIP/ }
+  ];
+  async function syncPrizePoolCounts(list){
+    if (!window.SB) return;
+    const totals = { avanzado:0, intermedio:0, principiante:0 };
+    const paid   = { avanzado:0, intermedio:0, principiante:0 };
+    (list || []).forEach(r => {
+      const up = String(r.category_code || r.category_name || '').toUpperCase();
+      const hit = PRIZE_CATS.find(c => c.t.test(up));
+      if (!hit) return;
+      totals[hit.k]++;                                  // TODOS los registros
+      const st = String(r.payment_status || '').toUpperCase();
+      if (st === 'CONFIRMED' || st === 'WAIVED') paid[hit.k]++;   // pagos confirmados
+    });
+    let cfg = {};
+    try {
+      const { data } = await window.SB.from('site_settings').select('value').eq('key', PRIZE_KEY).maybeSingle();
+      cfg = (data && data.value) || {};
+    } catch(e){ cfg = {}; }
+    const keys = ['avanzado','intermedio','principiante'];
+    const same = keys.every(k => (cfg.totals||{})[k] === totals[k] && (cfg.paid||{})[k] === paid[k]);
+    if (same) return;
+    cfg.totals = totals; cfg.paid = paid;
+    await window.SB.rpc('admin_save_site_setting', { p_key: PRIZE_KEY, p_value: cfg });
   }
 
   function counts(){
