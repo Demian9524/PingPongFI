@@ -468,6 +468,37 @@
   body[data-tw-pulse="precio"] .cta-precio,body[data-tw-pulse="premio"] .cta-premio,body[data-tw-pulse="bolsa"] .cta-bolsa,body[data-tw-pulse="reglas"] .cta-reglas,body[data-tw-pulse="all"] .cta-precio,body[data-tw-pulse="all"] .cta-premio,body[data-tw-pulse="all"] .cta-bolsa,body[data-tw-pulse="all"] .cta-reglas{animation:twPulseBtn 2.2s ease-in-out infinite}
   @media(prefers-reduced-motion:reduce){body[data-tw-pulse] .cta-precio,body[data-tw-pulse] .cta-premio,body[data-tw-pulse] .cta-bolsa,body[data-tw-pulse] .cta-reglas{animation:none}}
 
+  /* ── Botón INSCRIBIRSE de la nav: movimiento + color de acento ──
+     El estado por defecto vive en CSS puro (sin esperar a JS) para que al
+     recargar no se vea un destello con el botón gris antiguo. Los Tweaks
+     solo sobreescriben. */
+  :root{--tw-reg:#e6d4b4}
+  .btn-gray{position:relative;overflow:hidden;
+    background:linear-gradient(180deg,var(--tw-reg),color-mix(in srgb,var(--tw-reg) 58%,#000));
+    border:1px solid color-mix(in srgb,var(--tw-reg) 65%,#fff 35%);color:#1a1410;
+    --tw-reg-glow:color-mix(in srgb,var(--tw-reg) 55%,transparent);
+    animation:twRegPulse 2.6s ease-in-out infinite,twRegNudge 2.4s ease-in-out infinite}
+  .btn-gray::after{content:'';position:absolute;top:0;bottom:0;left:-42%;width:34%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,0.5),transparent);
+    animation:twRegShine 3.6s ease-in-out infinite}
+  body.tw-reg-light-ink .btn-gray{color:#fff}
+  body.tw-reg-off .btn-gray{background:linear-gradient(180deg,#43434b,#26262c);color:#f2f2f4;
+    border-color:rgba(255,255,255,0.12);--tw-reg-glow:rgba(255,255,255,0.22)}
+  @keyframes twRegShine{0%{left:-42%}55%,100%{left:122%}}
+  @keyframes twRegPulse{0%,100%{box-shadow:0 6px 18px -7px rgba(0,0,0,0.6),0 0 0 0 var(--tw-reg-glow)}
+    58%{box-shadow:0 6px 20px -6px rgba(0,0,0,0.6),0 0 0 10px transparent}}
+  @keyframes twRegNudge{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5px) scale(1.025)}}
+  body[data-tw-reg-move] .btn-gray{animation:none}
+  body[data-tw-reg-move] .btn-gray::after{display:none}
+  body[data-tw-reg-move="shine"] .btn-gray::after,body[data-tw-reg-move="both"] .btn-gray::after{display:block;
+    animation:twRegShine 3.6s ease-in-out infinite}
+  body[data-tw-reg-move="pulse"] .btn-gray{animation:twRegPulse 2.6s ease-in-out infinite}
+  body[data-tw-reg-move="nudge"] .btn-gray{animation:twRegNudge 2.4s ease-in-out infinite}
+  body[data-tw-reg-move="both"] .btn-gray{animation:twRegPulse 2.6s ease-in-out infinite,twRegNudge 2.4s ease-in-out infinite}
+  .btn-gray:hover{filter:brightness(1.06);animation-play-state:paused}
+  body.tw-reg-off .btn-gray:hover{filter:brightness(1.14)}
+  @media(prefers-reduced-motion:reduce){.btn-gray,.btn-gray::after,body[data-tw-reg-move] .btn-gray,body[data-tw-reg-move] .btn-gray::after{animation:none}}
+
   /* 4-point star sparkles drawn with CSS gradients */
   .cta-premio .spk{position:absolute;width:10px;height:10px;pointer-events:none;opacity:0;
     background:
@@ -488,6 +519,7 @@
   .cta-gold{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;
     color:var(--gold);border:1.5px solid rgba(224,181,74,0.55);padding:11px 18px;display:inline-flex;align-items:center;gap:8px;
     clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);background:rgba(224,181,74,0.06)}
+
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
   .chip{display:flex;align-items:center;gap:8px;background:rgba(16,14,16,0.7);border:1px solid var(--line);
     border-radius:8px;padding:6px 10px;backdrop-filter:blur(4px)}
@@ -3284,13 +3316,55 @@
     // Trae la config real del servidor: cualquier visitante (sin admin
     // abierto) ve el valor que guardó el organizador, no solo el de su
     // propio navegador.
+    let liveCounts = false;   // conteos en vivo ya aplicados: no los pisa la config guardada
     if (window.SB){
       window.SB.from('site_settings').select('value').eq('key', STORAGE_KEY).maybeSingle().then(({ data, error }) => {
         if (error || !data || !data.value) return;
-        Object.assign(cfg, data.value);
+        const v = { ...data.value };
+        if (liveCounts){ delete v.totals; delete v.paid; }
+        Object.assign(cfg, v);
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch(e){}
         if (window.renderPrizePool) window.renderPrizePool();
       });
+      // Conteos EN VIVO desde las inscripciones: primera cifra = pagos
+      // confirmados, segunda = registros totales de la categoria. Se intenta en
+      // cada carga; si la sesion es de organizador tambien se republica en
+      // site_settings para que cualquier visitante anonimo vea lo mismo.
+      (async () => {
+        const CATS = [
+          { k:'avanzado',     t:/AVANZ/ },
+          { k:'intermedio',   t:/INTERMEDI/ },
+          { k:'principiante', t:/PRINCIP/ }
+        ];
+        let rows = null;
+        try {
+          let edId = null;
+          if (window.SB_CATALOG && window.SB_CATALOG.getActiveEdition){
+            const ed = await window.SB_CATALOG.getActiveEdition();
+            edId = ed && ed.id;
+          }
+          const res = await window.SB.rpc('admin_registrations', edId != null ? { p_edition_id: edId } : {});
+          if (!res.error && Array.isArray(res.data)) rows = res.data;
+        } catch(e){ rows = null; }
+        if (!rows || !rows.length) return;   // sin permiso: se queda la cifra publicada
+        const totals = { avanzado:0, intermedio:0, principiante:0 };
+        const paid   = { avanzado:0, intermedio:0, principiante:0 };
+        rows.forEach(r => {
+          const up = String(r.category_code || r.category_name || '').toUpperCase();
+          const hit = CATS.find(c => c.t.test(up));
+          if (!hit) return;
+          totals[hit.k]++;
+          const st = String(r.payment_status || '').toUpperCase();
+          if (st === 'CONFIRMED' || st === 'WAIVED') paid[hit.k]++;
+        });
+        const keys = ['avanzado','intermedio','principiante'];
+        const same = keys.every(k => cfg.totals[k] === totals[k] && cfg.paid[k] === paid[k]);
+        if (same) return;
+        cfg.totals = totals; cfg.paid = paid; liveCounts = true;
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch(e){}
+        if (window.renderPrizePool) window.renderPrizePool();
+        try { await window.SB.rpc('admin_save_site_setting', { p_key: STORAGE_KEY, p_value: cfg }); } catch(e){}
+      })();
     }
     const cap = c => c[0].toUpperCase() + c.slice(1);
     const fmt = n => {
@@ -3451,6 +3525,8 @@
         animateCounter('amt' + cap(cat), splitCents[cat] / 100, true);
         const p = document.getElementById('paid' + cap(cat)); if (p) p.textContent = cfg.paid[cat];
         const tot = document.getElementById('tot' + cap(cat)); if (tot) tot.textContent = cfg.totals[cat];
+        const meta = document.querySelector('.cat-card[data-cat="'+cat+'"] .cc-meta');
+        if (meta) meta.style.visibility = totalPlayers > 0 ? '' : 'hidden';
         // etiqueta "Avanzados · 50%"
         const nm = document.querySelector('.cat-card[data-cat="'+cat+'"] .cc-name');
         if (nm) nm.textContent = CAT_LBL[cat] + ' · ' + Math.round(cfg.pcts[cat]*100) + '%';
@@ -3810,7 +3886,10 @@
     "ctaBorderMult": 1.4,
     "ctaElev": false,
     "ctaArrow": false,
-    "ctaPulse": "all"
+    "ctaPulse": "all",
+    "regMove": "both",
+    "regTint": true,
+    "regColor": "#e6d4b4"
   }/*EDITMODE-END*/;
   function CtaTweaks(){
     const [t, setTweak] = useTweaks(CTA_TWEAK_DEFAULTS);
@@ -3827,6 +3906,19 @@
       if (t.ctaPulse && t.ctaPulse !== 'none') document.body.setAttribute('data-tw-pulse', t.ctaPulse);
       else document.body.removeAttribute('data-tw-pulse');
     }, [t.ctaPulse]);
+    React.useEffect(() => {
+      if (t.regMove && t.regMove !== 'none') document.body.setAttribute('data-tw-reg-move', t.regMove);
+      else document.body.removeAttribute('data-tw-reg-move');
+    }, [t.regMove]);
+    React.useEffect(() => {
+      document.body.classList.toggle('tw-reg-off', !t.regTint);
+      document.documentElement.style.setProperty('--tw-reg', t.regColor);
+      /* Texto claro cuando el tono es oscuro, para que siga legible */
+      const hex = String(t.regColor || '').replace('#','');
+      const n = hex.length === 6 ? parseInt(hex,16) : 0;
+      const lum = (((n>>16)&255)*0.299 + ((n>>8)&255)*0.587 + (n&255)*0.114) / 255;
+      document.body.classList.toggle('tw-reg-light-ink', lum <= 0.62);
+    }, [t.regTint, t.regColor]);
     return (
       <TweaksPanel title="Botones CTA">
         <TweakSection label="Legibilidad" />
@@ -3838,6 +3930,20 @@
         <TweakRadio label="Botón" value={t.ctaPulse}
           options={[{value:'none',label:'Ninguno'},{value:'all',label:'Todos'},{value:'precio',label:'Entrada'},{value:'premio',label:'Premios'},{value:'bolsa',label:'Dinero'},{value:'reglas',label:'Reglas'}]}
           onChange={(v) => setTweak('ctaPulse', v)} />
+        <TweakSection label="Botón Inscribirse (nav)" />
+        <TweakRadio label="Movimiento" value={t.regMove}
+          options={[{value:'none',label:'Ninguno'},{value:'shine',label:'Brillo'},{value:'pulse',label:'Latido'},{value:'nudge',label:'Rebote'},{value:'both',label:'Latido + brillo'}]}
+          onChange={(v) => setTweak('regMove', v)} />
+        <TweakToggle label="Color de acento" value={t.regTint} onChange={(v) => setTweak('regTint', v)} />
+        <TweakColor label="Tono frío" value={t.regColor}
+          options={['#16c7bb','#e13a8d','#8b5cf6','#3ea8a0']}
+          onChange={(v) => setTweak('regColor', v)} />
+        <TweakColor label="Tono cálido / café" value={t.regColor}
+          options={['#c9924e','#a9682f','#7d4a25','#4e3320']}
+          onChange={(v) => setTweak('regColor', v)} />
+        <TweakColor label="Tono claro" value={t.regColor}
+          options={['#e6d4b4','#cbb894','#f0ece4']}
+          onChange={(v) => setTweak('regColor', v)} />
       </TweaksPanel>
     );
   }
