@@ -771,8 +771,9 @@
      Al estar oculta no aporta alto ni gap: .col-l es flex con gap, así que
      Fase de Grupos vuelve exactamente a su posición original. */
   #preGroupSection[hidden]{display:none !important}
-  #preGroupSection .pgsub{font-size:13px;color:var(--muted);margin-top:8px;max-width:640px;text-wrap:pretty}
-  .pghead{display:flex;align-items:flex-start;gap:14px;margin-top:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  #preGroupSection .pgsub{font-size:13px;line-height:1.45;color:var(--muted);margin-top:6px;max-width:none;text-wrap:pretty}
+  @media (max-width:760px){#preGroupSection .pgsub{max-width:640px}}
+  .pghead{display:flex;align-items:center;gap:14px;margin-top:2px;padding-bottom:10px;border-bottom:1px solid var(--line)}
   .pghead h3{font-family:var(--disp);font-weight:800;font-style:italic;font-size:19px;letter-spacing:0.03em;text-transform:uppercase;line-height:1}
   .pgcode{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;color:var(--dim);text-transform:uppercase;margin-top:5px}
   .pgcount{margin-left:auto;text-align:right;flex:0 0 auto}
@@ -782,7 +783,7 @@
      css/supabase-pages.css) y mismo ancho útil máximo que .pjx-wrap
      (1440 − 2×26 = 1388), centrado en la página junto con su encabezado. */
   #preGroupSection [data-pre-group-body]{max-width:1388px;margin-left:auto;margin-right:auto}
-  .pgcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:14px auto 0;max-width:1388px}
+  .pgcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:12px auto 0;max-width:1388px}
   #preGroupSection .empty-pick{margin-top:14px}
   #preGroupSection .state{text-align:center;color:var(--muted);font-size:13.5px;padding:26px 18px}
   #preGroupSection .state b{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:18px;
@@ -792,7 +793,7 @@
     .pgcards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
     #preGroupSection .fn-card{padding:10px 10px 10px 57px;min-height:74px;
       clip-path:polygon(0 7px,7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%)}
-    #preGroupSection .fn-portrait{left:10px;top:50%;transform:translateY(calc(-50% - 3px));width:42px;height:42px}
+    #preGroupSection .fn-portrait{left:10px;top:50%;transform:translateY(calc(-50% + 1px));width:42px;height:42px}
     #preGroupSection .fn-portrait img,#preGroupSection .fn-mono{width:42px;height:42px}
     /* el emblema tiene 3 capas (wrap 42 / flip 56 / caras 56): al encoger solo
        las <img> las caras quedaban ancladas arriba-izquierda del flip de 56px.
@@ -2936,7 +2937,7 @@
 <script src="supabase/bracket-topology.js?v=178"></script>
 <script src="supabase/bracket-canvas.js?v=229"></script>
 <script src="supabase/bracket-config.js?v=192"></script>
-<script src="supabase/pre-group-roster.js?v=106"></script>
+<script src="supabase/pre-group-roster.js?v=108"></script>
 <div class="bb-modal" id="bbModal" hidden>
   <div class="bb-card">
     <button type="button" class="bb-close" id="bbClose" aria-label="Cerrar"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></button>
