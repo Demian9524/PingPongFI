@@ -28,6 +28,8 @@
       hint:'Llave de la fase eliminatoria en la página pública.' },
     { id:'terceros', label:'Terceros y sistema 5–4–3',
       hint:'Explicación de cómo se reparten las plazas de tercer lugar entre grupos.' },
+    { id:'restauracion', label:'Restauremos las Mesas',
+      hint:'Bloque de la campaña de restauración: meta, avance, donadores y plan de materiales. Al ocultarla, el pop-up flotante también desaparece.' },
     { id:'whatsapp', label:'Pop-up de comunidad WhatsApp',
       hint:'Burbuja flotante en la esquina que invita a unirse al grupo de WhatsApp del torneo.' },
     { id:'rtpopup', label:'Pop-up Arreglemos las Mesas',
@@ -38,7 +40,7 @@
     { id:'empty', label:'Vacía',   title:'Se muestra el bloque, pero con el aviso «aún no se publica».' },
     { id:'off',   label:'Oculta',  title:'El bloque no aparece en la página.' }
   ];
-  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', whatsapp:'on', rtpopup:'on' };
+  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', restauracion:'on', whatsapp:'on', rtpopup:'on' };
 
   // Compatibilidad con la versión anterior, que guardaba booleanos.
   function norm(v){

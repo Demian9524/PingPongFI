@@ -3020,7 +3020,9 @@
     { id:'bracket', sel:'#bracket', auto:false,
       msg:'El bracket de esta categoría aún no ha sido publicado.' },
     { id:'terceros', sel:'#reglas', auto:false,
-      msg:'La información de terceros de esta categoría aún no ha sido publicada.' }
+      msg:'La información de terceros de esta categoría aún no ha sido publicada.' },
+    { id:'restauracion', sel:'#restauracion', auto:false,
+      msg:'La campaña «Restauremos las Mesas» aún no ha sido publicada.' }
   ];
   function stateOf(cfg, id){
     var v = cfg[id];
@@ -3761,7 +3763,8 @@
   var KEY='torneo_sections_cfg_v1';
   function apply(){
     var cfg; try{cfg=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){cfg={};}
-    if(cfg && cfg.rtpopup==='off'){ el.hidden=true; el.classList.remove('show'); if(window.__waAvoidCountdown) window.__waAvoidCountdown(); return; }
+    // si la sección a la que apunta está oculta, el pop-up también se oculta
+    if(cfg && (cfg.rtpopup==='off' || cfg.restauracion==='off')){ el.hidden=true; el.classList.remove('show'); if(window.__waAvoidCountdown) window.__waAvoidCountdown(); return; }
     el.hidden=false;
     el.classList.add('show');
     if(window.__waAvoidCountdown) window.__waAvoidCountdown();
