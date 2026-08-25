@@ -16,6 +16,11 @@
       "source": "/qr",
       "destination": "/Pagina%20Torneo.html",
       "permanent": false
+    },
+    {
+      "source": "/comunidad",
+      "destination": "https://chat.whatsapp.com/KlF6bCXvd9VLAqaO8bJBBU",
+      "permanent": false
     }
   ]
 }
