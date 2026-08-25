@@ -354,6 +354,21 @@
         </ul>
       </div>`],
 
+    ['Jugadores del representativo / experiencia competitiva', `
+      <span class="rt-badge red">Solo categoría Avanzados · cuota $70 · se aplica por enfrentamiento</span>
+      <p>Los jugadores que pertenecen o pertenecieron al <b>equipo representativo</b> quedan clasificados <b>directamente en la categoría Avanzados</b>, y es ahí donde puede aplicarse la <b>pala de madera (hardbat)</b>.</p>
+      <p>Con el objetivo de mantener enfrentamientos competitivos entre jugadores de distintos niveles, la organización podrá aplicar un sistema de balance mediante el uso de una <b>pala de madera (hardbat)</b>.</p>
+      <ul>
+        <li>Aplica <b>solo dentro de la categoría Avanzados</b>: los jugadores del representativo entran directo a esa categoría y compiten ahí con la <b>pala de madera</b> cuando la organización lo determine.</li>
+        <li>Esta regla podrá aplicarse a jugadores con <b>experiencia competitiva considerable</b>, entrenamiento especializado, participación en <b>equipos representativos</b> o varios meses/años de entrenamiento formal, cuando se enfrenten contra participantes de <b>nivel amateur</b>.</li>
+        <li>La <b>pala de madera</b> utiliza una superficie de goma sencilla, generalmente <b>sin esponja</b>, y ofrece considerablemente <b>menos velocidad y efecto</b> que una raqueta competitiva moderna.</li>
+        <li>La organización decide <b>en qué enfrentamientos</b> se aplica la medida, dependiendo de la diferencia de nivel entre los participantes.</li>
+        <li>Cuando dos jugadores de <b>nivel competitivo similar</b> se enfrenten entre ellos, la organización podrá permitir el uso de sus <b>raquetas habituales</b>.</li>
+        <li>La <b>cuota de entrada</b> para estos jugadores es de <b>$70 MXN</b>: el doble de la cuota habitual del torneo.</li>
+        <li>Las palas de madera deberán ser <b>proporcionadas o previamente aprobadas</b> por la organización, para garantizar condiciones similares entre participantes.</li>
+      </ul>
+      <div class="rt-note"><span>No es una sanción ni una prohibición permanente: es una <b>medida de balance</b> que puede aplicarse en <b>determinados enfrentamientos</b>, principalmente cuando existe una diferencia considerable de experiencia entre ambos jugadores.</span></div>`],
+
     ['Formato actual', `<div id="rtFmtHost"><p class="rt-fmt-pend">Cargando información publicada…</p></div>`]
     ];
   }

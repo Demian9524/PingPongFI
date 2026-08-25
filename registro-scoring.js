@@ -2,7 +2,12 @@
 // Cascada de condiciones (NO es una suma de puntos). Orden de prioridad:
 //   1. Representativo            → AVANZADO (regla dura, no negociable)
 //   2. Entrenamiento formal ≥1 mes → AVANZADO (regla dura, no negociable)
-//   3. Cascada de experiencia / frecuencia / técnicas  (umbrales SIN CAMBIOS)
+//   3. Cascada de experiencia / frecuencia / técnicas
+//      · Saque con efecto (SERVE) ya NO manda solo a Avanzados: es un PISO
+//        de INTERMEDIO (nunca Principiante). Sube a Avanzados solo si se
+//        acompaña de otra señal fuerte (3+ técnicas, topspin, peloteo 16+,
+//        frecuencia alta, +1 año, entrenamiento o representativo).
+//      · Umbral por técnicas puras: 3+ → Avanzado, 2 → Intermedio.
 //   4. Overrides por historial del torneo pasado (solo pueden SUBIR)
 //   5. Banderas de revisión (nunca bajan la categoría)
 //
@@ -84,10 +89,6 @@
       category = 'AVANZADO_OPEN';
       reasons.push('Declaró que sabe hacer topspin.');
     }
-    else if (techniques.includes('SERVE')){
-      category = 'AVANZADO_OPEN';
-      reasons.push('Declaró que sabe sacar con efecto.');
-    }
     else if (rally === 'R16P'){
       category = 'AVANZADO_OPEN';
       reasons.push('Sostiene peloteos de 16 golpes o más.');
@@ -101,9 +102,9 @@
       reasons.push('Tiene más de un año jugando.');
     }
     // ── CASCADA (para el resto, que no disparó ninguna regla dura) ──────
-    else if (tech >= 2){
+    else if (tech >= 3){
       category = 'AVANZADO_OPEN';
-      reasons.push('Varios recursos técnicos declarados.');
+      reasons.push('Tres o más recursos técnicos declarados.');
     }
     else if (((exp === 'EXP_6M_1Y' || exp === 'EXP_GT1Y') && tech >= 1) || tech >= 2 ||
              ((freq === 'WEEKLY' || freq === 'FREQUENT') && tech >= 1) || exp === 'EXP_GT1Y'){
@@ -115,6 +116,13 @@
       reasons.push((exp === 'EXP_NONE' && tech === 0)
         ? 'Sin experiencia previa ni técnicas declaradas.'
         : 'Poca experiencia o pocos recursos técnicos declarados.');
+    }
+
+    // ── PISO POR SAQUE CON EFECTO (sube a Intermedio, nunca a Principiante) ──
+    if (techniques.includes('SERVE') && category === 'PRINCIPIANTE'){
+      category = 'INTERMEDIO';
+      reasons.push('Declaró que sabe sacar con efecto: mínimo Intermedio.');
+      flag('SERVE_FLOOR', 'Saque con efecto con perfil de Principiante: se sube a Intermedio para revisión.');
     }
 
     // Peloteo: explica, no puntúa.
@@ -176,6 +184,9 @@
     }
     if (category === 'PRINCIPIANTE' && (tech === 1 || rally === 'R8_15' || rally === 'R16P')){
       flag('BORDERLINE_UP', 'Cerca del límite entre Principiante e Intermedio.');
+    }
+    if (category === 'INTERMEDIO' && techniques.includes('SERVE') && tech >= 2){
+      flag('SERVE_BORDERLINE', 'Sabe sacar con efecto y declara 2+ técnicas: revisar si corresponde Avanzado / Open.');
     }
     if (category === 'INTERMEDIO' && tech >= 3){
       flag('BORDERLINE_UP', 'Cerca del límite entre Intermedio y Avanzado / Open.');

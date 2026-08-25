@@ -270,6 +270,8 @@
     CONTRADICTION_NO_PLAY:'Dice no jugar pero declara técnicas o peloteo alto.',
     CONTRADICTION_RALLY_TECH:'Peloteo de 0 a 3 golpes pero declara topspin o ataque.',
     CONTRADICTION_TRAINING:'Declara entrenamiento formal pero el resto no lo respalda.',
+    SERVE_FLOOR:'Saque con efecto con perfil de Principiante: se subió a Intermedio.',
+    SERVE_BORDERLINE:'Sabe sacar con efecto y 2+ técnicas: revisar si corresponde Avanzado / Open.',
     BORDERLINE_UP:'Cerca del límite con la categoría de arriba.'
   };
   function techniquesText(v){

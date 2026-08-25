@@ -29,6 +29,9 @@
 .rt-sec-body ul li{position:relative;padding-left:18px;font-size:14px;line-height:1.5;color:var(--text,#f6efe2)}
 .rt-sec-body ul li::before{content:'»';position:absolute;left:0;color:var(--red2,#dd3b2c);font-weight:700}
 .rt-sec-body b{color:#fff}
+/* el bold inline del cuerpo de reglas iba en 700 y pesaba demasiado al leer */
+.rt-content b,.rt-content strong{font-weight:600}
+.rt-content .rt-badge,.rt-content .cbox2 h5,.rt-content .rt-fbox b,.rt-content .rt-count b,.rt-content table.rt-matrix td.g,.rt-content .rt-fmt-head{font-weight:700}
 .rt-lead{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;margin:0 0 8px;border:1px solid color-mix(in srgb,var(--gold,#edbb52) 40%,transparent);background:var(--amber-soft,rgba(227,169,63,0.16));clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
 .rt-lead .ic{color:var(--gold,#edbb52);flex:0 0 auto;display:flex;margin-top:2px}
 .rt-lead p{font-size:14px;line-height:1.55;color:var(--text,#f6efe2);margin:0}
