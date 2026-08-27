@@ -66,7 +66,7 @@ window.BELLY_DATA = [
         ${bands.map(b => {
           const cy = ((b.y + b.h/2) / vbH) * 100;
           return `<div class="blab blab-${b.key}" style="top:${cy.toFixed(2)}%">
-            <b>${b.label}</b><span>${b.pct}%</span>
+            <b>${b.label}</b>
           </div>`;
         }).join('')}
       </div>`;

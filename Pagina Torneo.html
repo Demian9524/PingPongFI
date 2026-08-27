@@ -1821,6 +1821,20 @@
   .pool-info-box h4{font-family:var(--disp);font-weight:800;font-style:italic;font-size:19px;letter-spacing:0.02em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:9px}
   .pool-info-box p{font-family:var(--body);font-size:14.5px;line-height:1.55;color:var(--text);margin:0}
   .pool-info-box p+p{margin-top:11px}
+  .pool-info-box h4+*{margin-top:0}
+  .pool-info-box>h4:not(:first-of-type){margin-top:20px}
+  .pool-info-box{max-height:min(86vh,720px);overflow:auto}
+  .pool-info-list{list-style:none;margin:11px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .pool-info-list li{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;
+    color:var(--muted);border-bottom:1px dashed var(--line2);padding-bottom:5px}
+  .pool-info-list li b{color:var(--text);font-weight:700}
+  .pool-info-list li i{font-style:normal;color:var(--gold)}
+  .pool-info-list li.pi-head{display:block;border:0;padding:12px 0 2px;font-size:10.5px;letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--gold);font-weight:700}
+  .pool-info-list li.pi-head:first-child{padding-top:0}
+  .pool-info-list li.pi-total{border-bottom:0;padding-top:2px}
+  .pool-info-list li.pi-total span{color:var(--text);font-weight:700;text-transform:uppercase;letter-spacing:1px;font-size:11px}
+  .pool-info-list li.pi-total b{font-family:var(--disp);font-size:17px;letter-spacing:0.02em}
   .pool-info-box p b{color:var(--gold)}
   .pool-info-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line2);
     background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s var(--cut)}
@@ -1829,7 +1843,9 @@
   .prize-piggy .live-dot{width:7px;height:7px;border-radius:50%;background:#3cf07e;box-shadow:0 0 8px #3cf07e}
 
   .piggy-body{display:grid;grid-template-columns:minmax(300px,0.8fr) minmax(0,1.45fr);gap:44px;align-items:center;padding:26px 28px 22px}
-  .piggy-side{display:flex;flex-direction:column;align-items:center;gap:14px}
+  /* overflow:clip — el halo decorativo mide 120% del contenedor y provocaba
+     scroll horizontal en la página (visible en móvil). */
+  .piggy-side{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:0;overflow:clip}
   .piggy-stage-wrap{position:relative;width:100%;display:flex;align-items:center;justify-content:center}
   .piggy-halo{position:absolute;inset:-10%;background:radial-gradient(circle at 50% 42%,rgba(237,187,82,0.22),transparent 65%);pointer-events:none;z-index:0}
   .piggy-rings{position:absolute;inset:6%;pointer-events:none;z-index:0;opacity:0.06;
@@ -1894,17 +1910,14 @@
   .piggy-3d.flipped .belly-chart{opacity:1;transform:scale(1)}
   .belly-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;
     filter:drop-shadow(0 4px 8px rgba(0,0,0,0.35))}
-  .belly-svg .bband{transition:opacity .35s var(--cut);opacity:0.65}
+  .belly-svg .bband{transition:opacity .35s var(--cut);opacity:0.42}
   .belly-labels{position:absolute;inset:0;pointer-events:none}
   .blab{position:absolute;left:50%;transform:translate(-50%,-50%);text-align:center;
     opacity:0;transition:opacity .45s var(--cut);
     font-family:var(--disp);font-weight:800;line-height:1;
     text-shadow:0 2px 5px rgba(0,0,0,0.7),0 0 10px rgba(0,0,0,0.5)}
   .piggy-3d.flipped .blab{opacity:1;transition-delay:.5s}
-  .blab b{display:block;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;color:#fff8e6;margin-bottom:2px}
-  .blab span{display:block;font-family:var(--disp);font-weight:900;font-style:italic;
-    font-size:16px;letter-spacing:0.01em;color:#fff;
-    text-shadow:0 2px 5px rgba(0,0,0,0.7),0 0 10px rgba(0,0,0,0.5)}
+  .blab b{display:block;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;color:#fff8e6}
   /* Color por categoría: rojo Avanzados, azul Intermedios, verde Principiantes */
   .blab-av b{color:#ffd2c8;text-shadow:0 1px 2px rgba(60,8,4,0.85),0 0 8px rgba(255,90,68,0.55),0 0 14px rgba(255,90,68,0.35)}
   .blab-av span{color:#ffe8e0;text-shadow:0 2px 5px rgba(50,5,2,0.95),0 0 10px rgba(255,90,68,0.7),0 0 22px rgba(255,90,68,0.45)}
@@ -1927,8 +1940,19 @@
     letter-spacing:0.01em;color:var(--gold);line-height:1;
     text-shadow:0 0 26px rgba(233,196,106,0.55);font-variant-numeric:tabular-nums}
   .big-cur{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:1px;color:var(--muted)}
-  .big-cuota{display:block;font-family:var(--mono);font-size:13px;letter-spacing:0.5px;color:var(--muted);margin-top:10px}
+  .big-cuota{display:block;font-family:var(--mono);font-size:12px;letter-spacing:0.2px;color:var(--text);font-weight:700;margin-top:10px;white-space:nowrap}
   .big-cuota b{color:var(--text);font-weight:700}
+  .cuota-av{color:#ff6a55;font-weight:700}
+  .cuota-int{color:#6d8cff;font-weight:700}
+  .cuota-pri{color:#4fd483;font-weight:700}
+  /* Pagados / registrados: en el color de su categoría, con el mismo brillo
+     que el título de la tarjeta. */
+  .cat-card .cc-meta b{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--cat);
+    letter-spacing:0.02em;font-variant-numeric:tabular-nums;
+    text-shadow:0 0 10px color-mix(in srgb,var(--cat) 55%,transparent)}
+  .cat-card .cc-meta i{font-style:normal;font-weight:700;font-size:9.5px;letter-spacing:0.6px;
+    text-transform:uppercase;color:var(--text)}
+  .cc-meta-row{display:flex;align-items:baseline;gap:4px;min-width:0}
   .pay-ring-block{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
   .pay-ring-wrap{position:relative;width:92px;height:92px;filter:drop-shadow(0 0 10px rgba(237,187,82,0.25))}
   .pay-ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -1941,23 +1965,16 @@
   .pay-ring-count{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--text);text-transform:uppercase}
   .pay-ring-rest{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;color:var(--dim)}
 
-  .dist-bar{display:flex;height:16px;border-radius:0;overflow:hidden;gap:2px}
-  .dist-seg{width:var(--w);display:flex;align-items:center;justify-content:center;position:relative;
-    clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%)}
-  .dist-seg span{font-family:var(--mono);font-size:9.5px;font-weight:700;color:#0d0704;letter-spacing:0.5px}
-  .dist-seg[data-cat="avanzado"]{background:#dd3b2c}
-  .dist-seg[data-cat="intermedio"]{background:#3a63f0}
-  .dist-seg[data-cat="principiante"]{background:#37bb66}
-  .dist-seg.is-tight span{position:absolute;top:-16px;color:var(--text)}
-
   .cat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .cat-card{padding:16px 18px;background:linear-gradient(135deg,color-mix(in srgb,var(--cat) 14%,transparent),rgba(15,10,8,0.55) 65%);border:1px solid color-mix(in srgb,var(--cat) 34%,var(--line));
     border-radius:6px;border-top:3px solid var(--cat);position:relative;overflow:hidden}
   .cat-card .cc-name{display:block;font-family:var(--mono);font-size:13px;letter-spacing:0.8px;
-    color:var(--cat);text-transform:uppercase;font-weight:700}
+    color:var(--cat);text-transform:uppercase;font-weight:700;
+    text-shadow:0 0 10px color-mix(in srgb,var(--cat) 55%,transparent)}
   .cat-card .cc-amt{display:block;font-family:var(--disp);font-weight:800;font-size:30px;
     letter-spacing:0.02em;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums}
-  .cat-card .cc-meta{display:block;font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:5px;letter-spacing:0.3px}
+  .cat-card .cc-meta{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:nowrap;
+    font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:8px;letter-spacing:0.3px}
   .cat-card[data-cat="avanzado"]{--cat:#dd3b2c}
   .cat-card[data-cat="intermedio"]{--cat:#3a63f0}
   .cat-card[data-cat="principiante"]{--cat:#37bb66}
@@ -1966,38 +1983,102 @@
     text-transform:uppercase;text-align:center;padding-top:2px}
   .meta-foot b{color:var(--gold);font-weight:700;opacity:1}
 
+  /* ── MÓVIL Y TABLET ────────────────────────────────────────────
+     Escritorio (>960px) queda intacto: puerquito protagonista a la izquierda y
+     panel financiero a la derecha. De 960 abajo la sección se rearma como un
+     componente pensado para teléfono — misma identidad visual (dorado, bordes,
+     sombras, colores por categoría), otra escala y otro ritmo vertical. */
   @media (max-width:960px){
-    .piggy-body{grid-template-columns:minmax(0,1fr);gap:18px;padding:18px}
-    .piggy-body{display:flex;flex-direction:column}
-    .piggy-body .piggy-side{order:1;align-self:stretch;width:auto;margin-left:-18px;margin-right:-18px}
+    /* Tablet: el puerquito baja de tamaño y el panel pasa debajo */
+    .piggy-body{display:flex;flex-direction:column;gap:20px;padding:20px}
+    .piggy-body .piggy-side{order:1;align-self:center;width:100%;max-width:520px}
     .piggy-body .piggy-meta{order:2}
-    .piggy-stage{max-width:440px}
-    .big-pool .big-val{font-size:54px}
+    .piggy-stage{max-width:380px}
+    .big-pool .big-val{font-size:clamp(44px,8vw,58px)}
     .big-cur{font-size:20px}
   }
-  @media (max-width:520px){
-    .piggy-stage{max-width:400px}
-    .xlab b{font-size:8.5px;margin-bottom:2px}
-    .xlab span{font-size:15px}
-    .big-pool{padding:14px 16px;flex-direction:column;align-items:flex-start;gap:12px}
-    .big-pool .big-lbl{font-size:9.5px;letter-spacing:2.2px}
-    .big-pool .big-val{font-size:40px}
-    .big-cur{font-size:16px}
-    .pay-ring-block{flex-direction:row;align-self:stretch;justify-content:flex-start;gap:12px}
-    .pay-ring-wrap{width:68px;height:68px}
+  @media (max-width:768px){
+    /* ─ Cabecera compacta, sin comprimir el título ─ */
+    .prize-piggy{margin-top:16px}
+    .prize-piggy .ph{padding:10px 14px;gap:9px}
+    .prize-piggy .ph h3{font-size:14px;line-height:1.1}
+    .prize-piggy .live-tag{font-size:8px;letter-spacing:1.4px;padding:3px 7px;flex:0 0 auto}
+    .prize-piggy .pool-info-btn{width:19px;height:19px;font-size:11px}
+
+    /* ─ Ritmo vertical: escala 8/12/16/20 en lugar de huecos arbitrarios ─ */
+    .prize-piggy .piggy-body{padding:16px 12px;gap:16px}
+    .prize-piggy .piggy-body,.piggy-meta,.big-pool,.big-pool-left,.cat-cards{min-width:0;max-width:100%}
+    .piggy-meta{gap:12px}
+
+    /* ─ Puerquito protagonista: tamaño casi original en móvil, elemento
+         dominante de la sección ─ */
+    .piggy-body .piggy-side{gap:16px;margin:0 0 4px;max-width:100%}
+    .piggy-stage{max-width:min(390px,92vw)}
+    .piggy-tap-main{font-size:17px}
+    .piggy-tap-sub{font-size:10px;letter-spacing:1.6px}
+    .piggy-tap-arrow{width:15px;height:15px;margin-top:0}
+
+    /* ─ Bolsa total: monto y anillo comparten fila; la cuota ocupa el ancho ─
+       display:contents sube los hijos de .big-pool-left al grid del padre. */
+    .big-pool{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+      column-gap:14px;row-gap:8px;padding:16px}
+    .big-pool-left{display:contents}
+    .big-pool .big-lbl{grid-column:1/-1;grid-row:1;font-size:12px!important;letter-spacing:1.8px!important;margin-bottom:0}
+    .big-val-row{grid-column:1;grid-row:2;gap:7px;align-items:baseline;flex-wrap:nowrap;min-width:0}
+    .big-pool .big-val{font-size:clamp(40px,13vw,56px)}
+    .big-cur{font-size:clamp(14px,4.2vw,18px)}
+    .big-cuota{grid-column:1/-1;grid-row:3;white-space:normal;font-size:11.5px;line-height:1.65;
+      letter-spacing:0.1px;margin-top:2px;padding-top:9px;border-top:1px solid rgba(233,196,106,0.2)}
+    /* La cuota se parte en dos renglones a propósito, no por falta de espacio */
+    .big-cuota .cuota-sep{display:block;height:0;overflow:hidden}
+
+    /* Anillo de pagos: a la derecha del monto, apilado y compacto */
+    .pay-ring-block{grid-column:2;grid-row:2;flex-direction:column;align-items:center;gap:4px;justify-self:end}
+    .pay-ring-wrap{width:66px;height:66px}
     .pay-ring-pct{font-size:15px}
-    .pay-ring-track,.pay-ring-fill{stroke-width:7}
-    .pay-ring-text{text-align:left}
+    .pay-ring-track,.pay-ring-fill{stroke-width:8}
+    .pay-ring-text{text-align:center}
+    .pay-ring-lbl{font-size:7.5px;letter-spacing:1.2px}
+    .pay-ring-count{font-size:12px}
+    .pay-ring-rest{font-size:9px}
+
+    /* ─ Tarjetas de categoría: una por fila, composición izquierda/derecha,
+         misma altura y mismo interlineado en las tres ─ */
     .cat-cards{grid-template-columns:1fr;gap:8px}
-    .cat-card{padding:12px 14px}
-    .cat-card .cc-name{font-size:12px}
-    .cat-card .cc-amt{font-size:24px}
-    /* Header de la sección más compacto y permite que el live-tag baje */
-    .prize-piggy .ph{padding:10px 13px;flex-wrap:wrap;gap:8px}
-    .prize-piggy .ph h3{font-size:14px;line-height:1.05}
-    .prize-piggy .live-tag{font-size:8.5px;letter-spacing:1.5px}
-    .prize-piggy .piggy-body{padding:12px 10px 14px;gap:14px}
-    .prize-piggy .piggy-body .piggy-side{margin-left:-10px;margin-right:-10px}
+    .cat-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+      column-gap:12px;row-gap:6px;padding:12px 14px;min-height:88px;align-content:center}
+    .cat-card .cc-name{grid-column:1/-1;grid-row:1;font-size:10px;letter-spacing:1.2px}
+    .cat-card .cc-amt{grid-column:1;grid-row:2;justify-self:start;text-align:left;
+      font-size:clamp(30px,9.5vw,40px);line-height:1;margin-top:0}
+    .cat-card .cc-meta{grid-column:2;grid-row:2;display:flex;flex-direction:column;align-items:flex-end;
+      gap:3px;margin-top:0;justify-self:end;text-align:right}
+    .cat-card .cc-meta-row{flex-direction:row;align-items:baseline;gap:5px;white-space:nowrap}
+    /* Pagados manda (color de la categoría); registrados queda secundario */
+    .cat-card .cc-meta b{font-size:15px;color:var(--cat)}
+    .cat-card .cc-meta i{font-size:8px;letter-spacing:0.5px;color:var(--text);opacity:0.85}
+    .cat-card .cc-meta-row:last-child b{font-size:13px;color:var(--text);opacity:0.75;text-shadow:none}
+    .cat-card .cc-meta-row:last-child i{opacity:0.55}
+
+    /* ─ Etiquetas del interior del puerquito: escalan con la cavidad para no
+         salirse del cristal y caer sobre la cerámica ─ */
+    .blab b{font-size:9px;letter-spacing:0.02em;
+      text-shadow:0 1px 2px rgba(0,0,0,0.9),0 0 5px rgba(0,0,0,0.7)}
+
+    /* ─ Explicación del reparto: bloque legible, no letra chica pegada al borde ─ */
+    .meta-foot{font-size:10px;line-height:1.7;letter-spacing:0.6px;opacity:0.85;
+      padding:11px 14px 2px;text-wrap:pretty}
+  }
+  @media (max-width:400px){
+    .prize-piggy .piggy-body{padding:14px 10px;gap:14px}
+    .piggy-stage{max-width:min(330px,90vw)}
+    .big-pool{padding:14px;column-gap:10px}
+    .pay-ring-wrap{width:58px;height:58px}
+    .pay-ring-pct{font-size:13px}
+    .pay-ring-lbl{font-size:7px}
+    .cat-card{padding:11px 12px;min-height:82px;column-gap:8px}
+    .cat-card .cc-meta b{font-size:14px}
+    .cat-card .cc-meta-row:last-child b{font-size:12px}
+    .blab b{font-size:8px}
   }
 </style>
 
@@ -2118,49 +2199,10 @@
       <header class="hero" id="inicio">
         <div class="hero-slides" id="heroSlides">
         </div>
-        <script>
-        /* Hero: se construye AQUÍ mismo (antes de pintar) con orden aleatorio,
-           así nunca se alcanza a ver un slide fijo al recargar. */
-        (function(){
-          const slides = window.HERO_SLIDES = [
-            { bg: 'assets/hero-park.png?v=2',      person: 'assets/person-1-cut.png' },
-            { bg: 'assets/hero-court.png',         person: 'assets/person-2-cut.png' },
-            { bg: 'assets/hero-office2.png',       person: 'assets/person-3-cut.png' },
-            { bg: 'assets/hero-night.png',         person: 'assets/person-4-cut.png?v=2' },
-            { bg: 'assets/hero-unam.png',          person: 'assets/person-5-cut.png' },
-            { bg: 'assets/hero-fi.png',            person: 'assets/person-6-cut.png?v=2' },
-            { bg: 'assets/hero-papeleria.png',     person: 'assets/person-rata.png' },
-            { bg: 'assets/hero-tacos.png?v=2',     person: 'assets/person-tacos.png?v=4' }
-          ];
-          /* Orden completamente barajado: se recorren TODOS los slides antes de
-             repetir cualquiera. El par fondo+persona y su data-slide (que manda
-             las animaciones y encuadres del CSS) nunca se separan. */
-          function shuffle(n, avoidFirst){
-            const a = Array.from({length:n}, (_, i) => i);
-            for (let i = a.length - 1; i > 0; i--){
-              const j = Math.floor(Math.random() * (i + 1));
-              [a[i], a[j]] = [a[j], a[i]];
-            }
-            if (a.length > 1 && a[0] === avoidFirst){ [a[0], a[1]] = [a[1], a[0]]; }
-            return a;
-          }
-          let prev = -1;
-          try { prev = parseInt(localStorage.getItem('torneo_hero_last_slide'), 10); } catch(e){}
-          const order = window.HERO_ORDER = shuffle(slides.length, isNaN(prev) ? -1 : prev);
-          try { localStorage.setItem('torneo_hero_last_slide', String(order[0])); } catch(e){}
-
-          const stage = document.getElementById('heroSlides');
-          slides.forEach((s, i) => {
-            const el = document.createElement('div');
-            el.className = 'hero-slide' + (i === order[0] ? ' is-active' : '');
-            el.dataset.slide = i;
-            el.innerHTML =
-              '<div class="hero-bg-img" style="background-image:url(\''+s.bg+'\')"></div>' +
-              '<img class="hero-character" src="'+s.person+'" alt="" />';
-            stage.appendChild(el);
-          });
-        })();
-        </script>
+        <!-- Slides, imágenes y visibilidad (fondo / persona) los define
+             hero-config.js, compartido con el Centro de control. -->
+        <script src="hero-config.js?v=1"></script>
+        <script>window.HERO_CFG && window.HERO_CFG.build();</script>
         <div class="hero-darken"></div>
         <div class="hero-vignette"></div>
         <div class="hero-grain"></div>
@@ -2515,7 +2557,7 @@
             <div class="big-pool-left">
               <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Bolsa total</small>
               <div class="big-val-row"><b class="big-val" id="poolTotal">$0</b><span class="big-cur">MXN</span></div>
-              <small class="big-cuota">Cuota por jugador: <b id="poolCuota">$35 MXN</b></small>
+              <small class="big-cuota" id="poolCuota">Cuota: <b>$35</b></small>
             </div>
             <div class="pay-ring-block">
               <div class="pay-ring-wrap" id="payRingWrap" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-label="0 de 4 pagos confirmados">
@@ -2532,26 +2574,21 @@
               </div>
             </div>
           </div>
-          <div class="dist-bar" id="distBar">
-            <div class="dist-seg" data-cat="avanzado" style="--w:35%"><span>35%</span></div>
-            <div class="dist-seg" data-cat="intermedio" style="--w:35%"><span>35%</span></div>
-            <div class="dist-seg" data-cat="principiante" style="--w:30%"><span>30%</span></div>
-          </div>
           <div class="cat-cards">
             <div class="cat-card" data-cat="avanzado">
-              <small class="cc-name">Avanzados · 50%</small>
+              <small class="cc-name">Avanzados</small>
               <b class="cc-amt" id="amtAvanzado">$0</b>
-              <small class="cc-meta"><span id="paidAvanzado">0</span> pagados · <span id="totAvanzado">0</span> registrados</small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidAvanzado">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totAvanzado">0</b><i>registrados</i></span></small>
             </div>
             <div class="cat-card" data-cat="intermedio">
-              <small class="cc-name">Intermedios · 30%</small>
+              <small class="cc-name">Intermedios</small>
               <b class="cc-amt" id="amtIntermedio">$0</b>
-              <small class="cc-meta"><span id="paidIntermedio">0</span> pagados · <span id="totIntermedio">0</span> registrados</small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidIntermedio">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totIntermedio">0</b><i>registrados</i></span></small>
             </div>
             <div class="cat-card" data-cat="principiante">
-              <small class="cc-name">Principiantes · 20%</small>
+              <small class="cc-name">Principiantes</small>
               <b class="cc-amt" id="amtPrincipiante">$0</b>
-              <small class="cc-meta"><span id="paidPrincipiante">0</span> pagados · <span id="totPrincipiante">0</span> registrados</small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidPrincipiante">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totPrincipiante">0</b><i>registrados</i></span></small>
             </div>
           </div>
           <div class="meta-foot">Distribución fija por categoría · La bolsa crece con cada pago confirmado</div>
@@ -2834,6 +2871,12 @@
     <div class="pool-info-ov" id="poolInfoOv" role="dialog" aria-modal="true" aria-label="Información de la bolsa del torneo" onclick="if(event.target===this)this.classList.remove('show')">
       <div class="pool-info-box">
         <button type="button" class="pool-info-close" aria-label="Cerrar" onclick="document.getElementById('poolInfoOv').classList.remove('show')">×</button>
+        <h4>Cómo se forma cada bolsa</h4>
+        <p>Cada categoría junta <b>su propio dinero</b>: los pagos confirmados por su cuota de inscripción (<b id="piCuotaAv">$50</b> avanzados, <b id="piCuotaResto">$35</b> intermedios y principiantes).</p>
+        <p id="piReserva"></p>
+        <p id="piCascada" style="display:none"></p>
+        <ul class="pool-info-list" id="piBreakdown"></ul>
+        <p>Todo lo recaudado se reparte como premio: ningún peso sale del torneo.</p>
         <h4>Gastos del torneo</h4>
         <p>El monto que ves en cada categoría es la bolsa <b>bruta</b>, acumulada directamente de las cuotas de inscripción.</p>
         <p>Antes del reparto final, a esa bolsa aún le falta descontar los <b>gastos operativos del torneo</b>: la promoción y publicidad usadas para convocar jugadores, y las pelotas empleadas en el sorteo físico de grupos.</p>
@@ -3216,63 +3259,12 @@
 })();
 </script>
 <script>
-  /* Hero loading-screen slide rotator */
+  /* Hero: trae la config real del servidor (imágenes y capas activas que
+     guardó el organizador) y reconstruye si difiere del cache local. */
   (function(){
-    const stage = document.getElementById('heroSlides');
-    const dotsHost = document.getElementById('heroDots');
-    if (!stage) return;
-    const els = [...stage.children];
-    if (!els.length) return;
-
-    // Orden barajado creado al construir el hero (arriba, inline). Se recorre
-    // completo antes de repetir cualquier slide; al cerrar el ciclo se vuelve
-    // a barajar evitando que el primero repita al ultimo mostrado.
-    let order = (window.HERO_ORDER || []).slice();
-    if (order.length !== els.length) order = els.map((_, i) => i);
-    let pos = 0;
-
-    function reshuffle(){
-      const last = order[order.length - 1];
-      const a = els.map((_, i) => i);
-      for (let i = a.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      if (a.length > 1 && a[0] === last){ [a[0], a[1]] = [a[1], a[0]]; }
-      order = a;
-    }
-
-    if (dotsHost){
-      dotsHost.innerHTML = '';
-      els.forEach((_, i) => {
-        const d = document.createElement('span');
-        if (i === order[0]) d.className = 'on';
-        dotsHost.appendChild(d);
-      });
-    }
-    const dotEls = dotsHost ? [...dotsHost.children] : [];
-    const numEl = document.getElementById('heroNextNum');
-    function paint(){
-      const idx = order[pos];
-      els.forEach((el, i) => el.classList.toggle('is-active', i === idx));
-      dotEls.forEach((d, i) => d.classList.toggle('on', i === idx));
-      if (numEl) numEl.textContent = (pos + 1) + '/' + els.length;
-    }
-    paint();
-    if (els.length < 2) return;
-
-    function next(){
-      pos++;
-      if (pos >= order.length){ reshuffle(); pos = 0; }
-      try { localStorage.setItem('torneo_hero_last_slide', String(order[pos])); } catch(e){}
-      paint();
-    }
-    let timer = setInterval(next, 8000);
-    const btn = document.getElementById('heroNext');
-    if (btn) btn.addEventListener('click', () => {
-      clearInterval(timer);
-      next();
-      timer = setInterval(next, 8000);
+    if (!window.HERO_CFG) return;
+    window.HERO_CFG.syncFromServer().then(function(changed){
+      if (changed) window.HERO_CFG.build();
     });
   })();
 </script>
@@ -3280,15 +3272,29 @@
   /* Prize pool — puerquito 3D flip + datos en vivo */
   (function initPrizePool(){
     const DEFAULTS = {
-      cuota: 35,                       // 35 MXN por participante (confirmado)
+      cuota: 35,                       // legado: cuota única (respaldo y modo manual)
+      // Cuota por categoría: avanzados pagan más, así su bolsa crece aparte.
+      cuotas: { avanzado: 50, intermedio: 35, principiante: 35 },
+      // Aportaciones especiales: jugadores que pagan una cifra distinta a la
+      // cuota de su categoría (p. ej. $100 en avanzados). Cada entrada
+      // { nombre, monto } sustituye la cuota de ESE jugador.
+      aportes: { avanzado: [], intermedio: [], principiante: [] },
+      // Aportes a avanzados: fracción de lo recaudado por cada categoría que
+       // se suma a la bolsa de avanzados. Única fuente de verdad de los
+       // porcentajes de redistribución; editable desde el panel de control.
+      aportePct: { principiante: 0.20, intermedio: 0.125 },
+      // Regla fundamental: la bolsa de avanzados NUNCA puede ser menor a lo
+      // que esa misma categoría recaudó.
+      pisoAvanzado: true,
+      modeloV: 4,
       // Registros por categoría: los publica el panel de control con los datos
       // reales de la base (no son cupos ni cifras inventadas).
       totals: { avanzado: 0, intermedio: 0, principiante: 0 },
-      pcts:   { avanzado: 0.50, intermedio: 0.30, principiante: 0.20 },
+      pcts:   { avanzado: 0.50, intermedio: 0.30, principiante: 0.20 },   // solo modo 'manual'
       // Pagos confirmados: PENDIENTE. Arrancan en 0 para no publicar cifras
       // inventadas; los captura la organización desde el panel de admin.
       paid:   { avanzado: 0, intermedio: 0, principiante: 0 },
-      mode:   'auto',        // 'auto' = pagos × cuota | 'manual' = bolsa fija
+      mode:   'auto',        // 'auto' = bolsa por categoría | 'manual' = bolsa fija repartida por pcts
       manualTotal: 16600     // usado solo en modo 'manual'
     };
     const STORAGE_KEY = 'torneo_prize_cfg_v1';
@@ -3298,6 +3304,18 @@
         if (saved && typeof saved === 'object') {
           return {
             cuota: saved.cuota ?? DEFAULTS.cuota,
+            cuotas: { ...DEFAULTS.cuotas, ...(saved.cuotas||{}) },
+            aportes: {
+              avanzado:     Array.isArray(saved.aportes && saved.aportes.avanzado)     ? saved.aportes.avanzado     : [],
+              intermedio:   Array.isArray(saved.aportes && saved.aportes.intermedio)   ? saved.aportes.intermedio   : [],
+              principiante: Array.isArray(saved.aportes && saved.aportes.principiante) ? saved.aportes.principiante : []
+            },
+            // Modelo v4: aportes a avanzados por origen (principiantes 15%,
+            // intermedios 10%), sin cascada hacia intermedios. Las config
+            // viejas se migran a los valores nuevos.
+            aportePct:    saved.modeloV === 4 ? { ...DEFAULTS.aportePct, ...(saved.aportePct||{}) } : { ...DEFAULTS.aportePct },
+            pisoAvanzado: saved.pisoAvanzado ?? DEFAULTS.pisoAvanzado,
+            modeloV: 4,
             totals: { ...DEFAULTS.totals, ...(saved.totals||{}) },
             pcts:   { ...DEFAULTS.pcts,   ...(saved.pcts||{}) },
             paid:   { ...DEFAULTS.paid,   ...(saved.paid||{}) },
@@ -3325,6 +3343,15 @@
         if (error || !data || !data.value) return;
         const v = { ...data.value };
         if (liveCounts){ delete v.totals; delete v.paid; }
+        // Misma migración de modelo que en load(): si la config del servidor
+        // viene de un modelo viejo, se normaliza antes de aplicarla.
+        if (v.modeloV !== 4){
+          v.aportePct    = { ...DEFAULTS.aportePct };
+          v.pisoAvanzado = v.pisoAvanzado ?? DEFAULTS.pisoAvanzado;
+          v.modeloV = 4;
+        } else {
+          v.aportePct = { ...DEFAULTS.aportePct, ...(v.aportePct||{}) };
+        }
         Object.assign(cfg, v);
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg)); } catch(e){}
         if (window.renderPrizePool) window.renderPrizePool();
@@ -3389,11 +3416,98 @@
       return result;
     }
 
+    // ── Bolsa por categoría ─────────────────────────────────────────
+    // Cada categoría junta SU propio dinero (pagos confirmados × su cuota) y
+    // encima aporta a avanzados un % de lo suyo (cfg.aportePct):
+    //   · principiantes → avanzados: 20%  ·  intermedios → avanzados: 12.5%
+    // Avanzados conserva el 100% de lo propio; intermedios ya NO recibe nada
+    // de principiantes.
+    // Nada se pierde: la suma de las tres bolsas es igual al total recaudado.
+    const CATS_ORDER = ['avanzado','intermedio','principiante'];
+    function cuotaFor(cat){
+      const c = cfg.cuotas && cfg.cuotas[cat];
+      return Math.max(0, +(c != null ? c : cfg.cuota) || 0);
+    }
+    function raisedFor(cat){
+      const q = cuotaFor(cat);
+      const paid = Math.max(0, +cfg.paid[cat] || 0);
+      const list = aportesOf(cat).slice(0, paid);   // nunca más aportaciones que pagos
+      const extra = list.reduce((s, x) => s + Math.max(0, +x.monto || 0), 0);
+      return (paid - list.length) * q + extra;
+    }
+    // Jugadores que pagaron una cifra distinta a la cuota de su categoría.
+    function aportesOf(cat){
+      const a = cfg.aportes && cfg.aportes[cat];
+      return Array.isArray(a) ? a.filter(x => x && +x.monto > 0) : [];
+    }
+    // Porcentajes de aporte hacia avanzados, saneados (0–50%).
+    function aporteRates(){
+      const src = cfg.aportePct || {};
+      const clamp = v => Math.min(0.5, Math.max(0, +v || 0));
+      return { principiante: clamp(src.principiante), intermedio: clamp(src.intermedio) };
+    }
+    // Porcentaje para mostrar: conserva los decimales (12.5%, no 13%).
+    const pctTx = r => (Math.round(r * 1000) / 10).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + '%';
+    function computedRaised(){
+      return CATS_ORDER.reduce((s, c) => s + raisedFor(c), 0);
+    }
+    /* ── Reparto ─────────────────────────────────────────────────
+       La bolsa publicada es TODO lo recaudado: los gastos de organización
+       (publicidad, papelería) no se descuentan aquí — se cubren aparte.
+       Todo en centavos para que no se pierda un peso por redondeo:
+         1. Cada categoría recauda lo suyo (pagos × cuota + aportaciones
+            especiales de quien pagó distinto).
+         2. Aportes a avanzados: principiantes entrega el 20% de su recaudado
+            e intermedios el 12.5%. Avanzados conserva el 100% de lo propio y
+            recibe esos dos aportes; intermedios NO recibe nada de
+            principiantes. Los porcentajes viven en cfg.aportePct.
+         3. Piso de avanzados: se cumple solo con este modelo, pero queda como
+            salvaguarda explícita. */
+    function computeSplit(){
+      const rc = {};
+      CATS_ORDER.forEach(c => { rc[c] = Math.round(raisedFor(c) * 100); });
+      const raisedC = rc.avanzado + rc.intermedio + rc.principiante;
+
+      if (cfg.mode === 'manual'){
+        const t = Math.round(Math.max(0, +cfg.manualTotal || 0) * 100);
+        const b = splitPoolCents(t, cfg.pcts, CATS_ORDER);
+        return { rc, raisedC, premiosC: t, bolsas: b,
+                 flows: { intToAv:0, priToAv:0 }, rates: aporteRates(), jerarquiaOk: true };
+      }
+
+      const rt = aporteRates();
+      const priToAv = Math.round(rc.principiante * rt.principiante);
+      const intToAv = Math.round(rc.intermedio  * rt.intermedio);
+      let av  = rc.avanzado + priToAv + intToAv;
+      let int = rc.intermedio - intToAv;
+      let pri = rc.principiante - priToAv;
+
+      if (cfg.pisoAvanzado !== false && av < rc.avanzado) av = rc.avanzado;
+      const diff = raisedC - (av + int + pri);
+      if (diff) av += diff;
+
+      // Jerarquía esperada: avanzados > intermedios > principiantes. Si una
+      // distribución anómala de inscritos la rompe, se avisa — NO se
+      // redistribuye dinero automáticamente.
+      const jerarquiaOk = av >= int && int >= pri;
+
+      return { rc, raisedC, premiosC: raisedC,
+               bolsas: { avanzado: av, intermedio: int, principiante: pri },
+               flows: { intToAv, priToAv }, rates: rt, jerarquiaOk };
+    }
+    // Bolsa total publicada = todo lo recaudado.
     function computedTotal(){
       if (cfg.mode === 'manual') return Math.max(0, +cfg.manualTotal || 0);
-      const totalPaid = cfg.paid.avanzado + cfg.paid.intermedio + cfg.paid.principiante;
-      return totalPaid * cfg.cuota;
+      return computeSplit().raisedC / 100;
     }
+    // Bolsa de cada categoría en centavos (la suma cuadra con el total).
+    function splitAmountsCents(){
+      const r = computeSplit();
+      return { avanzado: r.bolsas.avanzado, intermedio: r.bolsas.intermedio,
+               principiante: r.bolsas.principiante, flows: r.flows, rates: r.rates,
+               jerarquiaOk: r.jerarquiaOk, raisedC: r.raisedC, rc: r.rc };
+    }
+    window.PRIZE_POOL_MATH = { cuotaFor, raisedFor, computedRaised, computedTotal, computeSplit, splitAmountsCents, aporteRates };
 
     // ── Relleno del puerquito según el dinero confirmado ──────────────────
     // 100% de llenado = imagen 100 = $1200 en el bote (FILL_FULL).
@@ -3451,28 +3565,40 @@
     window.updatePiggyFill = updateFill;
 
     // Sincroniza los porcentajes con el chart del puerquito y lo re-dibuja
-    function syncBelly(){
+    function syncBelly(pcts){
       if (!window.BELLY_DATA) return;
       const map = { av:'avanzado', in:'intermedio', pr:'principiante' };
+      const src = pcts || cfg.pcts;
       window.BELLY_DATA.forEach(b => {
         const c = map[b.key];
-        if (c) b.pct = Math.round(cfg.pcts[c] * 100);
+        if (c) b.pct = Math.round(src[c] * 100);
       });
       if (window.renderBelly) window.renderBelly();
     }
 
+    // Un solo tween vivo por elemento: si la p\u00e1gina se re-renderiza (config
+    // nueva del servidor, edici\u00f3n del organizador) el tween anterior se
+    // cancela. Si no, dos tweens compiten y el que termina despu\u00e9s deja el
+    // contador clavado en su valor inicial (t\u00edpicamente $0).
+    const counterTweens = new Map();
     function animateCounter(id, target, isMoney){
       const el = document.getElementById(id); if (!el) return;
+      const prev = counterTweens.get(id);
+      if (prev) cancelAnimationFrame(prev);
       const cur = +el.dataset.cur || 0;
+      // El valor final se registra de inmediato: cualquier render posterior
+      // arranca desde aqu\u00ed, sin importar en qu\u00e9 frame vaya la animaci\u00f3n.
+      el.dataset.cur = target;
       const t0 = performance.now(), dur = 850;
       function tick(t){
         const k = Math.min(1, (t - t0) / dur);
         const ease = 1 - Math.pow(1 - k, 3);
         const v = cur + (target - cur) * ease;
         el.textContent = isMoney ? fmt(v) : Math.round(v).toString();
-        if (k < 1) requestAnimationFrame(tick); else el.dataset.cur = target;
+        if (k < 1) counterTweens.set(id, requestAnimationFrame(tick));
+        else counterTweens.delete(id);
       }
-      requestAnimationFrame(tick);
+      counterTweens.set(id, requestAnimationFrame(tick));
     }
     const PAY_RING_R = 42;
     const PAY_RING_CIRC = 2 * Math.PI * PAY_RING_R;
@@ -3500,41 +3626,123 @@
       fill.setAttribute('stroke-dasharray', PAY_RING_CIRC.toFixed(1));
       fill.setAttribute('stroke-dashoffset', (PAY_RING_CIRC * (1 - ratio)).toFixed(1));
     }
-    function renderDistBar(pcts){
-      const order = ['avanzado','intermedio','principiante'];
-      order.forEach(cat => {
-        const seg = document.querySelector('.dist-seg[data-cat="'+cat+'"]');
-        if (!seg) return;
-        const pct = Math.round(pcts[cat] * 100);
-        seg.style.setProperty('--w', pct + '%');
-        seg.classList.toggle('is-tight', pct < 12);
-        const span = seg.querySelector('span'); if (span) span.textContent = pct + '%';
+    // Pop-up de información de la bolsa: cuotas, aporte en cascada y el
+    // desglose con las cifras reales del momento.
+    function renderPoolInfo(splitCents){
+      const box = document.getElementById('poolInfoOv');
+      if (!box) return;
+      const rt = aporteRates();
+      const pPri = pctTx(rt.principiante), pInt = pctTx(rt.intermedio);
+      const setTx = (id, tx) => { const el = document.getElementById(id); if (el) el.textContent = tx; };
+      setTx('piCuotaAv', fmt(cuotaFor('avanzado')));
+      setTx('piCuotaResto', fmt(Math.max(cuotaFor('intermedio'), cuotaFor('principiante'))));
+      const list = document.getElementById('piBreakdown');
+      if (!list) return;
+      if (cfg.mode === 'manual'){ list.textContent = ''; return; }
+      const f = (splitCents && splitCents.flows) || { intToAv:0, priToAv:0 };
+      // Texto explicativo: cambia según cómo esté configurado el reparto.
+      const pReserva = document.getElementById('piReserva');
+      if (pReserva){
+        pReserva.innerHTML = 'La <b>bolsa total</b> que ves es todo lo recaudado: cada peso de inscripción vuelve a los jugadores como premio. ' +
+          'Los gastos de organización se cubren aparte y no se descuentan de la bolsa.';
+      }
+      const pCascada = document.getElementById('piCascada');
+      if (pCascada){
+        const hay = rt.principiante > 0 || rt.intermedio > 0;
+        pCascada.style.display = hay ? '' : 'none';
+        if (hay) pCascada.innerHTML = 'Encima de eso, las categorías más competidas concentran los premios más grandes: ' +
+          '<b>principiantes aporta ' + pPri + '</b> de lo suyo e <b>intermedios ' + pInt + '</b> a la bolsa de avanzados, ' +
+          'que conserva además el <b>100%</b> de lo que recauda su propia categoría. El resto se queda en su categoría.';
+      }
+      // Desglose por categoría: recaudado → aporte → premio final.
+      const rows = [];
+      const detalle = [
+        ['avanzado',     null],
+        ['intermedio',   f.intToAv],
+        ['principiante', f.priToAv]
+      ];
+      detalle.forEach(([cat, aporte]) => {
+        rows.push(['— ' + CAT_LBL[cat].toUpperCase() + ' —', '', 'head']);
+        rows.push(['Recaudado por la categoría', fmt(raisedFor(cat))]);
+        // Aportaciones especiales (jugadores que pagaron distinto a su cuota).
+        const esp = aportesOf(cat).slice(0, Math.max(0, +cfg.paid[cat] || 0));
+        if (esp.length){
+          const extra = esp.reduce((s, x) => s + (Math.max(0, +x.monto || 0) - cuotaFor(cat)), 0);
+          rows.push([esp.length + (esp.length > 1 ? ' aportaciones especiales incluidas' : ' aportación especial incluida'),
+            (extra >= 0 ? '+' : '−') + fmt(Math.abs(extra))]);
+        }
+        if (cat === 'avanzado'){
+          if (f.priToAv) rows.push(['Aportación de principiantes (' + pPri + ')', '+' + fmt(f.priToAv / 100)]);
+          if (f.intToAv) rows.push(['Aportación de intermedios (' + pInt + ')', '+' + fmt(f.intToAv / 100)]);
+        } else if (aporte){
+          rows.push(['Aportación a avanzados (' + (cat === 'intermedio' ? pInt : pPri) + ')', '−' + fmt(aporte / 100)]);
+        }
+        rows.push(['Premio final', fmt(splitCents[cat] / 100), 'total']);
+      });
+      list.textContent = '';
+      rows.forEach(([k, v, kind]) => {
+        const li = document.createElement('li');
+        if (kind === 'head'){
+          li.className = 'pi-head';
+          li.textContent = k.replace(/^— | —$/g, '');
+        } else {
+          li.className = kind === 'total' ? 'pi-total' : '';
+          li.innerHTML = '<span>' + k + '</span>' + (kind === 'total' ? '<b>' + v + '</b>' : '<i>' + v + '</i>');
+        }
+        list.appendChild(li);
       });
     }
+
     function render(){
       const totalPaid = cfg.paid.avanzado + cfg.paid.intermedio + cfg.paid.principiante;
       const totalPool = computedTotal();
       const totalPlayers = cfg.totals.avanzado + cfg.totals.intermedio + cfg.totals.principiante;
       animateCounter('poolTotal', totalPool, true);
       updateFill(totalPool);
-      // cuota en el subtítulo
-      const cuotaEl = document.getElementById('poolCuota'); if (cuotaEl) cuotaEl.textContent = fmt(cfg.cuota) + ' MXN';
+      // Cuotas en el subtítulo: primero la cuota general y al final la de
+      // avanzados, resaltada en rojo por ser la más alta.
+      const cuotaEl = document.getElementById('poolCuota');
+      if (cuotaEl){
+        const ca = cuotaFor('avanzado'), ci = cuotaFor('intermedio'), cp = cuotaFor('principiante');
+        const nEsp = CATS_ORDER.reduce((s, c) => s + aportesOf(c).slice(0, Math.max(0, +cfg.paid[c]||0)).length, 0);
+        const base = (ca === ci && ci === cp)
+          ? fmt(ca) + ' MXN'
+          : '<b>' + fmt(Math.max(ci, cp)) + '</b> <span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span>' +
+            '<span class="cuota-sep"> · </span><b>' + fmt(ca) + '</b> <span class="cuota-av">Avanzados</span>';
+        cuotaEl.innerHTML = 'Cuota: ' + base + (nEsp ? ' · +' + nEsp + (nEsp > 1 ? ' especiales' : ' especial') : '');
+      }
       renderPayRing(totalPaid, totalPlayers);
-      renderDistBar(cfg.pcts);
-      const order = ['avanzado','intermedio','principiante'];
+      const order = CATS_ORDER;
       const totalCents = Math.round(totalPool * 100);
-      const splitCents = splitPoolCents(totalCents, cfg.pcts, order);
+      const splitCents = splitAmountsCents();
+      // Proporciones — solo para dimensionar las bandas del puerquito. Nunca
+      // se muestran como porcentaje: un "12%" desanima a quien se inscribe,
+      // aunque su bolsa esté creciendo. En la página manda el monto.
+      const shares = {};
+      order.forEach(cat => { shares[cat] = totalCents > 0 ? splitCents[cat] / totalCents : cfg.pcts[cat]; });
       for (const cat of order){
         animateCounter('amt' + cap(cat), splitCents[cat] / 100, true);
         const p = document.getElementById('paid' + cap(cat)); if (p) p.textContent = cfg.paid[cat];
         const tot = document.getElementById('tot' + cap(cat)); if (tot) tot.textContent = cfg.totals[cat];
         const meta = document.querySelector('.cat-card[data-cat="'+cat+'"] .cc-meta');
         if (meta) meta.style.visibility = totalPlayers > 0 ? '' : 'hidden';
-        // etiqueta "Avanzados · 50%"
+        // etiqueta sin porcentaje: manda el monto. El % de la bolsa total
+        // depende de cuánta gente pagó, no del reparto, y desanima.
         const nm = document.querySelector('.cat-card[data-cat="'+cat+'"] .cc-name');
-        if (nm) nm.textContent = CAT_LBL[cat] + ' · ' + Math.round(cfg.pcts[cat]*100) + '%';
+        if (nm) nm.textContent = CAT_LBL[cat];
       }
-      syncBelly();
+      // Nota al pie: explica de dónde sale la bolsa de cada categoría.
+      const foot = document.querySelector('.meta-foot');
+      if (foot){
+        const rt = aporteRates();
+        foot.textContent = cfg.mode === 'manual'
+          ? 'Bolsa fija repartida por categoría · La define la organización'
+          : ((rt.principiante || rt.intermedio)
+              ? 'Cada categoría junta su propia bolsa y crece con cada pago · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
+              : 'Cada categoría junta su propia bolsa · Crece con cada pago confirmado');
+      }
+      renderPoolInfo(splitCents);
+      syncBelly(shares);
     }
     window.renderPrizePool = render;
     /* Frame-by-frame rotation animator (stacked imgs, visibility toggle) */
@@ -4160,3 +4368,21 @@
 @media(max-width:768px){#slider .grow .rk{font-size:26px !important}}
 @media(max-width:480px){#slider .grow .rk{font-size:24px !important}}
 </style>
+
+<script>
+/* Precio de entrada por categoría: Avanzados $50, resto $35.
+   La categoría vive en body[data-cat] (la fija setCategory de torneo-render.js). */
+(function(){
+  var PRICE = { avanzado: 50, intermedio: 35, principiante: 35 };
+  var BASE = 35;
+  function priceFor(){ var c = document.body.getAttribute('data-cat'); return PRICE[c] || BASE; }
+  function apply(){
+    var p = priceFor(), tx = '$' + p;
+    var n = document.querySelector('.cta-precio .precio-num'); if (n) n.textContent = tx;
+    var btn = document.querySelector('.cta-precio'); if (btn) btn.setAttribute('aria-label', tx + ' de entrada');
+    var amt = document.querySelector('.pay-ticket .amt'); if (amt) amt.textContent = tx;
+  }
+  apply();
+  new MutationObserver(apply).observe(document.body, { attributes:true, attributeFilter:['data-cat'] });
+})();
+</script>

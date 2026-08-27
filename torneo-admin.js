@@ -5,7 +5,13 @@
   const CATS = ['avanzado','intermedio','principiante'];
   const LBL  = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
   const COL  = { avanzado:'#dd3b2c', intermedio:'#3a63f0', principiante:'#37bb66' };
-  const fmt  = n => '$' + Math.round(n||0).toLocaleString('es-MX');
+  const fmt  = n => {
+    // Centavos solo cuando existen (12.5% de aporte genera cifras como $91.88).
+    const cents = Math.round((+n || 0) * 100);
+    return '$' + (cents / 100).toLocaleString('es-MX', { minimumFractionDigits: cents % 100 === 0 ? 0 : 2, maximumFractionDigits: 2 });
+  };
+  // Porcentaje para mostrar: conserva los decimales (12.5%, no 13%).
+  const pctTx = r => (Math.round((+r || 0) * 1000) / 10).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + '%';
 
   // ── estilos ────────────────────────────────────────────────────────────
   const css = `
@@ -106,6 +112,32 @@
   .adm-btn.gold{background:linear-gradient(150deg,#f0cf6e,#d29a30);border:1px solid rgba(237,187,82,0.5);color:#231703}
   .adm-btn.gold:hover{transform:translateY(-1px);filter:brightness(1.06)}
   .adm-hint{font-size:11.5px;color:#71614b;line-height:1.5;font-family:'HN Text',sans-serif}
+  /* Aportaciones especiales: jugadores que pagan distinto a su cuota */
+  .adm-esp{display:flex;flex-direction:column;gap:8px;padding:12px 13px;border-radius:10px;
+    background:rgba(255,240,220,0.03);border:1px solid rgba(255,240,220,0.09)}
+  .adm-esp-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#c9a86a}
+  .adm-esp-hd b{font-family:'HN Text',sans-serif;font-size:12px;letter-spacing:0;color:#f0cf6e;white-space:nowrap}
+  .adm-esp-list{display:flex;flex-direction:column;gap:6px}
+  .adm-esp-row{display:flex;align-items:center;gap:6px}
+  .adm-esp-row input.nm{flex:1;min-width:0;background:#120d08;border:1px solid rgba(255,240,220,0.14);border-radius:7px;
+    color:#f6efe2;font-family:'HN Text',sans-serif;font-size:12.5px;padding:8px 9px}
+  .adm-esp-row .adm-field{flex:0 0 auto}
+  .adm-esp-row input.mt{width:74px}
+  .adm-esp-x{flex:0 0 auto;width:28px;height:28px;border-radius:7px;background:none;cursor:pointer;
+    border:1px solid rgba(238,107,90,0.35);color:#ee6b5a;font-size:14px;line-height:1}
+  .adm-esp-x:hover{background:rgba(238,107,90,0.12)}
+  .adm-esp-add{align-self:flex-start;background:none;border:1px dashed rgba(237,187,82,0.4);color:#edbb52;
+    border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'HN Text',sans-serif;font-size:12px;font-weight:700}
+  .adm-esp-add:hover{background:rgba(237,187,82,0.1)}
+  .adm-esp-empty{font-family:'HN Text',sans-serif;font-size:11.5px;color:#71614b}
+  .adm-check{display:flex;gap:9px;align-items:flex-start;cursor:pointer;padding:11px 13px;border-radius:10px;
+    background:rgba(255,240,220,0.03);border:1px solid rgba(255,240,220,0.09)}
+  .adm-check input{margin:1px 0 0;width:16px;height:16px;flex:0 0 auto;accent-color:#edbb52}
+  .adm-check span{font-family:'HN Text',sans-serif;font-size:12px;line-height:1.5;color:#c9b79b}
+  .adm-check b{color:#f6efe2}
+  .adm-warn{font-family:'HN Text',sans-serif;font-size:11.5px;line-height:1.5;color:#ee6b5a;
+    background:rgba(238,107,90,0.08);border:1px solid rgba(238,107,90,0.28);border-radius:9px;padding:9px 11px;margin:0}
   .adm-saved{position:fixed;bottom:78px;right:18px;z-index:9003;background:rgba(95,208,138,0.14);
     border:1px solid rgba(95,208,138,0.4);color:#5fd08a;padding:9px 15px;border-radius:9px;
     font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;opacity:0;transform:translateY(8px);
@@ -152,6 +184,15 @@
       </div>
     </div>`).join('');
 
+  const cuotaRows = CATS.map(c => `
+    <div class="adm-row">
+      <span class="rl"><span class="adm-dot" style="background:${COL[c]}"></span>${LBL[c]}</span>
+      <div class="adm-field">
+        <span class="pfx">$</span>
+        <input class="adm-input pad-l" id="adm-cuota-${c}" type="number" min="0" step="5" inputmode="numeric">
+      </div>
+    </div>`).join('');
+
   const paidRows = CATS.map(c => `
     <div class="adm-row">
       <span class="rl"><span class="adm-dot" style="background:${COL[c]}"></span>${LBL[c]}</span>
@@ -174,10 +215,10 @@
     </div>
     <div class="admin-body">
       <div class="admin-sec">
-        <span class="sec-t">Distribución del premio</span>
+        <span class="sec-t">Distribución del premio (bolsa manual)</span>
         ${pctRows}
         <div class="pct-sum" id="adm-sum"><span>Suma de porcentajes</span><b id="adm-sum-v">100%</b></div>
-        <p class="adm-hint">Cada porcentaje define cuánto de la bolsa va a cada categoría y se refleja en el relleno del puerquito.</p>
+        <p class="adm-hint">Estos porcentajes se usan <b>solo</b> cuando la bolsa es manual. Con bolsa automática cada categoría junta su propio dinero y los porcentajes se calculan solos.</p>
       </div>
 
       <div class="admin-sec">
@@ -188,13 +229,30 @@
         </div>
 
         <div class="adm-mode" id="adm-mode-auto">
+          <p class="adm-hint" style="margin:0">Cuota de inscripción por categoría:</p>
+          ${cuotaRows}
           <div class="adm-row">
-            <span class="rl">Cuota por jugador</span>
+            <span class="rl">Principiantes → avanzados</span>
             <div class="adm-field">
-              <span class="pfx">$</span>
-              <input class="adm-input pad-l" id="adm-cuota" type="number" min="0" step="10" inputmode="numeric">
+              <input class="adm-input pad-r" id="adm-ap-principiante" type="number" min="0" max="50" step="0.5" inputmode="decimal">
+              <span class="sfx">%</span>
             </div>
           </div>
+          <div class="adm-row">
+            <span class="rl">Intermedios → avanzados</span>
+            <div class="adm-field">
+              <input class="adm-input pad-r" id="adm-ap-intermedio" type="number" min="0" max="50" step="0.5" inputmode="decimal">
+              <span class="sfx">%</span>
+            </div>
+          </div>
+          <p class="adm-hint" style="margin-top:-2px">Cada categoría aporta ese porcentaje de <b>lo que ella misma recaudó</b> a la bolsa de avanzados; avanzados conserva el 100% de lo propio e intermedios no recibe nada de principiantes. En <b>0%</b> cada categoría se queda con todo lo suyo y la diferencia la hace solo la cuota.</p>
+
+          <label class="adm-check" for="adm-piso">
+            <input type="checkbox" id="adm-piso">
+            <span><b>Avanzados nunca reparte menos de lo que recaudó</b><br>Regla fundamental: su bolsa nunca baja de sus propios pagos × cuota.</span>
+          </label>
+          <p class="adm-hint" style="margin:2px 0 0">Jugadores que pagan una cifra distinta a la cuota de su categoría (por ejemplo $100 en avanzados). Cada renglón sustituye la cuota de <b>ese</b> jugador:</p>
+          <div id="adm-esp-wrap" style="display:flex;flex-direction:column;gap:10px"></div>
         </div>
 
         <div class="adm-mode" id="adm-mode-manual">
@@ -217,6 +275,8 @@
           <span class="rl2">Bolsa actual</span>
           <span class="rv" id="adm-total">$0</span>
         </div>
+        <p class="adm-hint" id="adm-split" aria-live="polite"></p>
+        <p class="adm-warn" id="adm-piso-warn" style="display:none"></p>
 
         <div class="adm-fill">
           <div class="adm-fill-hd"><span>Llenado del puerquito</span><b id="adm-fill-pct">0%</b></div>
@@ -268,6 +328,10 @@
   const STORAGE_KEY = 'torneo_prize_cfg_v1';
   const FALLBACK_DEFAULTS = {
     cuota: 35,
+    cuotas: { avanzado: 50, intermedio: 35, principiante: 35 },
+    aportes: { avanzado: [], intermedio: [], principiante: [] },
+    aportePct: { principiante: 0.20, intermedio: 0.125 },
+    pisoAvanzado: true,
     totals: { avanzado: 12, intermedio: 24, principiante: 24 },
     pcts:   { avanzado: 0.50, intermedio: 0.30, principiante: 0.20 },
     paid:   { avanzado: 0, intermedio: 0, principiante: 0 },
@@ -280,6 +344,17 @@
     try { s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e){}
     const c = window.PRIZE_POOL = {
       cuota: (s && s.cuota != null) ? s.cuota : d.cuota,
+      cuotas: Object.assign({}, d.cuotas, (s && s.cuotas) || {}),
+      aportes: {
+        avanzado:     Array.isArray(s && s.aportes && s.aportes.avanzado)     ? s.aportes.avanzado     : [],
+        intermedio:   Array.isArray(s && s.aportes && s.aportes.intermedio)   ? s.aportes.intermedio   : [],
+        principiante: Array.isArray(s && s.aportes && s.aportes.principiante) ? s.aportes.principiante : []
+      },
+      aportePct: (s && s.modeloV === 4)
+        ? Object.assign({}, d.aportePct, s.aportePct || {})
+        : Object.assign({}, d.aportePct),
+      pisoAvanzado: (s && s.pisoAvanzado != null) ? s.pisoAvanzado : d.pisoAvanzado,
+      modeloV: 4,
       totals: Object.assign({}, d.totals, (s && s.totals) || {}),
       pcts:   Object.assign({}, d.pcts,   (s && s.pcts)   || {}),
       paid:   Object.assign({}, d.paid,   (s && s.paid)   || {}),
@@ -312,6 +387,117 @@
   }
   const cfg = () => window.PRIZE_POOL;
   const $ = id => document.getElementById(id);
+  // Cuota efectiva de una categoría (con respaldo a la cuota única antigua).
+  const cuotaOf = (c, cat) => {
+    const v = c.cuotas && c.cuotas[cat];
+    return Math.max(0, +(v != null ? v : c.cuota) || 0);
+  };
+  const raisedOf = (c, cat) => {
+    const paid = Math.max(0, +c.paid[cat] || 0);
+    const list = espOf(c, cat).slice(0, paid);
+    const extra = list.reduce((a, x) => a + Math.max(0, +x.monto || 0), 0);
+    return (paid - list.length) * cuotaOf(c, cat) + extra;
+  };
+  // Aportaciones especiales con monto válido de una categoría.
+  function espOf(c, cat){
+    const a = c.aportes && c.aportes[cat];
+    return Array.isArray(a) ? a.filter(x => x && +x.monto > 0) : [];
+  }
+  function espListRaw(c, cat){
+    if (!c.aportes) c.aportes = {};
+    if (!Array.isArray(c.aportes[cat])) c.aportes[cat] = [];
+    return c.aportes[cat];
+  }
+  const poolTotalOf = c => {
+    if (c.mode === 'manual') return Math.max(0, +c.manualTotal || 0);
+    if (window.PRIZE_POOL_MATH && window.PRIZE_POOL_MATH.computedTotal) return window.PRIZE_POOL_MATH.computedTotal();
+    const sp = splitOf(c);
+    return CATS.reduce((a, cat) => a + sp[cat], 0);
+  };
+  const raisedTotalOf = c => CATS.reduce((a, cat) => a + raisedOf(c, cat), 0);
+  /* ── Reparto ─────────────────────────────────────────────────────
+     Espejo del cálculo de la página pública (Pagina Torneo.html): recaudado →
+     aportes a avanzados (principiantes 20%, intermedios 12.5%) → piso de
+     avanzados. Si la página expone su propia matemática se usa esa, para que
+     nunca se separen las dos versiones. */
+  function splitOf(c){
+    if (window.PRIZE_POOL_MATH && window.PRIZE_POOL_MATH.computeSplit){
+      const r = window.PRIZE_POOL_MATH.computeSplit();
+      return { avanzado: r.bolsas.avanzado/100, intermedio: r.bolsas.intermedio/100,
+               principiante: r.bolsas.principiante/100, flows: r.flows };
+    }
+    if (c.mode === 'manual'){
+      const t = poolTotalOf(c);
+      const out = { }; CATS.forEach(cat => { out[cat] = t * (c.pcts[cat] || 0); });
+      return out;
+    }
+    const r = {}; CATS.forEach(cat => { r[cat] = raisedOf(c, cat); });
+    const ap = c.aportePct || {};
+    const clamp = v => Math.min(0.5, Math.max(0, +v || 0));
+    const sPri = clamp(ap.principiante), sInt = clamp(ap.intermedio);
+    let av = r.avanzado + r.principiante * sPri + r.intermedio * sInt;
+    const int = r.intermedio * (1 - sInt);
+    const pri = r.principiante * (1 - sPri);
+    if (c.pisoAvanzado !== false && av < r.avanzado) av = r.avanzado;
+    return { avanzado: av, intermedio: int, principiante: pri };
+  }
+
+  // ── Aportaciones especiales por categoría ──────────────────────────
+  // Cada renglón es un jugador que pagó una cifra distinta a la cuota de su
+  // categoría; sustituye SU cuota en el cálculo de lo recaudado.
+  function espSave(){
+    if (window.PRIZE_POOL_SAVE) window.PRIZE_POOL_SAVE();
+    if (window.renderPrizePool) window.renderPrizePool();
+    refreshDerived();
+    flashSaved();
+  }
+  function renderEsp(){
+    const wrap = $('adm-esp-wrap');
+    const c = cfg();
+    if (!wrap || !c) return;
+    wrap.textContent = '';
+    CATS.forEach(cat => {
+      const list = espListRaw(c, cat);
+      const box = document.createElement('div');
+      box.className = 'adm-esp';
+      const paid = Math.max(0, +c.paid[cat] || 0);
+      const over = list.length > paid;
+      box.innerHTML =
+        '<div class="adm-esp-hd"><span><span class="adm-dot" style="background:' + COL[cat] + '"></span> ' + LBL[cat] + '</span>' +
+          '<b>' + (list.length ? list.length + ' especial' + (list.length > 1 ? 'es' : '') : 'cuota normal') + '</b></div>' +
+        '<div class="adm-esp-list"></div>' +
+        (list.length ? '' : '<span class="adm-esp-empty">Todos pagan ' + fmt(cuotaOf(c, cat)) + '.</span>') +
+        (over ? '<span class="adm-esp-empty" style="color:#ee6b5a">Hay más aportaciones que pagos confirmados: solo se cuentan las primeras ' + paid + '.</span>' : '') +
+        '<button type="button" class="adm-esp-add">+ Agregar jugador</button>';
+      const rows = box.querySelector('.adm-esp-list');
+      list.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'adm-esp-row';
+        row.innerHTML =
+          '<input class="nm" type="text" placeholder="Nombre del jugador (opcional)" />' +
+          '<div class="adm-field"><span class="pfx">$</span>' +
+            '<input class="adm-input pad-l mt" type="number" min="0" step="5" inputmode="numeric" /></div>' +
+          '<button type="button" class="adm-esp-x" aria-label="Quitar">×</button>';
+        const nm = row.querySelector('.nm'), mt = row.querySelector('.mt');
+        nm.value = item.nombre || '';
+        mt.value = item.monto != null ? item.monto : '';
+        nm.addEventListener('input', () => { item.nombre = nm.value; espSave(); });
+        mt.addEventListener('input', () => { item.monto = Math.max(0, +mt.value || 0); espSave(); });
+        row.querySelector('.adm-esp-x').onclick = () => { list.splice(idx, 1); espSave(); renderEsp(); };
+        rows.appendChild(row);
+      });
+      box.querySelector('.adm-esp-add').onclick = () => {
+        list.push({ nombre: '', monto: Math.max(cuotaOf(c, cat) * 2, cuotaOf(c, cat)) });
+        espSave();
+        renderEsp();
+        const inputs = wrap.querySelectorAll('.adm-esp');
+        const mine = inputs[CATS.indexOf(cat)];
+        const last = mine && mine.querySelectorAll('.adm-esp-row .nm');
+        if (last && last.length) last[last.length - 1].focus();
+      };
+      wrap.appendChild(box);
+    });
+  }
 
   function fillInputs(){
     const c = cfg(); if (!c) return;
@@ -319,9 +505,15 @@
       $('adm-pct-'+cat).value  = Math.round(c.pcts[cat]*100);
       $('adm-paid-'+cat).value = c.paid[cat];
       $('adm-tot-'+cat).value  = c.totals[cat];
+      $('adm-cuota-'+cat).value = cuotaOf(c, cat);
     });
-    $('adm-cuota').value  = c.cuota;
+    const ap = c.aportePct || {};
+    // Se conservan los decimales del porcentaje (12.5, no 13).
+    $('adm-ap-principiante').value = Math.round((ap.principiante != null ? ap.principiante : 0) * 1000) / 10;
+    $('adm-ap-intermedio').value   = Math.round((ap.intermedio   != null ? ap.intermedio   : 0) * 1000) / 10;
+    $('adm-piso').checked    = c.pisoAvanzado !== false;
     $('adm-manual').value = c.manualTotal;
+    renderEsp();
     setMode(c.mode || 'auto', false);
     refreshDerived();
     setPhoneVis(window.PHONE_VISIBILITY ? window.PHONE_VISIBILITY.show : false, false);
@@ -358,10 +550,40 @@
     sumEl.classList.toggle('ok', sum === 100);
     sumEl.classList.toggle('bad', sum !== 100);
     // bolsa total
-    let total;
-    if (c.mode === 'manual') total = +c.manualTotal || 0;
-    else total = CATS.reduce((a,cat)=>a + (+c.paid[cat]||0), 0) * (+c.cuota||0);
+    const total = poolTotalOf(c);
+    const raised = raisedTotalOf(c);
     $('adm-total').textContent = fmt(total);
+    const sp = splitOf(c);
+    const spEl = $('adm-split');
+    if (spEl){
+      // Retorno = qué fracción de lo que juntó cada categoría vuelve como
+      // premio a esa misma categoría. Es la cifra que de verdad mide justicia.
+      const ret = cat => { const r = raisedOf(c, cat); return r > 0 ? Math.round(sp[cat]/r*100) + '%' : '—'; };
+      spEl.textContent = raised > 0
+        ? 'Recaudado — ' + CATS.map(cat => LBL[cat] + ': ' + fmt(raisedOf(c, cat))).join(' · ') + ' · total ' + fmt(raised) + '\n' +
+          'Bolsa — ' + CATS.map(cat => LBL[cat] + ': ' + fmt(sp[cat])).join(' · ') + '\n' +
+          'Retorno por categoría — ' + CATS.map(cat => LBL[cat] + ': ' + ret(cat)).join(' · ')
+        : 'Sin pagos confirmados todavía.';
+      spEl.style.whiteSpace = 'pre-line';
+    }
+    // Aviso si el reparto dejaría a avanzados por debajo de lo que juntó.
+    const warn = $('adm-piso-warn');
+    if (warn){
+      const rAv = raisedOf(c, 'avanzado');
+      const bad = c.mode === 'auto' && rAv > 0 && sp.avanzado + 0.005 < rAv;
+      const nada = c.mode === 'auto' && raised > 0 && total <= 0;
+      // Jerarquía esperada: avanzados > intermedios > principiantes. Solo se
+      // avisa — no se redistribuye dinero automáticamente.
+      const jerarquia = c.mode === 'auto' && raised > 0 &&
+        !(sp.avanzado + 0.005 >= sp.intermedio && sp.intermedio + 0.005 >= sp.principiante);
+      warn.style.display = (bad || nada || jerarquia) ? '' : 'none';
+      if (bad) warn.textContent = 'Avanzados repartiría ' + fmt(sp.avanzado) + ' habiendo recaudado ' + fmt(rAv) +
+        '. Activa el piso de avanzados.';
+      else if (nada) warn.textContent = 'No queda nada de premio: revisa la configuración.';
+      else if (jerarquia) warn.textContent = 'Jerarquía rota: se esperaba avanzados > intermedios > principiantes y ahora es ' +
+        CATS.map(cat => LBL[cat] + ' ' + fmt(sp[cat])).join(' · ') +
+        '. Es por la distribución de inscritos, no un error de cálculo — revísalo antes de publicar.';
+    }
     refreshFill(total);
   }
 
@@ -381,10 +603,7 @@
   }
   window.ADMIN_REFRESH_FILL = () => {
     const c = cfg(); if (!c) return;
-    let total;
-    if (c.mode === 'manual') total = +c.manualTotal || 0;
-    else total = CATS.reduce((a,cat)=>a + (+c.paid[cat]||0), 0) * (+c.cuota||0);
-    refreshFill(total);
+    refreshFill(poolTotalOf(c));
   };
 
   // lee inputs → cfg, re-renderiza página, persiste
@@ -394,12 +613,18 @@
       c.pcts[cat]   = Math.max(0, Math.min(100, +$('adm-pct-'+cat).value || 0)) / 100;
       c.totals[cat] = Math.max(0, +$('adm-tot-'+cat).value || 0);
       c.paid[cat]   = Math.max(0, Math.min(c.totals[cat], +$('adm-paid-'+cat).value || 0));
+      if (!c.cuotas) c.cuotas = {};
+      c.cuotas[cat] = Math.max(0, +$('adm-cuota-'+cat).value || 0);
     });
-    c.cuota = Math.max(0, +$('adm-cuota').value || 0);
+    if (!c.aportePct) c.aportePct = {};
+    c.aportePct.principiante = Math.max(0, Math.min(50, +$('adm-ap-principiante').value || 0)) / 100;
+    c.aportePct.intermedio   = Math.max(0, Math.min(50, +$('adm-ap-intermedio').value || 0)) / 100;
+    c.pisoAvanzado = $('adm-piso').checked;
     c.manualTotal = Math.max(0, +$('adm-manual').value || 0);
     if (window.PRIZE_POOL_SAVE) window.PRIZE_POOL_SAVE();
     if (window.renderPrizePool) window.renderPrizePool();
     refreshDerived();
+    renderEsp();
     flashSaved();
   }
 
@@ -425,6 +650,7 @@
   document.querySelectorAll('#adm-mode button').forEach(b => {
     b.onclick = () => setMode(b.dataset.mode, true);
   });
+  $('adm-piso').addEventListener('change', commit);
 
   // Sincroniza pagos/cupos reales desde las inscripciones (admin_registrations()),
   // en vez de que el staff los teclee a mano. Cuenta TODAS las inscripciones por
@@ -494,7 +720,11 @@
     if (!d) return;
     const c = cfg();
     c.cuota = d.cuota; c.mode = d.mode; c.manualTotal = d.manualTotal;
-    CATS.forEach(cat => { c.pcts[cat]=d.pcts[cat]; c.totals[cat]=d.totals[cat]; c.paid[cat]=d.paid[cat]; });
+    c.aportePct = Object.assign({}, d.aportePct);
+    c.pisoAvanzado = d.pisoAvanzado;
+    c.aportes = { avanzado: [], intermedio: [], principiante: [] };
+    CATS.forEach(cat => { c.pcts[cat]=d.pcts[cat]; c.totals[cat]=d.totals[cat]; c.paid[cat]=d.paid[cat];
+      if (!c.cuotas) c.cuotas = {}; c.cuotas[cat] = d.cuotas[cat]; });
     if (window.PRIZE_POOL_SAVE) window.PRIZE_POOL_SAVE();
     if (window.renderPrizePool) window.renderPrizePool();
     fillInputs();
