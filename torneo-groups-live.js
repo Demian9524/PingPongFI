@@ -338,7 +338,9 @@
     const m1 = $('#mGroups'), m2 = $('#mPlayers'), m5 = $('#heroPlayers');
     if (m1) m1.textContent = nGroups;
     if (m2) m2.textContent = nPlayers;
-    if (m5 && live.ready) m5.textContent = live.totalPlayers + ' JUGADORES';
+    // El chip del hero lleva el total HISTÓRICO (lo fija la página); si ya lo
+    // escribió, no se pisa con el conteo de la edición vigente.
+    if (m5 && live.ready && !window.__heroPlayersLocked) m5.textContent = live.totalPlayers + ' JUGADORES';
   }
 
   async function onCategory(key){
@@ -383,7 +385,7 @@
     // hero: total real de jugadores en cuanto esté disponible
     loadLive().then(() => {
       const m5 = $('#heroPlayers');
-      if (m5) m5.textContent = live.totalPlayers + ' JUGADORES';
+      if (m5 && !window.__heroPlayersLocked) m5.textContent = live.totalPlayers + ' JUGADORES';
       // si el usuario ya eligió categoría antes de terminar la carga
       const on = document.querySelector('#catSeg button.on');
       if (on) renderLiveGroups(on.dataset.cat);

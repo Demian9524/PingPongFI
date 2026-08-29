@@ -233,6 +233,20 @@
   .fac-podium .pod3d-step.place-1 .pod3d-rank{font-size:60px}
   .fac-podium .pod3d-step.place-2 .pod3d-rank{font-size:46px}
   .fac-podium .pod3d-step.place-3 .pod3d-rank{font-size:32px}
+  /* Podio FLUIDO en CUALQUIER ancho: escala con el ancho real del panel
+     (container query), así nunca se corta en tablet ni en ventanas estrechas. */
+  .pjx-hr-panel{container-type:inline-size}
+  .fac-podium{--pod-h1:clamp(72px,calc(40cqi - 8px),156px);max-width:100%}
+  .fac-podium .pod3d-step.place-1 .pod3d-img{--bh:var(--pod-h1)}
+  .fac-podium .pod3d-step.place-2 .pod3d-img{--bh:calc(var(--pod-h1)*0.833)}
+  .fac-podium .pod3d-step.place-3 .pod3d-img{--bh:calc(var(--pod-h1)*0.667)}
+  .fac-podium .pod3d-step.place-1 .pod3d-rank{font-size:calc(var(--pod-h1)*0.385)}
+  .fac-podium .pod3d-step.place-2 .pod3d-rank{font-size:calc(var(--pod-h1)*0.295)}
+  .fac-podium .pod3d-step.place-3 .pod3d-rank{font-size:calc(var(--pod-h1)*0.205)}
+  .fac-podium-name{font-size:clamp(12px,calc(var(--pod-h1)*0.141),22px);max-width:min(118px,26cqi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fac-podium-pct{font-size:clamp(11px,calc(var(--pod-h1)*0.141),22px)}
+  .fac-podium-sub{font-size:clamp(8.5px,calc(var(--pod-h1)*0.08),12.5px)}
+
   .fac-podium-name{font-family:'HN Wide','HN Display',var(--fj-cond);font-weight:700;font-size:22px;line-height:1;
     color:#f6efe2;text-align:center;text-wrap:balance;max-width:118px}
   .fac-podium-name a{color:#f6efe2} .fac-podium-name a:hover{color:#fff;text-decoration:underline}
@@ -870,7 +884,7 @@
 <script src="navbar-fi.js?v=1"></script>
 <script src="supabase/player-card.js?v=99"></script>
 <script src="supabase/academic-titles.js?v=109"></script>
-<script src="supabase/academic-page.js?v=102"></script>
+<script src="supabase/academic-page.js?v=103"></script>
 <script>
   (function(){
     var modal = document.getElementById('facPodInfoModal');
@@ -1070,7 +1084,7 @@
   var probe = null, raf = 0, lastKey = '';
   function fit(){
     raf = 0;
-    if (window.innerWidth > 760){ el.style.fontSize = ''; lastKey = ''; return; }
+    
     var txt = String(el.textContent || '').trim();
     if (!txt || txt === '—') return;
     var avail = el.clientWidth;

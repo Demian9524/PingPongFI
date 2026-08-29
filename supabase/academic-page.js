@@ -131,7 +131,9 @@
       const catKey = String(code).toLowerCase().replace(/[^a-z]/g, '')
         .replace(/^princip.*/, 'principiante').replace(/^interm.*/, 'intermedio').replace(/^avanz.*/, 'avanzado');
       let displayName = kind === 'category'
-        ? ((scoped[0] && scoped[0].category_name) || CAT_NAMES[catKey] || code)
+        // El nombre canónico va en PLURAL: el de la BD puede venir en singular
+        // («Intermedio»), y el hero de la categoría siempre dice «Intermedios».
+        ? (CAT_NAMES[catKey] || (scoped[0] && scoped[0].category_name) || code)
         : ((scoped[0] && (kind === 'faculty' ? (scoped[0].faculty_name || code) : (scoped[0].career_name || code))) || code);
       // Sin participantes no hay nombre en el plantel y se acababa mostrando el
       // código crudo («CONTADURIA_ADMINISTRACION»). El catálogo sí tiene el
@@ -240,13 +242,14 @@
       const displayRows = scoped;
 
       // filtros
-      const state = { q:'', cat:'', career:'', grp:'', withMatches:false, withWa:false };
+      const state = { q:'', cat:'', fac:'', career:'', grp:'', withMatches:false, withWa:false };
       const playedSet = new Set(); // registration_ids con partidos jugados (se llena tras standings)
       function applyFilters(){
         const q = normKey(state.q);
         return displayRows.filter(r => {
           if (q && !(normKey(r.nickname).includes(q) || normKey(r.career_name).includes(q) || normKey(r.career_code).includes(q))) return false;
           if (state.cat && r.category_code !== state.cat) return false;
+          if (state.fac && r.faculty_code !== state.fac) return false;
           if (state.career && r.career_code !== state.career) return false;
           if (state.grp && r.group_label !== state.grp) return false;
           if (state.withWa && !r._waUrl) return false;
@@ -262,6 +265,8 @@
       }
       if (ids.filterCat) populateSelect($(ids.filterCat),
         [...new Map(scoped.filter(r=>r.category_code).map(r=>[r.category_code, r.category_name||r.category_code])).entries()], 'Todas las categorías');
+      if (ids.filterFaculty) populateSelect($(ids.filterFaculty),
+        [...new Map(scoped.filter(r=>r.faculty_code).map(r=>[r.faculty_code, r.faculty_name||r.faculty_code])).entries()], 'Todas las facultades');
       if (ids.filterGroup) populateSelect($(ids.filterGroup), grpLabels.map(g => [g, 'Grupo ' + g]), 'Todos los grupos');
       if (kind !== 'career' && ids.filterCareer) populateSelect($(ids.filterCareer),
         [...new Map(scoped.filter(r=>r.career_code).map(r=>[r.career_code, r.career_name||r.career_code])).entries()], 'Todas las carreras');
@@ -282,13 +287,15 @@
 
       if (ids.search) $(ids.search).addEventListener('input', e => { state.q = e.target.value; renderList(); });
       if (ids.filterCat) $(ids.filterCat).addEventListener('change', e => { state.cat = e.target.value; renderList(); });
+      if (ids.filterFaculty) $(ids.filterFaculty).addEventListener('change', e => { state.fac = e.target.value; renderList(); });
       if (ids.filterGroup) $(ids.filterGroup).addEventListener('change', e => { state.grp = e.target.value; renderList(); });
       if (ids.filterCareer) $(ids.filterCareer).addEventListener('change', e => { state.career = e.target.value; renderList(); });
       if (ids.filterWa) $(ids.filterWa).addEventListener('change', e => { state.withWa = e.target.checked; renderList(); });
       if (ids.clear) $(ids.clear).addEventListener('click', () => {
-        state.q = state.cat = state.career = state.grp = ''; state.withWa = false; state.withMatches = false;
+        state.q = state.cat = state.fac = state.career = state.grp = ''; state.withWa = false; state.withMatches = false;
         if (ids.search) $(ids.search).value = '';
         if (ids.filterCat) $(ids.filterCat).value = '';
+        if (ids.filterFaculty) $(ids.filterFaculty).value = '';
         if (ids.filterGroup) $(ids.filterGroup).value = '';
         if (ids.filterCareer) $(ids.filterCareer).value = '';
         if (ids.filterWa) $(ids.filterWa).checked = false;

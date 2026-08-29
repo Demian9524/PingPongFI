@@ -671,47 +671,108 @@
   .prow.p3{background:rgba(255,255,255,0.025)}
 
   /* ── PREMIOS · reparto democrático entre semifinalistas ── */
-  .deal-body{display:grid;grid-template-columns:minmax(0,0.46fr) minmax(0,1fr);gap:26px;padding:22px 24px 26px;align-items:start}
-  .deal-sil{grid-column:1;grid-row:1/5;align-self:center;position:relative;display:flex;align-items:center;justify-content:center;
-    border-radius:10px;padding:10px 14px;min-height:0}
   /* visor 3D dentro de premios */
   #premios-detalle .trophy-viewer{height:280px;border-radius:10px}
-  .trophy-hint{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-    color:var(--muted);text-align:center;margin:9px 0 0;display:flex;align-items:center;justify-content:center}
-  .deal-sil img{width:100%;max-width:320px;height:auto;display:block;
-    filter:drop-shadow(0 12px 26px rgba(0,0,0,0.55))}
-  .deal-art-tag{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;
-    color:var(--gold);background:rgba(15,8,3,0.72);border:1px solid rgba(224,181,74,0.4);
-    padding:5px 12px;border-radius:999px;white-space:nowrap;backdrop-filter:blur(3px)}
-  .deal-reglas-intro{grid-column:2;grid-row:1;min-width:0}
-  .deal-reglas-opts{grid-column:2;grid-row:2;min-width:0}
-  .deal-section-title{font-family:var(--disp);font-weight:700;font-size:14px;color:#fff;margin:14px 0 6px;letter-spacing:0.02em}
-  .deal-lead{font-family:var(--disp);font-weight:800;font-size:21px;line-height:1.2;color:#fff;margin:0 0 10px;text-wrap:pretty}
-  .deal-lead em{font-style:italic;color:var(--gold)}
-  .deal-text{font-size:14px;line-height:1.6;color:#cfccc6;margin:0 0 16px;text-wrap:pretty}
-  .deal-text b{color:#fff;font-weight:700}
-  .deal-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
-  .deal-opt{display:flex;align-items:flex-start;gap:12px;padding:11px 13px;border-radius:9px;
-    border:1px solid var(--line);background:rgba(255,255,255,0.03)}
-  .deal-opt:first-child{background:rgba(255,255,255,0.03);border-color:var(--line)}
-  .deal-opt .dn{flex:0 0 auto;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font-family:var(--disp);font-weight:800;font-size:13px;color:#1a0f06;background:var(--gold);margin-top:1px}
-  .deal-opt b{font-family:var(--disp);font-weight:700;font-size:14px;color:#fff;display:block;letter-spacing:0.01em}
-  .deal-opt small{display:block;font-size:12px;color:var(--muted);line-height:1.45;margin-top:2px}
-  .deal-foot{font-family:var(--mono);font-size:11px;letter-spacing:0.3px;color:var(--dim);margin:0;line-height:1.5;grid-column:2;grid-row:4}
-  /* llamada al trofeo Cerdo d'Or */
-  .cerdo-callout{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;
-    border-radius:10px;border:1px solid rgba(224,181,74,0.38);
-    background:rgba(224,181,74,0.07);margin-bottom:12px;grid-column:2;grid-row:3}
-  .cerdo-callout p{font-size:13px;line-height:1.58;color:#cec5a4;margin:0}
-  .cerdo-callout em{color:var(--gold);font-style:italic;font-weight:700;font-family:var(--disp)}
-  @media (max-width:820px){
-    .deal-body{grid-template-columns:1fr;gap:18px;padding:18px;display:flex;flex-direction:column}
-    .deal-sil{min-height:0;padding:0;justify-content:center;align-items:center;overflow:hidden;max-width:190px;margin:2px auto 8px}
-    .deal-sil img{margin:0 auto;max-width:100%;width:100%}
-    .cerdo-callout{margin-bottom:0}
-    .deal-lead{font-size:18px}
+  .trophy-hint{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:center;margin:9px 0 0;display:flex;align-items:center;justify-content:center}
+  .dl{position:relative;padding:26px 24px 28px;display:flex;flex-direction:column;gap:24px;overflow:hidden}
+  .dl::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,transparent 0 150px,rgba(237,187,82,0.05) 150px 151px,transparent 151px 330px)}
+  .dl > *{position:relative;z-index:1}
+  .dl-head{width:100%;max-width:none;display:block}
+  .dl-h{font-family:var(--disp);font-weight:800;font-style:italic;font-size:clamp(28px,3vw,36px);line-height:1.08;letter-spacing:0.01em;text-transform:uppercase;color:#fff;margin:0 0 12px;width:100%;max-width:none;text-wrap:balance}
+  .dl-h em{font-style:italic;color:var(--gold)}
+  .dl-p{font-family:var(--body);font-weight:400;font-size:16px;line-height:1.5;color:#cfccc6;margin:0;width:100%;max-width:none;text-wrap:pretty}
+  .dl-p b{color:#f6efe2;font-weight:700}
+  .dl-sep{display:flex;align-items:center;gap:13px;margin-top:16px;padding:9px 17px;width:max-content;max-width:100%;border:1px solid rgba(237,187,82,0.3);background:linear-gradient(100deg,rgba(237,187,82,0.1),rgba(0,0,0,0.2));clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+  .dl-sep b{font-family:var(--disp);font-weight:700;font-style:italic;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase;color:#f4ecdc}
+  .dl-sep .cats{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-style:italic;font-size:13.5px;letter-spacing:0.06em;text-transform:uppercase}
+  .dl-sep .cats s{text-decoration:none;color:rgba(246,239,226,0.35)}
+  .dl-sep .cats span{display:inline-flex;align-items:center;gap:6px}
+  .dl-sep .cats i{width:9px;height:9px;transform:rotate(45deg);border-radius:2px;display:block}
+  .dl-sep .dash{color:rgba(246,239,226,0.35)}
+  .dl-dots{display:flex;gap:7px;flex:0 0 auto}
+  .dl-dots i{width:9px;height:9px;transform:rotate(45deg);display:block;border-radius:2px}
+  .dl{min-width:0}
+  .dl-card,.dl-4grid,.dl-plate,.dl-step,.dl-steps,.dl-opt{min-width:0}
+  .dl-step > div{min-width:0}
+  .dl-mid{display:grid;grid-template-columns:minmax(320px,0.75fr) minmax(0,1.25fr);gap:18px;align-items:stretch}
+  .dl-card{position:relative;padding:20px;border:1px solid rgba(237,187,82,0.22);background:linear-gradient(165deg,rgba(38,26,12,0.8),rgba(14,11,9,0.92));clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);display:flex;flex-direction:column;gap:14px}
+  .dl-card::before{content:'';position:absolute;top:0;left:20px;width:66px;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .dl-four{box-shadow:inset 0 0 60px rgba(237,187,82,0.08)}
+  .dl-kicker{font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(240,197,101,0.95);margin:0}
+  .dl-4grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .dl-bignum{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-style:italic;font-size:180px;line-height:1;color:#edbb52;opacity:0.045;pointer-events:none;user-select:none}
+  .dl-plate{position:relative;display:flex;align-items:center;gap:10px;padding:17px 13px;height:100%;border:1px solid rgba(237,187,82,0.3);background:linear-gradient(160deg,rgba(46,31,14,0.92),rgba(12,10,8,0.94));clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+  .dl-plate .n{font-family:var(--disp);font-weight:800;font-style:italic;font-size:33px;line-height:0.9;color:rgba(237,187,82,0.55);flex:0 0 auto}
+  .dl-plate > svg{width:16px;height:16px;color:rgba(246,239,226,0.45);flex:0 0 auto}
+  .dl-plate .tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .dl-plate .tx b{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:rgba(246,239,226,0.82);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dl-plate .tx span{font-family:var(--disp);font-weight:700;font-style:italic;font-size:12.5px;letter-spacing:0.06em;color:var(--gold)}
+  .dl-badge{align-self:center;font-family:var(--disp);font-weight:800;font-style:italic;font-size:15px;letter-spacing:0.09em;text-transform:uppercase;color:#1a1208;background:linear-gradient(150deg,#f2cd74,#c9902a);padding:10px 26px;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}
+  .dl-steps{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;flex:1}
+  .dl-step{display:flex;gap:13px;align-items:flex-start;padding:16px 0;border-top:1px solid rgba(237,187,82,0.14)}
+  .dl-step .sn{font-family:var(--disp);font-weight:800;font-style:italic;font-size:34px;line-height:0.85;color:rgba(237,187,82,0.32);flex:0 0 auto}
+  .dl-step > svg{width:18px;height:18px;color:rgba(237,187,82,0.7);flex:0 0 auto;margin-top:3px}
+  .dl-step h5{font-family:var(--disp);font-weight:700;font-style:italic;font-size:17px;letter-spacing:0.05em;text-transform:uppercase;color:#f6efe2;margin:0 0 5px}
+  .dl-step p{font-family:var(--body);font-weight:400;font-size:14px;line-height:1.45;color:#aea9a0;margin:0}
+  .dl-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+  .dl-opt{gap:11px;padding:22px;height:100%}
+  .dl-opt .oh{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .dl-opt .on{font-family:var(--disp);font-weight:800;font-style:italic;font-size:38px;line-height:0.85;color:rgba(237,187,82,0.35)}
+  .dl-opt .oh svg{width:20px;height:20px;color:rgba(237,187,82,0.75);flex:0 0 auto;align-self:center}
+  .dl-opt h5{font-family:var(--disp);font-weight:700;font-style:italic;font-size:19px;letter-spacing:0.03em;text-transform:uppercase;color:#f6efe2;margin:0}
+  .dl-opt p{font-family:var(--body);font-weight:400;font-size:14.5px;line-height:1.5;color:#b5b0a6;margin:0}
+  .dl-bar{display:flex;gap:3px;height:16px;margin-top:auto}
+  .dl-bar i{display:block;height:100%;background:linear-gradient(180deg,#f0c469,#a97a24);opacity:0.85}
+  .dl-bar i:nth-child(2){opacity:0.6} .dl-bar i:nth-child(3){opacity:0.42} .dl-bar i:nth-child(4){opacity:0.3}
+  .dl-opt p.dl-barlab{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:rgba(237,187,82,0.8);margin:0}
+  .dl-cerdo{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(260px,0.38fr) minmax(0,0.62fr);align-items:center;gap:28px;padding:24px 28px;border:1px solid rgba(240,197,101,0.55);background:linear-gradient(112deg,rgba(12,10,8,0.96),rgba(58,38,10,0.92) 58%,rgba(104,72,18,0.7));clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px)}
+  .dl-cerdo::after{content:'';position:absolute;top:-40%;left:8%;width:26%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);transform:rotate(14deg);pointer-events:none}
+  .dl-cerdo .cl{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+  .dl-cerdo .cl > svg{width:46px;height:46px;color:#f0c465;flex:0 0 auto}
+  .dl-cerdo .tx{position:relative;z-index:1}
+  .dl-cerdo .tx small{display:block;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(240,197,101,0.8)}
+  .dl-cerdo .tx h4{font-family:var(--disp);font-weight:800;font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1;letter-spacing:0.02em;text-transform:uppercase;color:#f2cd74;margin:5px 0 7px}
+  .dl-cerdo .cr{position:relative;z-index:1;font-family:var(--body);font-weight:400;font-size:15.5px;line-height:1.5;color:#e6dcc6;margin:0;text-wrap:pretty}
+  .dl-final{font-family:var(--body);font-weight:400;font-size:13px;line-height:1.5;color:rgba(246,239,226,0.8);margin:0;width:100%;max-width:none;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media (max-width:1120px){.dl-final{white-space:normal}}
+  @media (max-width:1000px){
+    .dl-mid{grid-template-columns:1fr}
+    .dl-cerdo{grid-template-columns:1fr;gap:16px}
+    .dl-opts{grid-template-columns:1fr 1fr}
+    .dl-bignum{font-size:150px}
+  }
+  @media (max-width:720px){
+    .dl{padding:20px 14px 22px;gap:18px}
+    .dl-card{padding:16px 14px}
+    .dl-opts{grid-template-columns:1fr}
+    .dl-steps{grid-template-columns:1fr;gap:0}
+    .dl-cerdo{grid-template-columns:1fr;align-items:flex-start;gap:14px;padding:20px 18px}
+    .dl-bignum{font-size:120px}
+    /* La línea de categorías se apila en dos renglones en vez de desbordarse. */
+    .dl-sep{width:auto;gap:8px;padding:11px 13px;flex-wrap:wrap;row-gap:7px}
+    .dl-sep .cats{flex-wrap:wrap;gap:6px 8px;font-size:12.5px}
+    .dl-sep .dash{display:none}
+    .dl-sep b{font-size:12px;flex:1 1 100%}
+    /* Placas: 2×2 en columna, el texto baja del número para que quepa. */
+    .dl-4grid{gap:9px}
+    .dl-plate{flex-direction:column;align-items:flex-start;gap:6px;padding:13px 12px}
+    .dl-plate .n{font-size:30px}
+    .dl-plate > svg{display:none}
+    .dl-plate .tx{width:100%}
+    .dl-plate .tx b{font-size:11px;white-space:normal}
+    .dl-badge{font-size:13.5px;padding:9px 20px}
+    .dl-step{padding:13px 0;gap:11px}
+    .dl-step .sn{font-size:30px}
+    .dl-step h5{font-size:16px}
+    .dl-step p{font-size:13.5px}
+    .dl-step > svg{display:none}
+    .dl-opt{padding:18px 16px}
+    .dl-cerdo .cl > svg{width:38px;height:38px}
+    .dl-final{font-size:12.5px;line-height:1.5}
+  }
+  @media (max-width:420px){
+    .dl-plate .n{font-size:26px}
+    .dl-plate .tx b{font-size:10.5px}
   }
 
   /* ── SALÓN DE LA FAMA / MURO DE CAMPEONES ── */
@@ -1508,6 +1569,8 @@
   /* ── FOOTER ──────────────────────────────────── */
   footer{margin-top:36px;border-top:1px solid color-mix(in srgb,var(--red2) 20%,transparent);padding:24px 0 36px}
   .foot-in{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+  .foot-legal{margin-top:20px;max-width:860px;font-family:var(--body);font-size:12.5px;line-height:1.55;color:rgba(246,239,226,0.5);text-wrap:pretty}
+  .foot-legal b{color:rgba(246,239,226,0.72);font-weight:700}
   .foot-mid{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:800;font-style:italic;
     font-size:15px;letter-spacing:0.04em;text-transform:uppercase;color:var(--text)}
   .foot-mid .r{color:var(--red2)}
@@ -2258,7 +2321,7 @@
             </div>
           </div>
           <div class="chips">
-            <div class="chip"><div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div><div class="tx"><b>24 – 31 MAYO</b><small>Fechas del torneo</small></div></div>
+            <div class="chip"><div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div><div class="tx"><b>8 DE SEPTIEMBRE</b><small>Fechas del torneo</small></div></div>
             <div class="chip"><div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div class="tx"><b>MESAS FI</b><small>Junto al edificio J</small></div></div>
             <div class="chip"><div class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M16 5a3 3 0 010 6M21 20a5 5 0 00-4-4.9"/></svg></div><div class="tx"><b id="heroPlayers">—</b><small>Jugadores inscritos</small></div></div>
           </div>
@@ -2406,6 +2469,7 @@
       .pay-ticket b .mxn{font-size:0.4em;letter-spacing:0.03em;color:#f2e2b8}
       .pay-ticket .bar{width:84px;height:3px;background:linear-gradient(90deg,var(--red2),var(--gold) 70%,transparent);border-radius:2px}
       .pay-ticket > span{font-family:var(--body);font-size:13.5px;font-weight:500;color:rgba(246,239,226,0.85);letter-spacing:0.01em}
+      .pay-ticket > span .cuota-pri,.pay-ticket > span .cuota-int,.pay-ticket > span .cuota-av{font-family:inherit;font-size:inherit;font-style:normal;font-weight:700;letter-spacing:inherit;text-shadow:none}
       .pay-lbl{font-family:var(--disp);font-weight:800;font-style:italic;font-size:21px;letter-spacing:0.01em;text-transform:uppercase;
         color:var(--red2);display:block;margin-bottom:8px}
       .pay-lbl-bar{width:64px;height:3px;background:var(--red2);border-radius:2px;margin-bottom:0}
@@ -2472,7 +2536,7 @@
           <div class="pay-cut pay-ticket">
             <b><span class="amt">$35</span><span class="mxn">MXN</span></b>
             <div class="bar"></div>
-            <span>Costo de entrada · cualquier categoría</span>
+            <span>Costo de entrada · <span class="pay-ticket-cats"><span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span></span></span>
           </div>
           <div class="pay-cut pay-presencial">
             <b class="pay-lbl">Pago presencial</b>
@@ -2887,34 +2951,56 @@
     <!-- PREMIOS — reparto democrático entre semifinalistas -->
     <section class="hud hud-red panel" id="premios-detalle">
       <div class="ph"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg></span><h3>Premios</h3></div>
-      <div class="deal-body">
+      <div class="dl">
 
-        <div class="deal-reglas-intro">
-          <p class="deal-lead">La bolsa de dinero está en manos de <em>los semifinalistas</em>.</p>
-          <p class="deal-text">Al llegar a semifinales, los cuatro jugadores que continúan en competencia deberán tomar una decisión: <b>¿cómo se repartirá el premio de su categoría?</b></p>
-          <p class="deal-text">Cada semifinalista tendrá voz y voto. Podrán elegir entre repartir la bolsa según la clasificación, entregarla completamente al campeón o crear su propio acuerdo. La decisión se tomará antes de las semifinales y será definitiva.</p>
+        <div class="dl-head">
+          <h4 class="dl-h">Los semifinalistas deciden <em>el destino de la bolsa</em></h4>
+          <p class="dl-p">Cuando queden cuatro jugadores en una categoría, cada uno tendrá voz y voto para acordar cómo se reparte su bolsa. La decisión deberá quedar definida <b>antes de jugar las semifinales</b>.</p>
+          <div class="dl-sep"><span class="cats"><span><i style="background:#37bb66"></i><s style="color:#4fd483">Principiantes</s></span><span class="dash">·</span><span><i style="background:#3a63f0"></i><s style="color:#6d8cff">Intermedios</s></span><span class="dash">·</span><span><i style="background:#ff5a44"></i><s style="color:#ff8b78">Avanzados</s></span></span><span class="dash">—</span><b>Cada categoría decide por separado</b></div>
         </div>
 
-        <div class="deal-sil">
-          <img src="assets/four-white-v2.png?v=2" alt="Los cuatro semifinalistas de la categoría" />
-          <span class="deal-art-tag">4 semifinalistas</span>
-        </div>
-
-        <div class="deal-reglas-opts">
-          <p class="deal-section-title">Opciones de reparto</p>
-          <p class="deal-text">A continuación se muestran <b>algunas opciones de distribución</b> que los cuatro semifinalistas podrán considerar y votar antes del inicio de las semifinales:</p>
-          <div class="deal-opts">
-            <div class="deal-opt"><div><b>Reparto por posiciones</b><small>La bolsa se distribuye entre el primer, segundo y tercer lugar, utilizando los porcentajes acordados por los cuatro semifinalistas.</small></div></div>
-            <div class="deal-opt"><div><b>Todo para el campeón</b><small>El ganador de la categoría recibe el
-100 % de la bolsa acumulada.</small></div></div>
-            <div class="deal-opt"><div><b>Distribución personalizada</b><small>Los semifinalistas pueden proponer cualquier otro esquema de reparto, siempre que sea aprobado mediante votación antes del inicio de las semifinales.</small></div></div>
+        <div class="dl-mid">
+          <div class="dl-card dl-four">
+            <p class="dl-kicker">Los 4 deciden</p>
+            <div class="dl-4grid"><span class="dl-bignum" aria-hidden="true">4</span><div class="dl-plate"><span class="n">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.2 20a6.8 6.8 0 0113.6 0"/></svg><span class="tx"><b>Semifinalista 01</b><span>1 voto</span></span></div><div class="dl-plate"><span class="n">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.2 20a6.8 6.8 0 0113.6 0"/></svg><span class="tx"><b>Semifinalista 02</b><span>1 voto</span></span></div><div class="dl-plate"><span class="n">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.2 20a6.8 6.8 0 0113.6 0"/></svg><span class="tx"><b>Semifinalista 03</b><span>1 voto</span></span></div><div class="dl-plate"><span class="n">04</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5.2 20a6.8 6.8 0 0113.6 0"/></svg><span class="tx"><b>Semifinalista 04</b><span>1 voto</span></span></div></div>
+            <span class="dl-badge">1 voto cada uno</span>
+          </div>
+          <div class="dl-card dl-flow">
+            <p class="dl-kicker">Cómo se decide</p>
+            <div class="dl-steps"><div class="dl-step"><span class="sn">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="7" r="2.4"/><circle cx="7" cy="17" r="2.4"/><circle cx="17" cy="17" r="2.4"/></svg><div><h5>Clasifican</h5><p>Quedan cuatro jugadores en la categoría.</p></div></div><div class="dl-step"><span class="sn">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 5h16v11H9.5L4.5 20V5z"/></svg><div><h5>Proponen</h5><p>Se presentan una o más formas de reparto.</p></div></div><div class="dl-step"><span class="sn">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12.2l2.8 2.8L16 9"/></svg><div><h5>Votan</h5><p>Cada semifinalista tiene voz y un voto.</p></div></div><div class="dl-step"><span class="sn">04</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="9.5" r="5.5"/><path d="M8.7 15.2L7.6 21l4.4-2.1L16.4 21l-1.1-5.8"/></svg><div><h5>Se define</h5><p>El acuerdo queda cerrado antes de las semifinales.</p></div></div></div>
           </div>
         </div>
-        <div class="cerdo-callout">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--gold);flex-shrink:0;margin-top:2px"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg>
-          <p>El campeón de cada categoría recibirá, además, el trofeo exclusivo <em>El Cerdo de Oro</em> — una pieza única elaborada especialmente para cada edición del torneo.</p>
+
+        <div class="dl-opts">
+          <div class="dl-card dl-opt">
+            <div class="oh"><span class="on">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 20v-8M12 20V5M20 20v-6"/></svg></div>
+            <h5>Reparto por posiciones</h5>
+            <p>La bolsa se divide entre los lugares acordados por los semifinalistas.</p>
+            <div class="dl-bar" aria-hidden="true"><i style="flex:5"></i><i style="flex:3"></i><i style="flex:2"></i></div>
+            <p class="dl-barlab">Por lugar</p>
+          </div>
+          <div class="dl-card dl-opt">
+            <div class="oh"><span class="on">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg></div>
+            <h5>Todo para el campeón</h5>
+            <p>El ganador recibe el 100% de la bolsa de su categoría.</p>
+            <div class="dl-bar" aria-hidden="true"><i style="flex:1"></i></div>
+            <p class="dl-barlab">100%</p>
+          </div>
+          <div class="dl-card dl-opt">
+            <div class="oh"><span class="on">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h5M14 17h6"/><circle cx="15.5" cy="7" r="2.1"/><circle cx="11.5" cy="17" r="2.1"/></svg></div>
+            <h5>Acuerdo personalizado</h5>
+            <p>Los semifinalistas pueden votar cualquier otro esquema antes de jugar.</p>
+            <div class="dl-bar" aria-hidden="true"><i style="flex:3"></i><i style="flex:4"></i><i style="flex:2"></i><i style="flex:3"></i></div>
+            <p class="dl-barlab">A convenir</p>
+          </div>
         </div>
-        <p class="deal-foot">El pacto deberá establecerse antes del inicio de las semifinales y tendrá validez exclusiva sobre la bolsa de esa categoría.</p>
+
+        <div class="dl-cerdo">
+          <div class="cl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg><div class="tx"><small>Premio garantizado</small><h4>El Cerdo de Oro</h4></div></div>
+          <p class="cr">Sin importar cómo se reparta el dinero, el campeón de cada categoría también recibirá el trofeo exclusivo de esta edición.</p>
+        </div>
+
+        <p class="dl-final">El acuerdo debe establecerse antes del inicio de las semifinales, será definitivo y solo tendrá efecto sobre la bolsa de esa categoría.</p>
       </div>
     </section>
 
@@ -2956,6 +3042,7 @@
       <img class="logo-fi" src="assets/escudo-fi.svg" style="width:42px;height:48px" alt="Facultad de Ingeniería" />
     </div>
   </div>
+  <div class="wrap"><p class="foot-legal"><b>Aviso:</b> Este es un proyecto estudiantil y un torneo organizado por estudiantes. Este sitio no es una página oficial de la UNAM ni de la Facultad de Ingeniería, y su contenido no implica respaldo, patrocinio, autorización o representación institucional por parte de la Universidad Nacional Autónoma de México.</p></div>
 </footer>
 
 <script src="torneo-data.js"></script>
@@ -4330,6 +4417,35 @@
   });
 })();
 </script>
+<script>
+/* Chip del hero «N JUGADORES»: total HISTÓRICO de jugadores registrados alguna
+   vez en principiantes + intermedios + avanzados (todas las ediciones), no los
+   inscritos del torneo vigente. Misma fuente que el Directorio en vista
+   General: get_public_academic_roster por facultad, deduplicado por jugador. */
+(function(){
+  var el = document.getElementById('heroPlayers'); if (!el) return;
+  function run(){
+    if (!window.SB_CATALOG || !window.SB_PARTICIPANTS) return;
+    window.SB_CATALOG.getFaculties().then(function(facs){
+      return Promise.all((facs || []).map(function(f){
+        return window.SB_PARTICIPANTS.fetchAcademicRoster('faculty', f.code).catch(function(){ return []; });
+      }));
+    }).then(function(lists){
+      var seen = {}, n = 0;
+      [].concat.apply([], lists).forEach(function(r){
+        var k = String(r.category_code || r.category_name || '').toUpperCase();
+        if (!/PRINCIPIANT|INTERMEDI|AVANZAD/.test(k)) return;
+        var id = String(r.player_id || r.registration_id || r.nickname || '');
+        if (!id || seen[id]) return;
+        seen[id] = 1; n++;
+      });
+      window.__heroPlayersLocked = true;
+      el.textContent = n + ' JUGADORES';
+    }).catch(function(){});
+  }
+  if (document.readyState === 'complete') run(); else window.addEventListener('load', run);
+})();
+</script>
 </body>
 </html>
 
@@ -4381,6 +4497,10 @@
     var n = document.querySelector('.cta-precio .precio-num'); if (n) n.textContent = tx;
     var btn = document.querySelector('.cta-precio'); if (btn) btn.setAttribute('aria-label', tx + ' de entrada');
     var amt = document.querySelector('.pay-ticket .amt'); if (amt) amt.textContent = tx;
+    var cats = document.querySelector('.pay-ticket-cats');
+    if (cats) cats.innerHTML = (document.body.getAttribute('data-cat') === 'avanzado')
+      ? '<span class="cuota-av">Avanzados</span>'
+      : '<span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span>';
   }
   apply();
   new MutationObserver(apply).observe(document.body, { attributes:true, attributeFilter:['data-cat'] });

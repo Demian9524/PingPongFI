@@ -199,7 +199,7 @@ function renderMeta(cat) {
   if (m2) m2.textContent = cat.nPlayers;
   if (m3) m3.textContent = cat.bracketSize === 16 ? 'Octavos' : 'Cuartos';
   if (m4) m4.textContent = cat.label.toUpperCase();
-  if (m5) m5.textContent = (DATA.principiante.nPlayers + DATA.intermedio.nPlayers + DATA.avanzado.nPlayers) + ' JUGADORES';
+  if (m5 && !window.__heroPlayersLocked) m5.textContent = (DATA.principiante.nPlayers + DATA.intermedio.nPlayers + DATA.avanzado.nPlayers) + ' JUGADORES';
 }
 
 // ── SWITCH ──────────────────────────────────────────────────────────────
@@ -245,7 +245,7 @@ function initNeutral() {
   // Meta limpia
   const m1=$('#mGroups'), m2=$('#mPlayers'), m3=$('#mBracket'), m4=$('#catTagBkt');
   if (m1) m1.textContent='—'; if (m2) m2.textContent='—'; if (m3) m3.textContent='—'; if (m4) m4.textContent='—';
-  const hp = $('#heroPlayers'); if (hp) hp.textContent = (DATA.principiante.nPlayers + DATA.intermedio.nPlayers + DATA.avanzado.nPlayers) + ' JUGADORES';
+  const hp = window.__heroPlayersLocked ? null : $('#heroPlayers'); if (hp) hp.textContent = (DATA.principiante.nPlayers + DATA.intermedio.nPlayers + DATA.avanzado.nPlayers) + ' JUGADORES';
   // Vacíos con prompt
   emptyState($('#slider'),       'Elige una categoría para ver los grupos');
   emptyState($('#bracket-cols'), 'Elige una categoría para ver el bracket');

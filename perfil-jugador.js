@@ -360,6 +360,30 @@
   function normCatText(s){
     return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
   }
+  // Clave canónica de categoría a partir de cualquier código/nombre.
+  function catKeyOf(s){
+    const k = normCatText(s);
+    if (/AVANZAD/.test(k)) return 'avanzado';
+    if (/INTERMEDI/.test(k)) return 'intermedio';
+    if (/PRINCIPIANT|NOVAT/.test(k)) return 'principiante';
+    return '';
+  }
+  // Categoría HISTÓRICA del jugador: aquella en la que jugó más partidos
+  // oficiales. Un ascenso (p. ej. de intermedios a avanzados) cambia su
+  // categoría actual, pero su podio histórico sigue siendo el de la categoría
+  // donde realmente compitió.
+  async function historicCategoryKey(regId){
+    const ms = await matchesOf(regId);
+    const tally = {};
+    (ms || []).forEach(m => {
+      if (!m.is_official) return;
+      const k = catKeyOf(m.category_code || m.category_name);
+      if (k) tally[k] = (tally[k] || 0) + 1;
+    });
+    let best = '', n = 0;
+    Object.keys(tally).forEach(k => { if (tally[k] > n){ n = tally[k]; best = k; } });
+    return best;
+  }
   function winWeightOf(m){
     const key = normCatText(m.category_name || m.category_code || '');
     if (/AVANZAD/.test(key)) return 1.30;
@@ -386,17 +410,29 @@
   async function computeCategoryPodiumPlace(categoryKey, registrationId){
     if (!categoryKey || !registrationId || !window.SB_PARTICIPANTS || !window.SB_CATALOG) return { place: 0, total: 0 };
     try {
+      const want = catKeyOf(categoryKey);
+      if (!want) return { place: 0, total: 0 };
       const facs = await window.SB_CATALOG.getFaculties();
       const lists = await Promise.all((facs || []).map(f =>
         window.SB_PARTICIPANTS.fetchAcademicRoster('faculty', f.code).catch(() => [])));
-      const norm = s => String(s == null ? '' : s).toLowerCase().replace(/[^a-z]/g, '');
-      const want = norm(categoryKey);
-      const roster = [].concat.apply([], lists).filter(r => {
-        const c = norm(r.category_code);
-        return !!c && !!want && (c === want || c.indexOf(want) === 0 || want.indexOf(c) === 0);
-      });
+      const all = [].concat.apply([], lists);
+      const roster = all.filter(r => catKeyOf(r.category_code || r.category_name) === want);
+      // Ascensos: quien hoy está en una categoría MÁS ALTA pudo haber jugado su
+      // historia en ésta. Se revisan esos padrones y se suman los que tengan
+      // partidos oficiales aquí, para que el podio no se recorra al faltarles.
+      const HIGHER = { principiante: ['intermedio','avanzado'], intermedio: ['avanzado'], avanzado: [] };
+      const above = all.filter(r => (HIGHER[want] || []).indexOf(catKeyOf(r.category_code || r.category_name)) >= 0);
+      const promoted = await Promise.all(above.map(async r => {
+        const ms = await matchesOf(r.registration_id);
+        return (ms || []).some(m => m.is_official && catKeyOf(m.category_code || m.category_name) === want) ? r : null;
+      }));
+      promoted.forEach(r => { if (r) roster.push(r); });
+      if (!roster.some(r => r.registration_id === registrationId)){
+        const own = all.find(r => r.registration_id === registrationId);
+        if (own) roster.push(own);
+      }
       if (!roster.length) return { place: 0, total: 0 };
-      return await rankInRoster(roster, registrationId);
+      return await rankInRoster(roster, registrationId, want);
     } catch(e){
       window.SB_LOG && window.SB_LOG.error('PJ-PODIUM-CAT', e);
       return { place: 0, total: 0 };
@@ -411,7 +447,7 @@
     return ms;
   }
   // Ranking ponderado sobre cualquier padrón (facultad o categoría).
-  async function rankInRoster(roster, registrationId){
+  async function rankInRoster(roster, registrationId, catKey){
     {
       const matchesByReg = new Map();
       await Promise.all(roster.map(async r => {
@@ -429,7 +465,10 @@
         dedupedRegIds.add(r.registration_id);
       });
       function statsFromMatches(ms){
-        const official = (ms || []).filter(m => m.is_official);
+        // Con catKey solo cuentan los partidos JUGADOS en esa categoría: quien
+        // llegó ahí por ascenso no arrastra su historial de otra categoría.
+        const official = (ms || []).filter(m => m.is_official &&
+          (!catKey || catKeyOf(m.category_code || m.category_name) === catKey));
         let wins = 0, losses = 0, weighted = 0;
         official.forEach(m => {
           if (m.result === 'WON'){ wins++; weighted += winWeightOf(m); }
@@ -938,8 +977,11 @@
     // Los dos podios son INDEPENDIENTES: un jugador puede estar en el top 3 de
     // su categoría sin estarlo en el de toda la facultad (y viceversa). Se
     // evalúa cada uno por separado y se apilan las marcas que apliquen.
-    const catPodium = await computeCategoryPodiumPlace(
-      current.category_code || current.category_name, current.registration_id);
+    // El podio de categoría se evalúa en la categoría donde el jugador
+    // realmente jugó (histórica), no en la que tiene asignada hoy.
+    const histCat = (await historicCategoryKey(current.registration_id))
+      || catKeyOf(current.category_code || current.category_name);
+    const catPodium = await computeCategoryPodiumPlace(histCat, current.registration_id);
     const facTop = podiumPlace >= 1 && podiumPlace <= 3;
     const catTop = catPodium.place >= 1 && catPodium.place <= 3;
     if (slot) slot.textContent = '';
@@ -960,9 +1002,13 @@
     // Marca de categoría: misma caja, con el nombre de la categoría en su color
     // y el filo del marco en ese mismo tono. Va siempre arriba de la de facultad.
     if (slot && catTop){
-      const tone = categoryTone(current.category_code, current.category_name);
-      const accent = categoryBrandColor(current.category_code, current.category_name) || tone.fg;
-      const label = normalizeMetaText(categoryLabel(current) || current.category_name || current.category_code);
+      const CAT_CODE = { avanzado:'AVANZADO_OPEN', intermedio:'INTERMEDIO', principiante:'PRINCIPIANTE' };
+      const CAT_NAME = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
+      const useCode = CAT_CODE[histCat] || current.category_code;
+      const useName = CAT_NAME[histCat] || current.category_name;
+      const tone = categoryTone(useCode, useName);
+      const accent = categoryBrandColor(useCode, useName) || tone.fg;
+      const label = normalizeMetaText(CAT_NAME[histCat] || categoryLabel(current) || current.category_name || current.category_code);
       const catLine = rankLine('#' + catPodium.place, 'DE ' + catPodium.total,
         label, 'PODIO HISTÓRICO', accent);
       paintPlace(catLine, catPodium.place);
