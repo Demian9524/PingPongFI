@@ -40,7 +40,15 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v242';
+const CACHE = 'torneo-fi-v246';
+// v246 · Modal «Ranking completo»: los espacios del panel derecho ceden con la
+// altura de la ventana, así la franja de CATEGORÍA del jugador ya no se corta
+// fuera de la tarjeta (Facultad.html y Categoria2.html).
+// v245 · Hero: nuevo slide 9 «Vagón FI» (assets/hero-vagon.png), solo fondo,
+// paneo horizontal + zoom leve propios. hero-config.js ?v=4.
+// v243 · Hero: nuevo slide 8 «Entrada FI · día» (assets/hero-entrada.png), solo
+// fondo (show:'bg', sin persona), con paneo diagonal + zoom propios.
+// Premios: rediseño de jerarquía y ajustes móviles. hero-config.js ?v=2.
 // v242 · Categoría: el hero usa el nombre canónico en PLURAL («Intermedios»),
 // no el de la BD que puede venir en singular. academic-page.js ?v=103.
 // v241 · PerfilJugador: el podio de categoría incluye a los jugadores ASCENDIDOS

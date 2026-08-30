@@ -270,21 +270,59 @@
   }
   /* Slide 7 — Puesto de tacos de canasta (taquero) — BG zoom lento SIN pan
      Persona: sway X L→R puro (eje distinto al zoom del fondo) */
-  @keyframes heroPanTaco{ 0%{ transform:translate(4%,1.8%) } 50%{ transform:translate(0,-1%) } 100%{ transform:translate(-4%,-1.8%) } }
-  @keyframes heroZoomStill{ 0%{ scale:1.02 } 100%{ scale:1.09 } }
+  @keyframes heroPanTaco{ 0%{ transform:translate(2%,1%) } 50%{ transform:translate(0,-0.5%) } 100%{ transform:translate(-2%,-1%) } }
+  @keyframes heroZoomStill{ 0%{ scale:1 } 100%{ scale:1.04 } }
   @keyframes heroSwayTaco{
     0%  { transform: scale(1.0)   }
     50% { transform: scale(1.045) }
     100%{ transform: scale(1.0)   }
   }
   .hero-slide[data-slide="7"] .hero-bg-img{
-    inset:-9% -8%;background-size:cover;background-repeat:no-repeat;background-position:center 62%;background-color:#0b0b0e;
+    inset:-3% -3%;background-size:cover;background-repeat:no-repeat;background-position:center 58%;background-color:#0b0b0e;
     animation:heroPanTaco 14s ease-in-out infinite alternate, heroZoomStill 20s ease-in-out infinite alternate;
     filter:saturate(1.05) contrast(1.05) brightness(0.72);
   }
   .hero-slide[data-slide="7"] .hero-character{
     animation: heroSwayTaco 7s ease-in-out infinite;
-    right:12%;bottom:-27%;height:120%;
+    right:12%;bottom:-6%;height:95%;
+    filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
+  }
+  /* Slide 8 — Entrada FI (solo fondo, sin persona).
+     Al no haber capa de persona, el fondo lleva el movimiento completo:
+     paneo diagonal br→tl LENTO combinado con un zoom-in propio, distinto en
+     ritmo a los demás slides (18s / 26s). */
+  @keyframes heroPanEntrada{ 0%{ transform:translate(-1.8%,0.8%) } 100%{ transform:translate(1.8%,-0.8%) } }
+  @keyframes heroZoomEntrada{ 0%{ scale:1 } 100%{ scale:1.03 } }
+  .hero-slide[data-slide="8"] .hero-bg-img{
+    inset:-2.5% -2.5%;background-size:cover;background-repeat:no-repeat;background-position:center 52%;background-color:#0b0b0e;
+    animation:heroPanEntrada 18s ease-in-out infinite alternate, heroZoomEntrada 26s ease-in-out infinite alternate;
+    filter:saturate(1.04) contrast(1.06) brightness(0.7);
+  }
+  /* Slide 8 · persona (vigilante): aumento gradual ligero de 8s, exactamente
+     lo que dura el slide (se reinicia al activarse). */
+  @keyframes heroGrowGuard{ 0%{ scale:0.97 } 100%{ scale:1.015 } }
+  @keyframes heroSwayGuard{ 0%{ transform:translateX(7px) translateY(2px) } 100%{ transform:translateX(-7px) translateY(-2px) } }
+  .hero-slide[data-slide="8"] .hero-character{
+    animation:heroGrowGuard 8s linear forwards, heroSwayGuard 6s ease-in-out infinite alternate;
+    right:4%;bottom:-5%;height:91%;transform-origin:50% 100%;
+    filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
+  }
+  /* Slide 9 — Vagón FI (solo fondo). Movimiento distinto al slide 8: paneo
+     horizontal puro L→R (sin componente vertical) y zoom muy leve con otro
+     ritmo (20s / 30s), para que el vagón nunca salga de cuadro. */
+  @keyframes heroPanVagon{ 0%{ transform:translateX(-1.5%) } 100%{ transform:translateX(1.5%) } }
+  @keyframes heroZoomVagon{ 0%{ scale:1 } 100%{ scale:1.02 } }
+  .hero-slide[data-slide="9"] .hero-bg-img{
+    inset:-2% -2%;background-size:cover;background-repeat:no-repeat;background-position:center 50%;background-color:#0b0b0e;
+    animation:heroPanVagon 20s ease-in-out infinite alternate, heroZoomVagon 30s ease-in-out infinite alternate;
+    filter:saturate(1.03) contrast(1.05) brightness(0.68);
+  }
+  /* Slide 9 · persona (directivo): el fondo panea en X, así que la persona
+     trabaja en el eje Y con una deriva suave + micro-zoom (ejes contrastantes). */
+  @keyframes heroDriftDir{ 0%{ transform:translateX(16px) } 100%{ transform:translateX(-16px) } }
+  .hero-slide[data-slide="9"] .hero-character{
+    animation:heroDriftDir 9s ease-in-out infinite alternate;
+    right:5%;bottom:-12%;height:104%;transform-origin:50% 100%;
     filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
   }
   /* Darken + vignette overlays */
@@ -1759,14 +1797,18 @@
     .hero-slide[data-slide="0"] .hero-bg-img{ animation-name:heroPanX,heroZoomOutMobile!important;
       background-image:url('assets/hero-park-mobile.png?v=2')!important }
     .hero-slide[data-slide="3"] .hero-bg-img{ animation-name:heroPanY,heroZoomOutMobile!important }
-    .hero-slide[data-slide="4"] .hero-bg-img{ animation-name:heroPanDiagRev,heroZoomOutMobile!important }
+    .hero-slide[data-slide="4"] .hero-bg-img{ animation-name:heroPanDiagRev,heroZoomOutMobile!important; background-position:72% center!important }
     .hero-slide[data-slide="3"] .hero-character{height:385px!important;bottom:0!important;right:-4%!important}
     .hero-slide[data-slide="4"] .hero-character{height:440px!important;bottom:-20px!important;right:1%!important}
     .hero-slide[data-slide="5"] .hero-character{height:370px!important;bottom:0!important;right:-8%!important}
     .hero-slide[data-slide="6"] .hero-character{height:390px!important;bottom:0!important;right:-6%!important}
-    .hero-slide[data-slide="7"] .hero-character{height:545px!important;bottom:-125px!important;right:9%!important}
-    .hero-slide[data-slide="7"] .hero-bg-img{inset:-10% -9%!important;background-size:cover!important;background-position:70% 62%!important;animation:heroPanTaco 16s ease-in-out infinite alternate, heroZoomStill 22s ease-in-out infinite alternate!important}
+    .hero-slide[data-slide="7"] .hero-character{height:420px!important;bottom:-40px!important;right:9%!important}
+    .hero-slide[data-slide="7"] .hero-bg-img{inset:-3% -3%!important;background-size:cover!important;background-position:70% 62%!important;animation:heroPanTaco 16s ease-in-out infinite alternate, heroZoomStill 22s ease-in-out infinite alternate!important}
     .hero-slide[data-slide="6"] .hero-bg-img{background-position:center center!important}
+    .hero-slide[data-slide="8"] .hero-bg-img{inset:-2.5% -2.5%!important;background-position:58% 58%!important}
+    .hero-slide[data-slide="8"] .hero-character{height:400px!important;bottom:0!important;right:-4%!important}
+    .hero-slide[data-slide="9"] .hero-bg-img{inset:-2% -2%!important;background-position:62% 52%!important}
+    .hero-slide[data-slide="9"] .hero-character{height:430px!important;bottom:0!important;right:-4%!important}
     /* Texto ARRIBA, botón + edición al FONDO */
     .hero-kicker{display:flex;margin-bottom:10px;gap:8px}
     .hero-kicker span{font-size:9px;letter-spacing:2.5px}
@@ -1843,13 +1885,17 @@
   .hero-slide[data-slide="1"] .hero-bg-img{background-position:right center!important}
     .hero-slide[data-slide="2"] .hero-bg-img{background-position:right center!important}
     .hero-slide[data-slide="4"] .hero-character{height:398px!important;bottom:-15px!important;right:1%!important}
-    .hero-slide[data-slide="4"] .hero-bg-img{ inset:-26% -22%!important; animation-name:heroPanDiagRev,heroZoomOutMobile!important }
+    .hero-slide[data-slide="4"] .hero-bg-img{ inset:-26% -22%!important; animation-name:heroPanDiagRev,heroZoomOutMobile!important; background-position:72% center!important }
     .hero-slide[data-slide="5"] .hero-character{height:330px!important}
     .hero-slide[data-slide="5"] .hero-bg-img{ inset:-26% -22%!important; animation-name:heroPanXSlow,heroZoomOutMobile!important }
     .hero-slide[data-slide="6"] .hero-character{height:347px!important}
-    .hero-slide[data-slide="7"] .hero-character{height:485px!important;bottom:-112px!important;right:9%!important}
-    .hero-slide[data-slide="7"] .hero-bg-img{inset:0!important;background-size:cover!important;background-position:74% 62%!important}
+    .hero-slide[data-slide="7"] .hero-character{height:380px!important;bottom:-34px!important;right:9%!important}
+    .hero-slide[data-slide="7"] .hero-bg-img{inset:-3% -3%!important;background-size:cover!important;background-position:74% 62%!important}
     .hero-slide[data-slide="6"] .hero-bg-img{ inset:-26% -22%!important; animation-name:heroPanX,heroZoomOutMobile!important; background-position:center center!important }
+    .hero-slide[data-slide="8"] .hero-bg-img{ inset:-2.5% -2.5%!important; background-position:60% 58%!important }
+    .hero-slide[data-slide="8"] .hero-character{height:350px!important;bottom:0!important;right:-2%!important}
+    .hero-slide[data-slide="9"] .hero-bg-img{ inset:-2% -2%!important; background-position:64% 52%!important }
+    .hero-slide[data-slide="9"] .hero-character{height:375px!important;bottom:0!important;right:-2%!important}
     .hero-cta{gap:7px;flex-wrap:wrap}
     .cta-gold{flex:0 1 auto;font-size:10.5px;padding:9px 13px}
     .cta-premio{font-size:10px;padding:5px 11px 5px 7px;gap:10px}
@@ -2083,27 +2129,36 @@
 
     /* ─ Bolsa total: monto y anillo comparten fila; la cuota ocupa el ancho ─
        display:contents sube los hijos de .big-pool-left al grid del padre. */
-    .big-pool{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
-      column-gap:14px;row-gap:8px;padding:16px}
+    .big-pool{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);align-items:center;
+      column-gap:12px;row-gap:8px;padding:16px}
     .big-pool-left{display:contents}
     .big-pool .big-lbl{grid-column:1/-1;grid-row:1;font-size:12px!important;letter-spacing:1.8px!important;margin-bottom:0}
-    .big-val-row{grid-column:1;grid-row:2;gap:7px;align-items:baseline;flex-wrap:nowrap;min-width:0}
-    .big-pool .big-val{font-size:clamp(40px,13vw,56px)}
+    .big-val-row{grid-column:1;grid-row:2;gap:5px;align-items:baseline;flex-wrap:nowrap;min-width:0}
+    .big-pool .big-val{font-size:clamp(28px,8.2vw,40px);white-space:nowrap}
     .big-cur{font-size:clamp(14px,4.2vw,18px)}
-    .big-cuota{grid-column:1/-1;grid-row:3;white-space:normal;font-size:11.5px;line-height:1.65;
+    .big-cuota{grid-column:1/-1;grid-row:3;white-space:normal;font-size:13.5px;line-height:1.6;
       letter-spacing:0.1px;margin-top:2px;padding-top:9px;border-top:1px solid rgba(233,196,106,0.2)}
     /* La cuota se parte en dos renglones a propósito, no por falta de espacio */
     .big-cuota .cuota-sep{display:block;height:0;overflow:hidden}
 
-    /* Anillo de pagos: a la derecha del monto, apilado y compacto */
-    .pay-ring-block{grid-column:2;grid-row:2;flex-direction:column;align-items:center;gap:4px;justify-self:end}
-    .pay-ring-wrap{width:66px;height:66px}
-    .pay-ring-pct{font-size:15px}
-    .pay-ring-track,.pay-ring-fill{stroke-width:8}
-    .pay-ring-text{text-align:center}
-    .pay-ring-lbl{font-size:7.5px;letter-spacing:1.2px}
-    .pay-ring-count{font-size:12px}
-    .pay-ring-rest{font-size:9px}
+    /* Anillo de pagos: renglón propio a todo el ancho, en horizontal (anillo +
+       texto a su derecha). Apilarlo junto al monto obligaba a encoger el texto
+       hasta 7px; así los tres renglones se leen a tamaño normal. */
+    /* Anillo de pagos: renglón propio a todo el ancho, en horizontal. La
+       etiqueta y el conteo comparten línea para no dejar hueco a la derecha. */
+    /* Anillo de pagos: comparte la fila del monto y ocupa la columna derecha,
+       que antes quedaba vacía. Anillo + texto en horizontal, alineado a la
+       derecha, para que no se pierda ancho ni haya que encoger la tipografía. */
+    .pay-ring-block{grid-column:2;grid-row:2;flex-direction:row;align-items:center;
+      gap:8px;justify-self:end;text-align:left;margin:0;padding:0;border:0;min-width:0;max-width:100%}
+    .pay-ring-wrap{width:46px;height:46px;flex:0 0 auto}
+    .pay-ring-pct{font-size:11px!important}
+    .pay-ring-pct{font-size:13px}
+    .pay-ring-track,.pay-ring-fill{stroke-width:10}
+    .pay-ring-text{text-align:left;min-width:0;flex:1 1 auto}
+    .pay-ring-lbl{font-size:8.5px;letter-spacing:0.9px;line-height:1.2;white-space:nowrap}
+    .pay-ring-count{font-size:14px;margin-top:2px;white-space:nowrap}
+    .pay-ring-rest{font-size:8.5px;letter-spacing:0.2px;margin-top:2px;line-height:1.2;white-space:nowrap}
 
     /* ─ Tarjetas de categoría: una por fila, composición izquierda/derecha,
          misma altura y mismo interlineado en las tres ─ */
@@ -2117,9 +2172,9 @@
       gap:3px;margin-top:0;justify-self:end;text-align:right}
     .cat-card .cc-meta-row{flex-direction:row;align-items:baseline;gap:5px;white-space:nowrap}
     /* Pagados manda (color de la categoría); registrados queda secundario */
-    .cat-card .cc-meta b{font-size:15px;color:var(--cat)}
-    .cat-card .cc-meta i{font-size:8px;letter-spacing:0.5px;color:var(--text);opacity:0.85}
-    .cat-card .cc-meta-row:last-child b{font-size:13px;color:var(--text);opacity:0.75;text-shadow:none}
+    .cat-card .cc-meta b{font-size:17px;color:var(--cat)}
+    .cat-card .cc-meta i{font-size:9.5px;letter-spacing:0.5px;color:var(--text);opacity:0.85}
+    .cat-card .cc-meta-row:last-child b{font-size:14px;color:var(--text);opacity:0.75;text-shadow:none}
     .cat-card .cc-meta-row:last-child i{opacity:0.55}
 
     /* ─ Etiquetas del interior del puerquito: escalan con la cavidad para no
@@ -2135,12 +2190,15 @@
     .prize-piggy .piggy-body{padding:14px 10px;gap:14px}
     .piggy-stage{max-width:min(330px,90vw)}
     .big-pool{padding:14px;column-gap:10px}
-    .pay-ring-wrap{width:58px;height:58px}
-    .pay-ring-pct{font-size:13px}
-    .pay-ring-lbl{font-size:7px}
+    .pay-ring-wrap{width:42px;height:42px}
+    .pay-ring-pct{font-size:10.5px!important}
+    .pay-ring-lbl{font-size:9px}
+    .pay-ring-block{gap:8px}
+    .pay-ring-count{font-size:13px}
+    .pay-ring-rest{font-size:9.5px}
     .cat-card{padding:11px 12px;min-height:82px;column-gap:8px}
-    .cat-card .cc-meta b{font-size:14px}
-    .cat-card .cc-meta-row:last-child b{font-size:12px}
+    .cat-card .cc-meta b{font-size:15px}
+    .cat-card .cc-meta-row:last-child b{font-size:13px}
     .blab b{font-size:8px}
   }
 </style>
@@ -2264,7 +2322,7 @@
         </div>
         <!-- Slides, imágenes y visibilidad (fondo / persona) los define
              hero-config.js, compartido con el Centro de control. -->
-        <script src="hero-config.js?v=1"></script>
+        <script src="hero-config.js?v=16"></script>
         <script>window.HERO_CFG && window.HERO_CFG.build();</script>
         <div class="hero-darken"></div>
         <div class="hero-vignette"></div>
