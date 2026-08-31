@@ -116,7 +116,7 @@
   .hero-slide.is-active{opacity:1}
   .hero-bg-img{position:absolute;inset:-10% -6%;background-size:cover;background-position:center;
     transform-origin:50% 50%;
-    animation:heroPanX 12s linear infinite alternate, heroZoom 22s ease-in-out infinite alternate;
+    animation:heroPanX 13s linear infinite alternate, heroZoom 23s ease-in-out infinite alternate;
     filter:saturate(0.95) contrast(1.05) brightness(0.78)}
   .hero-next{position:absolute;z-index:6;right:14px;top:14px;display:inline-flex;align-items:center;gap:7px;
     font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
@@ -138,7 +138,7 @@
   .hero-music.is-on .off{display:block}
   @media print{.hero-music{display:none}}
   .hero-character{position:absolute;right:3%;bottom:0;height:96%;width:auto;
-    transform-origin:50% 100%;animation:heroFloat 7s ease-in-out infinite alternate;
+    transform-origin:50% 100%;animation:heroFloat 7.5s ease-in-out infinite alternate;
     filter:drop-shadow(0 12px 30px rgba(0,0,0,0.55)) contrast(1.04) saturate(1.05);
     pointer-events:none;user-select:none}
   @keyframes heroPanX{
@@ -198,7 +198,7 @@
   }
   @keyframes heroZoomOutSlide2{ 0%{ scale:0.82 } 100%{ scale:0.90 } }
   .hero-slide[data-slide="2"] .hero-character{
-    animation: heroZoomPulse 6s ease-in-out infinite;
+    animation: heroZoomPulse 6.5s ease-in-out infinite;
     right:0%;bottom:0;height:84%;
     filter:drop-shadow(-8px 18px 28px rgba(0,0,0,0.7)) contrast(1.05);
   }
@@ -219,7 +219,7 @@
     filter:saturate(0.9) contrast(1.1) brightness(0.65);
   }
   .hero-slide[data-slide="3"] .hero-character{
-    animation: heroRotateSway 5s ease-in-out infinite alternate;
+    animation: heroRotateSway 5.5s ease-in-out infinite alternate;
     right:3%;bottom:0;height:92%;
     filter:drop-shadow(0 16px 30px rgba(0,0,0,0.65)) contrast(1.06) saturate(1.08);
   }
@@ -238,7 +238,7 @@
     filter:saturate(1.05) contrast(1.04) brightness(0.74);
   }
   .hero-slide[data-slide="4"] .hero-character{
-    animation: heroFloat3 6s ease-in-out infinite;
+    animation: heroFloat3 6.5s ease-in-out infinite;
     right:9%;bottom:-18%;height:118%;
     filter:drop-shadow(-6px 14px 28px rgba(0,0,0,0.6)) contrast(1.06) saturate(1.1);
   }
@@ -260,7 +260,7 @@
     filter:saturate(0.9) contrast(1.06) brightness(0.68);
   }
   .hero-slide[data-slide="5"] .hero-character{
-    animation: heroWiggle 4s ease-in-out infinite alternate;
+    animation: heroWiggle 4.5s ease-in-out infinite alternate;
     right:-2%;bottom:0;height:86%;
     filter:drop-shadow(-8px 12px 28px rgba(0,0,0,0.65)) contrast(1.04) saturate(1.06);
   }
@@ -275,7 +275,7 @@
     filter:saturate(1.02) contrast(1.04) brightness(0.74);
   }
   .hero-slide[data-slide="6"] .hero-character{
-    animation: heroSwayR 6s ease-in-out infinite alternate;
+    animation: heroSwayR 6.5s ease-in-out infinite alternate;
     right:-2%;bottom:0;height:92%;
     filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
   }
@@ -290,11 +290,11 @@
   }
   .hero-slide[data-slide="7"] .hero-bg-img{
     inset:-3% -3%;background-size:cover;background-repeat:no-repeat;background-position:center 58%;background-color:#0b0b0e;
-    animation:heroPanTaco 14s ease-in-out infinite alternate, heroZoomStill 20s ease-in-out infinite alternate;
+    animation:heroPanTaco 15s ease-in-out infinite alternate, heroZoomStill 20s ease-in-out infinite alternate;
     filter:saturate(1.05) contrast(1.05) brightness(0.72);
   }
   .hero-slide[data-slide="7"] .hero-character{
-    animation: heroSwayTaco 7s ease-in-out infinite;
+    animation: heroSwayTaco 7.5s ease-in-out infinite;
     right:12%;bottom:-6%;height:95%;
     filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
   }
@@ -306,7 +306,7 @@
   @keyframes heroZoomEntrada{ 0%{ scale:1 } 100%{ scale:1.03 } }
   .hero-slide[data-slide="8"] .hero-bg-img{
     inset:-2.5% -2.5%;background-size:cover;background-repeat:no-repeat;background-position:center 52%;background-color:#0b0b0e;
-    animation:heroPanEntrada 18s ease-in-out infinite alternate, heroZoomEntrada 26s ease-in-out infinite alternate;
+    animation:heroPanEntrada 19s ease-in-out infinite alternate, heroZoomEntrada 26s ease-in-out infinite alternate;
     filter:saturate(1.04) contrast(1.06) brightness(0.7);
   }
   /* Slide 8 · persona (vigilante): aumento gradual ligero de 8s, exactamente
@@ -314,7 +314,7 @@
   @keyframes heroGrowGuard{ 0%{ scale:0.97 } 100%{ scale:1.015 } }
   @keyframes heroSwayGuard{ 0%{ transform:translateX(7px) translateY(2px) } 100%{ transform:translateX(-7px) translateY(-2px) } }
   .hero-slide[data-slide="8"] .hero-character{
-    animation:heroGrowGuard 8s linear forwards, heroSwayGuard 6s ease-in-out infinite alternate;
+    animation:heroGrowGuard 10s linear forwards, heroSwayGuard 6.5s ease-in-out infinite alternate;
     right:4%;bottom:-5%;height:91%;transform-origin:50% 100%;
     filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
   }
@@ -332,7 +332,7 @@
      trabaja en el eje Y con una deriva suave + micro-zoom (ejes contrastantes). */
   @keyframes heroDriftDir{ 0%{ transform:translateX(16px) } 100%{ transform:translateX(-16px) } }
   .hero-slide[data-slide="9"] .hero-character{
-    animation:heroDriftDir 9s ease-in-out infinite alternate;
+    animation:heroDriftDir 9.5s ease-in-out infinite alternate;
     right:5%;bottom:-12%;height:104%;transform-origin:50% 100%;
     filter:drop-shadow(-10px 14px 30px rgba(0,0,0,0.6)) contrast(1.04) saturate(1.05);
   }
@@ -1814,7 +1814,7 @@
     .hero-slide[data-slide="5"] .hero-character{height:370px!important;bottom:0!important;right:-8%!important}
     .hero-slide[data-slide="6"] .hero-character{height:390px!important;bottom:0!important;right:-6%!important}
     .hero-slide[data-slide="7"] .hero-character{height:420px!important;bottom:-40px!important;right:9%!important}
-    .hero-slide[data-slide="7"] .hero-bg-img{inset:-3% -3%!important;background-size:cover!important;background-position:70% 62%!important;animation:heroPanTaco 16s ease-in-out infinite alternate, heroZoomStill 22s ease-in-out infinite alternate!important}
+    .hero-slide[data-slide="7"] .hero-bg-img{inset:-3% -3%!important;background-size:cover!important;background-position:70% 62%!important;animation:heroPanTaco 17s ease-in-out infinite alternate, heroZoomStill 22s ease-in-out infinite alternate!important}
     .hero-slide[data-slide="6"] .hero-bg-img{background-position:center center!important}
     .hero-slide[data-slide="8"] .hero-bg-img{inset:-2.5% -2.5%!important;background-position:58% 58%!important}
     .hero-slide[data-slide="8"] .hero-character{height:400px!important;bottom:0!important;right:-4%!important}
@@ -2333,21 +2333,29 @@
         </div>
         <!-- Slides, imágenes y visibilidad (fondo / persona) los define
              hero-config.js, compartido con el Centro de control. -->
-        <script src="hero-config.js?v=16"></script>
+        <script src="hero-config.js?v=19"></script>
         <script>window.HERO_CFG && window.HERO_CFG.build();</script>
         <div class="hero-darken"></div>
         <button class="hero-music" id="heroMusic" type="button" aria-pressed="false" aria-label="Activar música" title="Música">
           <svg class="on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.6a3.4 3.4 0 1 0 2 3.1V7h4V3h-6z"/></svg>
           <svg class="off" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.6a3.4 3.4 0 1 0 2 3.1V7h4V3h-6z"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
         </button>
-        <audio id="heroAudio" src="assets/hero-theme.mp3" loop preload="none"></audio>
+        <audio id="heroAudio" src="assets/hero-theme.mp3" loop preload="metadata"></audio>
         <script>
         (function(){
           var b=document.getElementById('heroMusic'),a=document.getElementById('heroAudio');
           if(!b||!a) return;
           a.volume=0.45;
+          // La pista corre desde que carga la página (reloj virtual): al activarla
+          // entra en el punto donde iría, no desde el inicio.
+          var t0=Date.now();
+          function sync(){
+            var d=a.duration;
+            if(d && isFinite(d)) a.currentTime=((Date.now()-t0)/1000)%d;
+            else a.addEventListener('loadedmetadata',sync,{once:true});
+          }
           b.addEventListener('click',function(){
-            if(a.paused){ a.play().then(function(){ b.classList.add('is-on'); b.setAttribute('aria-pressed','true'); b.setAttribute('aria-label','Silenciar música'); }).catch(function(){}); }
+            if(a.paused){ sync(); a.play().then(function(){ b.classList.add('is-on'); b.setAttribute('aria-pressed','true'); b.setAttribute('aria-label','Silenciar música'); }).catch(function(){}); }
             else { a.pause(); b.classList.remove('is-on'); b.setAttribute('aria-pressed','false'); b.setAttribute('aria-label','Activar música'); }
           });
         })();

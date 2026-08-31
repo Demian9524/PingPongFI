@@ -183,7 +183,7 @@
       if (numEl) numEl.textContent = (pos + 1) + '/' + order.length;
     }, function(on){
       if (timer) { clearInterval(timer); timer = null; }
-      if (on && order.length > 1) timer = setInterval(next, 8000);
+      if (on && order.length > 1) timer = setInterval(next, 10000);
     });
 
     if (order.length < 2) return;
@@ -195,14 +195,14 @@
       paint();
     }
     if (timer) clearInterval(timer);
-    timer = setInterval(next, 8000);
+    timer = setInterval(next, 10000);
     const btn = document.getElementById('heroNext');
     if (btn && !btn.dataset.heroBound){
       btn.dataset.heroBound = '1';
       btn.addEventListener('click', () => {
         if (timer) clearInterval(timer);
         next();
-        timer = setInterval(next, 8000);
+        timer = setInterval(next, 10000);
       });
     }
   }
