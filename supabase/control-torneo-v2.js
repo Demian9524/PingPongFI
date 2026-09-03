@@ -64,6 +64,10 @@
       edcats = await window.SB_CATALOG.getEditionCategories(edition.id);
       edcatIndex = {}; edcats.forEach(c => { edcatIndex[c.id] = c.name || c.code; });
       rows = await window.SB_ADMIN.fetchAdminRegistrations(edition.id);
+      // Padrón disponible para otros paneles (p. ej. selección de representativo
+      // en el panel de aportaciones): se publica y se avisa por evento.
+      window.CT_REGISTRATIONS = rows;
+      document.dispatchEvent(new CustomEvent('ct-registrations'));
       // Pago vigente (último registro de payments), no «hubo algún confirmado»:
       // es la misma regla que usa el tablero de grupos para la elegibilidad.
       payConflicts = window.SB_PAYMENTS ? await window.SB_PAYMENTS.reconcile(rows) : [];

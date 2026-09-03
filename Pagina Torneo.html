@@ -2093,6 +2093,7 @@
     text-shadow:0 0 10px color-mix(in srgb,var(--cat) 55%,transparent)}
   .cat-card .cc-amt{display:block;font-family:var(--disp);font-weight:800;font-size:30px;
     letter-spacing:0.02em;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums}
+  .cat-card .cc-amt::after{content:' pts';font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;color:var(--muted);vertical-align:0.35em;margin-left:3px}
   .cat-card .cc-meta{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:nowrap;
     font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:8px;letter-spacing:0.3px}
   .cat-card[data-cat="avanzado"]{--cat:#dd3b2c}
@@ -2383,11 +2384,11 @@
           <div class="hero-cta">
             <span class="cta-gold"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 4L12 4l3.5 5L21 5l-2 11H5zm0 2h14v2H5z"/></svg>Edición 2027-1</span>
             <div class="cta-prizes-row">
-            <button class="cta-precio" type="button" onclick="document.getElementById('entrada-pagos').scrollIntoView({behavior:'smooth'})" aria-label="$35 de entrada">
+            <button class="cta-precio" type="button" onclick="document.getElementById('entrada-pagos').scrollIntoView({behavior:'smooth'})" aria-label="Entrada y aportes voluntarios">
               <span class="ticket-wrap">
                 <img src="assets/ticket-entrada.png" alt="" />
               </span>
-              <span class="precio-tx"><span class="precio-num">$35</span>entrada</span>
+              <span class="precio-tx"><span class="precio-num">35 pts</span>entrada</span>
             </button>
             <button class="cta-premio" type="button" onclick="document.getElementById('premios-detalle').scrollIntoView({behavior:'smooth'})" aria-label="Ver premios">
               <span class="piggy-wrap">
@@ -2399,11 +2400,11 @@
               </span>
               Premios
             </button>
-            <button class="cta-bolsa" type="button" onclick="document.getElementById('premios').scrollIntoView({behavior:'smooth'})" aria-label="Ver bolsa del torneo">
+            <button class="cta-bolsa" type="button" onclick="document.getElementById('premios').scrollIntoView({behavior:'smooth'})" aria-label="Ver donaciones voluntarias">
               <span class="money-wrap">
                 <img src="assets/money-stack.png" alt="" />
               </span>
-              Dinero
+              Apoyo
             </button>
             <button class="cta-reglas" type="button" data-open-reglas aria-haspopup="dialog" aria-label="Ver reglas del torneo">
               <span class="gavel-wrap">
@@ -2623,38 +2624,37 @@
       @media(prefers-reduced-motion:reduce){.pay-wa{animation:none}.pay-wa .wa-wrap img{animation:none}}
     </style>
     <section class="hud hud-red panel" id="entrada-pagos">
-      <div class="ph"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span><h3>Entrada y pagos</h3></div>
+      <div class="ph"><span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span><h3>Entrada y aportes</h3></div>
       <div class="pay-body">
         <div class="pay-grid">
           <div class="pay-cut pay-ticket">
-            <b><span class="amt">$35</span><span class="mxn">MXN</span></b>
+            <b><span class="amt">35</span><span class="mxn">PTS</span></b>
             <div class="bar"></div>
-            <span>Costo de entrada · <span class="pay-ticket-cats"><span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span></span></span>
+            <span>Aportación de recuperación · <span class="pay-ticket-cats"><span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span></span></span>
           </div>
           <div class="pay-cut pay-presencial">
-            <b class="pay-lbl">Pago presencial</b>
+            <b class="pay-lbl">Aportación presencial</b>
             <div class="pay-lbl-bar"></div>
-            <p>En las pimponeras, directamente con <b>Demian</b>.</p>
+            <p>En las pimponeras, directamente con <b>Demian</b>, <b>César</b> o <b>Diego</b>.</p>
           </div>
           <div class="pay-cut pay-transferencia">
-            <b class="pay-lbl">Transferencia</b>
+            <b class="pay-lbl">Aportación en línea</b>
             <div class="pay-lbl-bar-row">
               <div class="pay-lbl-bar"></div>
               <img class="mp-badge" src="assets/mercadopago-logo.png" alt="Mercado Pago" />
             </div>
-            <p>Mercado Pago, a la cuenta:</p>
+            <p>Envía tu aportación a la cuenta:</p>
             <span class="pay-clabe"><code>722969010457609861</code><button type="button" class="pay-copy" aria-label="Copiar número de cuenta" onclick="navigator.clipboard.writeText('722969010457609861');this.classList.add('copied');setTimeout(()=>this.classList.remove('copied'),1600)"><svg class="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><svg class="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></button></span>
-            <p class="pay-sub">Cuenta a nombre de <b>Demian</b>.</p>
           </div>
         </div>
         <div class="pay-note">
           <div class="pay-note-row">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v13H8l-4 4z"/><path d="M8 8h8M8 12h5"/></svg>
-            <p>Si pagas por transferencia, envía tu <b>comprobante de pago con tu nombre</b> al momento del registro por WhatsApp. También puedes escribirle a <b>Demian</b> por ahí para coordinar tu pago o cualquier duda.</p>
+            <p>Si haces tu aportación en línea, envía tu <b>comprobante con tu nombre</b> al momento del registro por WhatsApp. Por ahí mismo te ayudamos con cualquier duda del torneo.</p>
           </div>
           <div class="pay-cta">
-            <span>¿Dudas o ya pagaste?</span>
-            <a class="pay-wa" href="https://wa.me/525520308289" target="_blank" rel="noopener noreferrer" aria-label="Enviar comprobante de pago por WhatsApp">
+            <span>¿Alguna duda? Escríbenos</span>
+            <a class="pay-wa" href="https://wa.me/525520308289" target="_blank" rel="noopener noreferrer" aria-label="Escribir al torneo por WhatsApp">
               <span class="wa-wrap"><img src="assets/whatsapp-icon.png?v=2" alt="" /></span>
               WhatsApp
             </a>
@@ -2667,8 +2667,8 @@
     <section class="hud hud-red panel prize-piggy" id="premios">
       <div class="ph">
         <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg></span>
-        <h3>Bolsa del Torneo</h3>
-        <button type="button" class="pool-info-btn" aria-haspopup="dialog" aria-label="Información sobre la bolsa del torneo" onclick="document.getElementById('poolInfoOv').classList.add('show')">i</button>
+        <h3>Donaciones voluntarias</h3>
+        <button type="button" class="pool-info-btn" aria-haspopup="dialog" aria-label="Información sobre las donaciones voluntarias" onclick="document.getElementById('poolInfoOv').classList.add('show')">i</button>
         <span class="live-tag"><span class="live-dot"></span>Actualizado</span>
       </div>
       <div class="piggy-body">
@@ -2677,7 +2677,7 @@
             <div class="piggy-halo" aria-hidden="true"></div>
             <div class="piggy-rings" aria-hidden="true"></div>
             <div class="piggy-stage">
-              <div class="piggy-3d" id="piggy3d" tabindex="0" role="button" aria-label="Ver premios y desglose de la bolsa">
+              <div class="piggy-3d" id="piggy3d" tabindex="0" role="button" aria-label="Ver el desglose del apoyo reunido">
                 <div class="piggy-rot-stack" id="piggyRotStack">
                   <img class="piggy-rot-img active" data-i="0" src="assets/piggy-rot-00.png?v=2" alt="" />
                   <img class="piggy-rot-img" data-i="1" src="assets/piggy-rot-05.png" decoding="async" alt="" />
@@ -2705,19 +2705,19 @@
           </div>
           <button type="button" class="piggy-tap-hint" onclick="document.getElementById('piggy3d').click()">
             <span class="piggy-tap-main">Aprieta el puerquito</span>
-            <span class="piggy-tap-sub">Ver premios y desglose</span>
+            <span class="piggy-tap-sub">Ver desglose del apoyo</span>
             <svg class="piggy-tap-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
           </button>
         </div>
         <div class="piggy-meta">
           <div class="big-pool">
             <div class="big-pool-left">
-              <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Bolsa total</small>
-              <div class="big-val-row"><b class="big-val" id="poolTotal">$0</b><span class="big-cur">MXN</span></div>
-              <small class="big-cuota" id="poolCuota">Cuota: <b>$35</b></small>
+              <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Apoyo acumulado</small>
+              <div class="big-val-row"><b class="big-val" id="poolTotal">0</b><span class="big-cur">PTS</span></div>
+              <small class="big-cuota" id="poolCuota">Aportación: <b>35 pts</b></small>
             </div>
             <div class="pay-ring-block">
-              <div class="pay-ring-wrap" id="payRingWrap" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-label="0 de 4 pagos confirmados">
+              <div class="pay-ring-wrap" id="payRingWrap" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-label="0 de 4 aportaciones confirmadas">
                 <svg viewBox="0 0 100 100">
                   <circle class="pay-ring-track" cx="50" cy="50" r="42"/>
                   <circle class="pay-ring-fill" id="payRingFill" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
@@ -2725,7 +2725,7 @@
                 <div class="pay-ring-pct" id="payRingPct">0%</div>
               </div>
               <div class="pay-ring-text">
-                <div class="pay-ring-lbl">Pagos confirmados</div>
+                <div class="pay-ring-lbl">Aportaciones confirmadas</div>
                 <div class="pay-ring-count" id="payRingCount">0 de 0</div>
                 <div class="pay-ring-rest" id="payRingRest">—</div>
               </div>
@@ -2735,20 +2735,20 @@
             <div class="cat-card" data-cat="avanzado">
               <small class="cc-name">Avanzados</small>
               <b class="cc-amt" id="amtAvanzado">$0</b>
-              <small class="cc-meta"><span class="cc-meta-row"><b id="paidAvanzado">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totAvanzado">0</b><i>registrados</i></span></small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidAvanzado">0</b><i>aportaciones</i></span><span class="cc-meta-row"><b id="totAvanzado">0</b><i>registrados</i></span></small>
             </div>
             <div class="cat-card" data-cat="intermedio">
               <small class="cc-name">Intermedios</small>
               <b class="cc-amt" id="amtIntermedio">$0</b>
-              <small class="cc-meta"><span class="cc-meta-row"><b id="paidIntermedio">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totIntermedio">0</b><i>registrados</i></span></small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidIntermedio">0</b><i>aportaciones</i></span><span class="cc-meta-row"><b id="totIntermedio">0</b><i>registrados</i></span></small>
             </div>
             <div class="cat-card" data-cat="principiante">
               <small class="cc-name">Principiantes</small>
               <b class="cc-amt" id="amtPrincipiante">$0</b>
-              <small class="cc-meta"><span class="cc-meta-row"><b id="paidPrincipiante">0</b><i>pagados</i></span><span class="cc-meta-row"><b id="totPrincipiante">0</b><i>registrados</i></span></small>
+              <small class="cc-meta"><span class="cc-meta-row"><b id="paidPrincipiante">0</b><i>aportaciones</i></span><span class="cc-meta-row"><b id="totPrincipiante">0</b><i>registrados</i></span></small>
             </div>
           </div>
-          <div class="meta-foot">Distribución fija por categoría · La bolsa crece con cada pago confirmado</div>
+          <div class="meta-foot">Distribución fija por categoría · El apoyo crece con cada aportación confirmada</div>
         </div>
       </div>
     </section>
@@ -3028,16 +3028,16 @@
     <div class="pool-info-ov" id="poolInfoOv" role="dialog" aria-modal="true" aria-label="Información de la bolsa del torneo" onclick="if(event.target===this)this.classList.remove('show')">
       <div class="pool-info-box">
         <button type="button" class="pool-info-close" aria-label="Cerrar" onclick="document.getElementById('poolInfoOv').classList.remove('show')">×</button>
-        <h4>Cómo se forma cada bolsa</h4>
-        <p>Cada categoría junta <b>su propio dinero</b>: los pagos confirmados por su cuota de inscripción (<b id="piCuotaAv">$50</b> avanzados, <b id="piCuotaResto">$35</b> intermedios y principiantes).</p>
+        <h4>Cómo se forma el apoyo de cada categoría</h4>
+        <p>Cada categoría reúne <b>sus propios puntos de apoyo</b>: los que suman las aportaciones confirmadas de sus jugadores.</p>
         <p id="piReserva"></p>
         <p id="piCascada" style="display:none"></p>
         <ul class="pool-info-list" id="piBreakdown"></ul>
-        <p>Todo lo recaudado se reparte como premio: ningún peso sale del torneo.</p>
+        <p>Todo el apoyo reunido se queda en el torneo y llega a los jugadores: nada se va para afuera.</p>
         <h4>Gastos del torneo</h4>
-        <p>El monto que ves en cada categoría es la bolsa <b>bruta</b>, acumulada directamente de las cuotas de inscripción.</p>
-        <p>Antes del reparto final, a esa bolsa aún le falta descontar los <b>gastos operativos del torneo</b>: la promoción y publicidad usadas para convocar jugadores, y las pelotas empleadas en el sorteo físico de grupos.</p>
-        <p>El monto neto que se reparta podrá ajustarse una vez restados estos gastos.</p>
+        <p>Lo que ves en cada categoría es el apoyo <b>bruto</b> reunido por sus aportaciones.</p>
+        <p>De ahí salen primero los <b>gastos operativos del torneo</b>: la promoción y publicidad para convocar jugadores, y las pelotas usadas en el sorteo físico de grupos.</p>
+        <p>El apoyo final por categoría puede ajustarse una vez cubiertos esos gastos.</p>
       </div>
     </div>
 
@@ -3047,8 +3047,8 @@
       <div class="dl">
 
         <div class="dl-head">
-          <h4 class="dl-h">Los semifinalistas deciden <em>el destino de la bolsa</em></h4>
-          <p class="dl-p">Cuando queden cuatro jugadores en una categoría, cada uno tendrá voz y voto para acordar cómo se reparte su bolsa. La decisión deberá quedar definida <b>antes de jugar las semifinales</b>.</p>
+          <h4 class="dl-h">Los semifinalistas deciden <em>el destino del apoyo</em></h4>
+          <p class="dl-p">Cuando queden cuatro jugadores en una categoría, cada uno tendrá voz y voto para acordar cómo se reparte el apoyo reunido por su categoría. La decisión deberá quedar definida <b>antes de jugar las semifinales</b>.</p>
           <div class="dl-sep"><span class="cats"><span><i style="background:#37bb66"></i><s style="color:#4fd483">Principiantes</s></span><span class="dash">·</span><span><i style="background:#3a63f0"></i><s style="color:#6d8cff">Intermedios</s></span><span class="dash">·</span><span><i style="background:#ff5a44"></i><s style="color:#ff8b78">Avanzados</s></span></span><span class="dash">—</span><b>Cada categoría decide por separado</b></div>
         </div>
 
@@ -3068,14 +3068,14 @@
           <div class="dl-card dl-opt">
             <div class="oh"><span class="on">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 20v-8M12 20V5M20 20v-6"/></svg></div>
             <h5>Reparto por posiciones</h5>
-            <p>La bolsa se divide entre los lugares acordados por los semifinalistas.</p>
+            <p>El apoyo se divide entre los lugares acordados por los semifinalistas.</p>
             <div class="dl-bar" aria-hidden="true"><i style="flex:5"></i><i style="flex:3"></i><i style="flex:2"></i></div>
             <p class="dl-barlab">Por lugar</p>
           </div>
           <div class="dl-card dl-opt">
             <div class="oh"><span class="on">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg></div>
             <h5>Todo para el campeón</h5>
-            <p>El ganador recibe el 100% de la bolsa de su categoría.</p>
+            <p>El campeón recibe el 100% del apoyo de su categoría.</p>
             <div class="dl-bar" aria-hidden="true"><i style="flex:1"></i></div>
             <p class="dl-barlab">100%</p>
           </div>
@@ -3090,10 +3090,10 @@
 
         <div class="dl-cerdo">
           <div class="cl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 4h10v5a5 5 0 01-10 0zM7 7H4v1a3 3 0 003 3M17 7h3v1a3 3 0 01-3 3M9 19h6M10 21h4"/></svg><div class="tx"><small>Premio garantizado</small><h4>El Cerdo de Oro</h4></div></div>
-          <p class="cr">Sin importar cómo se reparta el dinero, el campeón de cada categoría también recibirá el trofeo exclusivo de esta edición.</p>
+          <p class="cr">Pase lo que pase con el reparto, el campeón de cada categoría se lleva el trofeo exclusivo de esta edición: su propio cerdito. Lo que guarde adentro ya es asunto suyo.</p>
         </div>
 
-        <p class="dl-final">El acuerdo debe establecerse antes del inicio de las semifinales, será definitivo y solo tendrá efecto sobre la bolsa de esa categoría.</p>
+        <p class="dl-final">El acuerdo debe establecerse antes del inicio de las semifinales, será definitivo y solo tendrá efecto sobre el apoyo de esa categoría.</p>
       </div>
     </section>
 
@@ -3577,11 +3577,7 @@
       })();
     }
     const cap = c => c[0].toUpperCase() + c.slice(1);
-    const fmt = n => {
-      const cents = Math.round((+n || 0) * 100);
-      const isInt = cents % 100 === 0;
-      return '$' + (cents / 100).toLocaleString('es-MX', { minimumFractionDigits: isInt ? 0 : 2, maximumFractionDigits: 2 });
-    };
+    const fmt = n => Math.round(+n || 0).toLocaleString('es-MX');
     const CAT_LBL = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
     // Reparto exacto en centavos (método de mayor residuo) — evita que la
     // suma de las tres categorías redondeadas difiera de la bolsa total.
@@ -3814,8 +3810,6 @@
       const rt = aporteRates();
       const pPri = pctTx(rt.principiante), pInt = pctTx(rt.intermedio);
       const setTx = (id, tx) => { const el = document.getElementById(id); if (el) el.textContent = tx; };
-      setTx('piCuotaAv', fmt(cuotaFor('avanzado')));
-      setTx('piCuotaResto', fmt(Math.max(cuotaFor('intermedio'), cuotaFor('principiante'))));
       const list = document.getElementById('piBreakdown');
       if (!list) return;
       if (cfg.mode === 'manual'){ list.textContent = ''; return; }
@@ -3823,16 +3817,16 @@
       // Texto explicativo: cambia según cómo esté configurado el reparto.
       const pReserva = document.getElementById('piReserva');
       if (pReserva){
-        pReserva.innerHTML = 'La <b>bolsa total</b> que ves es todo lo recaudado: cada peso de inscripción vuelve a los jugadores como premio. ' +
-          'Los gastos de organización se cubren aparte y no se descuentan de la bolsa.';
+        pReserva.innerHTML = 'El <b>apoyo acumulado</b> que ves es todo lo reunido por las aportaciones: cada punto vuelve a los jugadores. ' +
+          'Los gastos de organización se cubren aparte y no se descuentan de este total.';
       }
       const pCascada = document.getElementById('piCascada');
       if (pCascada){
         const hay = rt.principiante > 0 || rt.intermedio > 0;
         pCascada.style.display = hay ? '' : 'none';
-        if (hay) pCascada.innerHTML = 'Encima de eso, las categorías más competidas concentran los premios más grandes: ' +
-          '<b>principiantes aporta ' + pPri + '</b> de lo suyo e <b>intermedios ' + pInt + '</b> a la bolsa de avanzados, ' +
-          'que conserva además el <b>100%</b> de lo que recauda su propia categoría. El resto se queda en su categoría.';
+        if (hay) pCascada.innerHTML = 'Encima de eso, las categorías más competidas concentran el apoyo más grande: ' +
+          '<b>principiantes aporta ' + pPri + '</b> de lo suyo e <b>intermedios ' + pInt + '</b> al apoyo de avanzados, ' +
+          'que conserva además el <b>100%</b> de lo que reúne su propia categoría. El resto se queda en su categoría.';
       }
       // Desglose por categoría: recaudado → aporte → premio final.
       const rows = [];
@@ -3843,7 +3837,7 @@
       ];
       detalle.forEach(([cat, aporte]) => {
         rows.push(['— ' + CAT_LBL[cat].toUpperCase() + ' —', '', 'head']);
-        rows.push(['Recaudado por la categoría', fmt(raisedFor(cat))]);
+        rows.push(['Puntos reunidos por la categoría', fmt(raisedFor(cat))]);
         // Aportaciones especiales (jugadores que pagaron distinto a su cuota).
         const esp = aportesOf(cat).slice(0, Math.max(0, +cfg.paid[cat] || 0));
         if (esp.length){
@@ -3857,7 +3851,7 @@
         } else if (aporte){
           rows.push(['Aportación a avanzados (' + (cat === 'intermedio' ? pInt : pPri) + ')', '−' + fmt(aporte / 100)]);
         }
-        rows.push(['Premio final', fmt(splitCents[cat] / 100), 'total']);
+        rows.push(['Apoyo asignado', fmt(splitCents[cat] / 100), 'total']);
       });
       list.textContent = '';
       rows.forEach(([k, v, kind]) => {
@@ -3879,17 +3873,16 @@
       const totalPlayers = cfg.totals.avanzado + cfg.totals.intermedio + cfg.totals.principiante;
       animateCounter('poolTotal', totalPool, true);
       updateFill(totalPool);
-      // Cuotas en el subtítulo: primero la cuota general y al final la de
-      // avanzados, resaltada en rojo por ser la más alta.
+      // Subtítulo: aportación de recuperación por categoría, en puntos de apoyo.
       const cuotaEl = document.getElementById('poolCuota');
       if (cuotaEl){
         const ca = cuotaFor('avanzado'), ci = cuotaFor('intermedio'), cp = cuotaFor('principiante');
         const nEsp = CATS_ORDER.reduce((s, c) => s + aportesOf(c).slice(0, Math.max(0, +cfg.paid[c]||0)).length, 0);
         const base = (ca === ci && ci === cp)
-          ? fmt(ca) + ' MXN'
-          : '<b>' + fmt(Math.max(ci, cp)) + '</b> <span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span>' +
-            '<span class="cuota-sep"> · </span><b>' + fmt(ca) + '</b> <span class="cuota-av">Avanzados</span>';
-        cuotaEl.innerHTML = 'Cuota: ' + base + (nEsp ? ' · +' + nEsp + (nEsp > 1 ? ' especiales' : ' especial') : '');
+          ? fmt(ca) + ' pts'
+          : '<b>' + fmt(Math.max(ci, cp)) + ' pts</b> <span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span>' +
+            '<span class="cuota-sep"> · </span><b>' + fmt(ca) + ' pts</b> <span class="cuota-av">Avanzados</span>';
+        cuotaEl.innerHTML = 'Aportación: ' + base + (nEsp ? ' · +' + nEsp + (nEsp > 1 ? ' especiales' : ' especial') : '');
       }
       renderPayRing(totalPaid, totalPlayers);
       const order = CATS_ORDER;
@@ -3916,10 +3909,10 @@
       if (foot){
         const rt = aporteRates();
         foot.textContent = cfg.mode === 'manual'
-          ? 'Bolsa fija repartida por categoría · La define la organización'
+          ? 'Apoyo fijo repartido por categoría · Lo define la organización'
           : ((rt.principiante || rt.intermedio)
-              ? 'Cada categoría junta su propia bolsa y crece con cada pago · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
-              : 'Cada categoría junta su propia bolsa · Crece con cada pago confirmado');
+              ? 'Cada categoría reúne su propio apoyo y crece con cada aportación · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
+              : 'Cada categoría reúne su propio apoyo · Crece con cada aportación confirmada');
       }
       renderPoolInfo(splitCents);
       syncBelly(shares);
@@ -4272,7 +4265,7 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel">
-  // Tweak: legibilidad de botones CTA (Entrada/Premios/Dinero/Reglas)
+  // Tweak: legibilidad de botones CTA (Entrada/Premios/Apoyo/Reglas)
   const CTA_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
     "ctaFillMult": 2.4,
     "ctaBorderMult": 1.4,
@@ -4320,7 +4313,7 @@
         <TweakToggle label="Flecha indicadora" value={t.ctaArrow} onChange={(v) => setTweak('ctaArrow', v)} />
         <TweakSection label="Pulso en reposo" />
         <TweakRadio label="Botón" value={t.ctaPulse}
-          options={[{value:'none',label:'Ninguno'},{value:'all',label:'Todos'},{value:'precio',label:'Entrada'},{value:'premio',label:'Premios'},{value:'bolsa',label:'Dinero'},{value:'reglas',label:'Reglas'}]}
+          options={[{value:'none',label:'Ninguno'},{value:'all',label:'Todos'},{value:'precio',label:'Entrada'},{value:'premio',label:'Premios'},{value:'bolsa',label:'Apoyo'},{value:'reglas',label:'Reglas'}]}
           onChange={(v) => setTweak('ctaPulse', v)} />
         <TweakSection label="Botón Inscribirse (nav)" />
         <TweakRadio label="Movimiento" value={t.regMove}
@@ -4579,17 +4572,17 @@
 </style>
 
 <script>
-/* Precio de entrada por categoría: Avanzados $50, resto $35.
-   La categoría vive en body[data-cat] (la fija setCategory de torneo-render.js). */
+/* Aportación de recuperación por categoría, en puntos de apoyo:
+   Avanzados 50 pts, resto 35 pts. La categoría vive en body[data-cat]. */
 (function(){
-  var PRICE = { avanzado: 50, intermedio: 35, principiante: 35 };
+  var PTS = { avanzado: 50, intermedio: 35, principiante: 35 };
   var BASE = 35;
-  function priceFor(){ var c = document.body.getAttribute('data-cat'); return PRICE[c] || BASE; }
+  function ptsFor(){ var c = document.body.getAttribute('data-cat'); return PTS[c] || BASE; }
   function apply(){
-    var p = priceFor(), tx = '$' + p;
-    var n = document.querySelector('.cta-precio .precio-num'); if (n) n.textContent = tx;
-    var btn = document.querySelector('.cta-precio'); if (btn) btn.setAttribute('aria-label', tx + ' de entrada');
-    var amt = document.querySelector('.pay-ticket .amt'); if (amt) amt.textContent = tx;
+    var p = ptsFor();
+    var n = document.querySelector('.cta-precio .precio-num'); if (n) n.textContent = p + ' pts';
+    var btn = document.querySelector('.cta-precio'); if (btn) btn.setAttribute('aria-label', 'Aportación de ' + p + ' puntos de apoyo');
+    var amt = document.querySelector('.pay-ticket .amt'); if (amt) amt.textContent = p;
     var cats = document.querySelector('.pay-ticket-cats');
     if (cats) cats.innerHTML = (document.body.getAttribute('data-cat') === 'avanzado')
       ? '<span class="cuota-av">Avanzados</span>'

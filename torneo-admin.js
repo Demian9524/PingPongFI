@@ -5,11 +5,7 @@
   const CATS = ['avanzado','intermedio','principiante'];
   const LBL  = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
   const COL  = { avanzado:'#dd3b2c', intermedio:'#3a63f0', principiante:'#37bb66' };
-  const fmt  = n => {
-    // Centavos solo cuando existen (12.5% de aporte genera cifras como $91.88).
-    const cents = Math.round((+n || 0) * 100);
-    return '$' + (cents / 100).toLocaleString('es-MX', { minimumFractionDigits: cents % 100 === 0 ? 0 : 2, maximumFractionDigits: 2 });
-  };
+  const fmt  = n => Math.round(+n || 0).toLocaleString('es-MX') + ' pts';
   // Porcentaje para mostrar: conserva los decimales (12.5%, no 13%).
   const pctTx = r => (Math.round((+r || 0) * 1000) / 10).toLocaleString('es-MX', { maximumFractionDigits: 1 }) + '%';
 
@@ -123,7 +119,7 @@
   .adm-esp-row input.nm{flex:1;min-width:0;background:#120d08;border:1px solid rgba(255,240,220,0.14);border-radius:7px;
     color:#f6efe2;font-family:'HN Text',sans-serif;font-size:12.5px;padding:8px 9px}
   .adm-esp-row .adm-field{flex:0 0 auto}
-  .adm-esp-row input.mt{width:74px}
+  .adm-esp-row input.mt{width:88px}
   .adm-esp-x{flex:0 0 auto;width:28px;height:28px;border-radius:7px;background:none;cursor:pointer;
     border:1px solid rgba(238,107,90,0.35);color:#ee6b5a;font-size:14px;line-height:1}
   .adm-esp-x:hover{background:rgba(238,107,90,0.12)}
@@ -131,6 +127,22 @@
     border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'HN Text',sans-serif;font-size:12px;font-weight:700}
   .adm-esp-add:hover{background:rgba(237,187,82,0.1)}
   .adm-esp-empty{font-family:'HN Text',sans-serif;font-size:11.5px;color:#71614b}
+  /* Representativo: padrón de avanzados con marca de aportación doble */
+  .adm-rep-list{display:flex;flex-direction:column;gap:5px;max-height:320px;overflow-y:auto;padding-right:2px}
+  .adm-rep{display:flex;align-items:center;gap:9px;cursor:pointer;padding:7px 9px;border-radius:8px;
+    background:rgba(255,240,220,0.02);border:1px solid rgba(255,240,220,0.07);transition:border-color .15s,background .15s}
+  .adm-rep:hover{border-color:rgba(237,187,82,0.35);background:rgba(237,187,82,0.06)}
+  .adm-rep input{width:16px;height:16px;flex:0 0 auto;accent-color:#edbb52;margin:0}
+  .adm-rep .nm{flex:1;min-width:0;font-family:'HN Text',sans-serif;font-size:12.5px;font-weight:600;color:#f6efe2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adm-rep .fl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1px;color:#71614b;flex:0 0 auto}
+  .adm-rep .tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;
+    padding:2px 6px;border-radius:5px;flex:0 0 auto;border:1px solid rgba(95,208,138,0.35);color:#5fd08a}
+  .adm-rep.on{border-color:rgba(237,187,82,0.55);background:rgba(237,187,82,0.09)}
+  .adm-rep.on .amt{font-family:'JetBrains Mono',monospace;font-size:10px;color:#f0cf6e;flex:0 0 auto}
+  .adm-rep-search{background:#120d08;border:1px solid rgba(255,240,220,0.14);border-radius:7px;color:#f6efe2;
+    font-family:'HN Text',sans-serif;font-size:12.5px;padding:8px 9px;width:100%}
+  .adm-rep-search:focus{outline:none;border-color:rgba(237,187,82,0.7)}
   .adm-check{display:flex;gap:9px;align-items:flex-start;cursor:pointer;padding:11px 13px;border-radius:10px;
     background:rgba(255,240,220,0.03);border:1px solid rgba(255,240,220,0.09)}
   .adm-check input{margin:1px 0 0;width:16px;height:16px;flex:0 0 auto;accent-color:#edbb52}
@@ -188,8 +200,8 @@
     <div class="adm-row">
       <span class="rl"><span class="adm-dot" style="background:${COL[c]}"></span>${LBL[c]}</span>
       <div class="adm-field">
-        <span class="pfx">$</span>
-        <input class="adm-input pad-l" id="adm-cuota-${c}" type="number" min="0" step="5" inputmode="numeric">
+        <input class="adm-input pad-r" id="adm-cuota-${c}" type="number" min="0" step="5" inputmode="numeric">
+        <span class="sfx">pts</span>
       </div>
     </div>`).join('');
 
@@ -229,7 +241,7 @@
         </div>
 
         <div class="adm-mode" id="adm-mode-auto">
-          <p class="adm-hint" style="margin:0">Cuota de inscripción por categoría:</p>
+          <p class="adm-hint" style="margin:0">Aportación de recuperación por categoría (puntos de apoyo):</p>
           ${cuotaRows}
           <div class="adm-row">
             <span class="rl">Principiantes → avanzados</span>
@@ -251,7 +263,7 @@
             <input type="checkbox" id="adm-piso">
             <span><b>Avanzados nunca reparte menos de lo que recaudó</b><br>Regla fundamental: su bolsa nunca baja de sus propios pagos × cuota.</span>
           </label>
-          <p class="adm-hint" style="margin:2px 0 0">Jugadores que pagan una cifra distinta a la cuota de su categoría (por ejemplo $100 en avanzados). Cada renglón sustituye la cuota de <b>ese</b> jugador:</p>
+          <p class="adm-hint" style="margin:2px 0 0">Aportaciones dobles y casos especiales. En <b>avanzados</b> marca a los del representativo: aportan el doble de su categoría. En las otras categorías cada renglón sustituye la aportación de <b>ese</b> jugador:</p>
           <div id="adm-esp-wrap" style="display:flex;flex-direction:column;gap:10px"></div>
         </div>
 
@@ -259,8 +271,8 @@
           <div class="adm-row" style="flex-direction:column;align-items:stretch;gap:7px">
             <span class="rl" style="flex:none">Bolsa total (fija)</span>
             <div class="adm-field">
-              <span class="pfx">$</span>
-              <input class="adm-input pad-l wide" id="adm-manual" type="number" min="0" step="100" inputmode="numeric">
+              <input class="adm-input pad-r wide" id="adm-manual" type="number" min="0" step="100" inputmode="numeric">
+              <span class="sfx">pts</span>
             </div>
           </div>
           <p class="adm-hint" style="margin-top:-2px">En modo manual la cifra no depende de los pagos; se reparte directo según los porcentajes.</p>
@@ -451,12 +463,98 @@
     refreshDerived();
     flashSaved();
   }
+  // ── Representativo (avanzados) ─────────────────────────────────────
+  // Padrón real de la edición: se marca a los del representativo y su
+  // aportación pasa a ser el doble de la de su categoría.
+  function rosterAvanzados(){
+    const rows = window.CT_REGISTRATIONS;
+    if (!Array.isArray(rows)) return [];
+    return rows
+      .filter(r => /AVANZ/i.test(String(r.category_code || r.category_name || '')))
+      .map(r => ({
+        code: String(r.public_code || r.registration_id || ''),
+        name: r.nickname_snapshot || r.public_code || 'Sin apodo',
+        paid: /^(CONFIRMED|WAIVED)$/i.test(String(r.payment_status || ''))
+      }))
+      .filter(p => p.code)
+      .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  }
+  let repFilter = '';
+  function renderRep(c, box){
+    box.innerHTML =
+      '<div class="adm-esp-hd"><span><span class="adm-dot" style="background:' + COL.avanzado + '"></span> Avanzados · representativo</span><b class="rep-n"></b></div>' +
+      '<input class="adm-rep-search" type="search" placeholder="Buscar jugador…" />' +
+      '<div class="adm-rep-list"></div>' +
+      '<span class="adm-esp-empty rep-foot"></span>';
+    const search = box.querySelector('.adm-rep-search');
+    const holder = box.querySelector('.adm-rep-list');
+    const headN  = box.querySelector('.rep-n');
+    const foot   = box.querySelector('.rep-foot');
+    search.value = repFilter;
+    function marks(){
+      const arr = espListRaw(c, 'avanzado');
+      const doble = cuotaOf(c, 'avanzado') * 2;
+      // Los marcados siempre valen el doble de la aportación vigente.
+      arr.forEach(it => { if (it && it.code) it.monto = doble; });
+      return { arr, doble, set: new Set(arr.filter(x => x && x.code).map(x => x.code)) };
+    }
+    function paint(){
+      const { arr, doble, set } = marks();
+      const paidAv = Math.max(0, +c.paid.avanzado || 0);
+      headN.textContent = set.size ? set.size + ' con aportación doble' : 'ninguno marcado';
+      foot.textContent = 'Marcados: ' + fmt(doble) + ' cada uno · resto ' + fmt(cuotaOf(c, 'avanzado')) + '.' +
+        (arr.length > paidAv ? ' Hay más marcados que aportaciones confirmadas: solo cuentan los primeros ' + paidAv + '.' : '');
+      foot.style.color = arr.length > paidAv ? '#ee6b5a' : '';
+      const q = repFilter.trim().toLowerCase();
+      const roster = rosterAvanzados();
+      const shown = q ? roster.filter(p => (p.name + ' ' + p.code).toLowerCase().includes(q)) : roster;
+      holder.textContent = '';
+      if (!shown.length){
+        const e = document.createElement('span');
+        e.className = 'adm-esp-empty';
+        e.textContent = 'Sin jugadores que coincidan.';
+        holder.appendChild(e);
+        return;
+      }
+      shown.forEach(p => {
+        const on = set.has(p.code);
+        const row = document.createElement('label');
+        row.className = 'adm-rep' + (on ? ' on' : '');
+        row.innerHTML = '<input type="checkbox" /><span class="nm"></span>' +
+          (p.paid ? '<span class="tag">aportó</span>' : '') +
+          '<span class="fl"></span>' + (on ? '<span class="amt">' + fmt(marks().doble) + '</span>' : '');
+        row.querySelector('.nm').textContent = p.name;
+        row.querySelector('.fl').textContent = p.code;
+        const cb = row.querySelector('input');
+        cb.checked = on;
+        cb.onchange = () => {
+          const { arr: list, doble: dbl } = marks();
+          const i = list.findIndex(x => x && x.code === p.code);
+          if (cb.checked && i < 0) list.push({ code: p.code, nombre: p.name, monto: dbl });
+          if (!cb.checked && i >= 0) list.splice(i, 1);
+          espSave();
+          paint();
+        };
+        holder.appendChild(row);
+      });
+    }
+    search.oninput = () => { repFilter = search.value; paint(); };
+    paint();
+  }
+
   function renderEsp(){
     const wrap = $('adm-esp-wrap');
     const c = cfg();
     if (!wrap || !c) return;
     wrap.textContent = '';
     CATS.forEach(cat => {
+      if (cat === 'avanzado' && rosterAvanzados().length){
+        const box = document.createElement('div');
+        box.className = 'adm-esp';
+        renderRep(c, box);
+        wrap.appendChild(box);
+        return;
+      }
       const list = espListRaw(c, cat);
       const box = document.createElement('div');
       box.className = 'adm-esp';
@@ -464,10 +562,10 @@
       const over = list.length > paid;
       box.innerHTML =
         '<div class="adm-esp-hd"><span><span class="adm-dot" style="background:' + COL[cat] + '"></span> ' + LBL[cat] + '</span>' +
-          '<b>' + (list.length ? list.length + ' especial' + (list.length > 1 ? 'es' : '') : 'cuota normal') + '</b></div>' +
+          '<b>' + (list.length ? list.length + ' especial' + (list.length > 1 ? 'es' : '') : 'aportación normal') + '</b></div>' +
         '<div class="adm-esp-list"></div>' +
-        (list.length ? '' : '<span class="adm-esp-empty">Todos pagan ' + fmt(cuotaOf(c, cat)) + '.</span>') +
-        (over ? '<span class="adm-esp-empty" style="color:#ee6b5a">Hay más aportaciones que pagos confirmados: solo se cuentan las primeras ' + paid + '.</span>' : '') +
+        (list.length ? '' : '<span class="adm-esp-empty">Todos aportan ' + fmt(cuotaOf(c, cat)) + '.</span>') +
+        (over ? '<span class="adm-esp-empty" style="color:#ee6b5a">Hay más aportaciones especiales que aportaciones confirmadas: solo se cuentan las primeras ' + paid + '.</span>' : '') +
         '<button type="button" class="adm-esp-add">+ Agregar jugador</button>';
       const rows = box.querySelector('.adm-esp-list');
       list.forEach((item, idx) => {
@@ -475,8 +573,8 @@
         row.className = 'adm-esp-row';
         row.innerHTML =
           '<input class="nm" type="text" placeholder="Nombre del jugador (opcional)" />' +
-          '<div class="adm-field"><span class="pfx">$</span>' +
-            '<input class="adm-input pad-l mt" type="number" min="0" step="5" inputmode="numeric" /></div>' +
+          '<div class="adm-field">' +
+            '<input class="adm-input pad-r mt" type="number" min="0" step="5" inputmode="numeric" /><span class="sfx">pts</span></div>' +
           '<button type="button" class="adm-esp-x" aria-label="Quitar">×</button>';
         const nm = row.querySelector('.nm'), mt = row.querySelector('.mt');
         nm.value = item.nombre || '';
@@ -708,6 +806,9 @@
   function close(){ ov.classList.remove('open'); panel.classList.remove('open'); }
   if (INLINE){
     fillInputs();
+    // El padrón llega después (consulta a Supabase): al publicarse se repinta
+    // el bloque de aportaciones para poder marcar al representativo.
+    document.addEventListener('ct-registrations', () => renderEsp());
     $('adm-done').onclick = flashSaved;   // los cambios ya se guardan al teclear
   } else {
     fab.onclick = open;
