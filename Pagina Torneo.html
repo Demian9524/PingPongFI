@@ -3246,7 +3246,13 @@
     { id:'terceros', sel:'#reglas', auto:false,
       msg:'La información de terceros de esta categoría aún no ha sido publicada.' },
     { id:'restauracion', sel:'#restauracion', auto:false,
-      msg:'La campaña «Restauremos las Mesas» aún no ha sido publicada.' }
+      msg:'La campaña «Restauremos las Mesas» aún no ha sido publicada.' },
+    // Los botones del hero que bajan a estos dos bloques se ocultan junto con
+    // ellos (extra): un atajo que lleva a una sección oculta no lleva a nada.
+    { id:'entrada', sel:'#entrada-pagos', auto:false, extra:'.cta-precio',
+      msg:'La información de entrada y aportaciones aún no ha sido publicada.' },
+    { id:'donaciones', sel:'#premios', auto:false, extra:'.cta-bolsa',
+      msg:'Las donaciones voluntarias aún no han sido publicadas.' }
   ];
   function stateOf(cfg, id){
     var v = cfg[id];
@@ -3294,6 +3300,11 @@
       if (blank) notice(el, s.msg);
       else { var old = el.querySelector('.sec-unpub'); if (old) old.remove(); }
       if (el.classList.contains('is-unpub') !== blank) el.classList.toggle('is-unpub', blank);
+      if (s.extra){
+        document.querySelectorAll(s.extra).forEach(function(x){
+          if (x.hidden !== !show) x.hidden = !show;
+        });
+      }
     });
     busy = false;
   };

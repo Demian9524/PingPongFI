@@ -69,6 +69,7 @@ const STATIC = [
   'Resultados.html', 'Bracket.html', 'PerfilJugador.html', 'Facultad.html',
   'Admin.html', 'Diagnostico.html', 'RestablecerPassword.html', 'offline.html',
   'ControlTorneo.html', 'FaseEliminatoria.html', 'TableroGrupos.html', 'ResultadosAdmin.html', 'BracketAdmin.html', 'PreparacionEliminatoria.html', 'PapeletasSorteo.html',
+  'assets/fonts/HeadingNow-86BoldItalic.otf', 'assets/fonts/BurbankBigCondensed-Bold.otf', 'assets/fonts/BurbankBigRegular-Bold.otf',
   'css/supabase-pages.css', 'css/design-system.css', 'css/perfil-jugador.css', 'css/directorio.css?v=9', 'directorio.js?v=12', 'supabase/player-card.js?v=99', 'css/bracket-final.css', 'css/bracket-fortnite.css?v=204', 'css/reglas-torneo.css', 'css/pre-group-print.css?v=121', 'css/pre-group-draw-capture.css?v=116', 'manifest.webmanifest',
   'reglas-torneo.js', 'registro-config.js', 'registro-storage.js', 'registro-scoring.js', 'registro.js',
   'supabase/registration.js', 'supabase/registro-bridge.js',
