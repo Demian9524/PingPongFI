@@ -357,7 +357,6 @@
       : 'No jugó';
     $('#rvLevel').innerHTML = s.representative ? `
       <div class="rv-item"><small>Representativo</small><b>Sí · Avanzado / Open (pala de madera)</b></div>
-      <div class="rv-item"><small>Cuota de entrada</small><b>$70 MXN · doble por experiencia competitiva</b></div>
       <div class="rv-item"><small>Torneo pasado</small><b>${esc(prevLine)}</b></div>
     ` : `
       <div class="rv-item"><small>Entrenamiento formal</small><b>${LABELS.privateTraining[s.privateTraining] || '—'}</b></div>
@@ -430,12 +429,8 @@
       $('#tkCat').textContent = SCORING.categoryLabel(sc.category);
       $('#tkCat').style.color = SCORING.categoryColor(sc.category);
       $('#tkDate').textContent = new Date(res.createdAt).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' });
-      // cuota: los jugadores del representativo pagan el doble ($75)
-      const prAmt = $('#prAmt'), prCap = $('#prCap');
-      if (prAmt) prAmt.textContent = state.representative ? '$70' : '$35';
-      if (prCap) prCap.textContent = state.representative
-        ? 'Costo de entrada · Avanzados con experiencia competitiva (doble cuota)'
-        : 'Costo de entrada · cualquier categoría';
+      // El recordatorio final ya no habla de cuotas ni montos: manda al grupo
+      // de WhatsApp, donde la organizacion confirma el lugar.
       // El grupo de WhatsApp aún no existe: si el enlace sigue marcado como
       // pendiente en registro-config.js, el botón se oculta en lugar de
       // mandar a la gente a una URL inventada.
@@ -446,8 +441,8 @@
         else { waBtn.style.display = ''; waBtn.href = CFG.whatsappUrl; }
       }
       const msg = sc.requiresManualReview
-        ? `Tu categoría provisional es <b>${SCORING.categoryLabel(sc.category)}</b>, pero pasará a <b>revisión</b> por la organización. Tu lugar se confirma con el pago.`
-        : `Tu categoría provisional es <b>${SCORING.categoryLabel(sc.category)}</b>. Recuerda que tu lugar quedará confirmado después del pago.`;
+        ? `Tu categoría provisional es <b>${SCORING.categoryLabel(sc.category)}</b>, pero pasará a <b>revisión</b> por la organización. Escribe en el grupo para confirmar tu lugar.`
+        : `Tu categoría provisional es <b>${SCORING.categoryLabel(sc.category)}</b>. Escribe en el grupo de WhatsApp para confirmar tu lugar.`;
       let okHtml = msg;
       if (res.idempotent){
         okHtml = `Ya teníamos registrada esta preinscripción — no se duplicó. Tu folio sigue siendo válido.`;
