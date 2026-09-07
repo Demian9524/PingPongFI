@@ -11,52 +11,96 @@
 <link rel="stylesheet" href="css/design-system.css">
 <style>
   .who{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  /* ── cabecera compacta (el sorteo se ve en tablet horizontal) ─────── */
+  #boardView{max-width:100%;overflow-x:clip}
+  #boardView .head{align-items:center;gap:12px;margin-bottom:2px}
+  #boardView .head h1{margin:0;font-size:clamp(26px,3.2vw,38px)}
+  #boardView .head p{max-width:58ch;font-size:12px;line-height:1.45;margin:4px 0 0;color:var(--muted)}
+  #boardView .head .nav-right .btn{min-height:36px;padding:7px 14px;font-size:12px}
+  #gbPhase{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+    display:inline-block;margin-top:7px;padding:4px 9px;border:1px solid var(--line2);border-radius:99px}
   /* tabs por categoría */
-  .gb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
-  .gb-tab{font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
-    padding:9px 16px;border:1px solid var(--line2);color:var(--muted);border-radius:8px;display:inline-flex;gap:8px;align-items:center}
+  .gb-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+  .gb-tab{font-family:var(--disp);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+    padding:7px 13px;min-height:36px;border:1px solid var(--line2);color:var(--muted);border-radius:8px;display:inline-flex;gap:7px;align-items:center}
   .gb-tab.on{color:var(--text);border-color:var(--red2);background:var(--raise)}
   .gb-tab-n{font-family:var(--mono);font-size:10px;color:var(--gold)}
   /* toolbar */
-  .gb-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
-  /* tablero */
-  .gb-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start;padding-bottom:110px}
-  .gb-island{padding:0;display:flex;flex-direction:column;min-height:120px}
-  .gb-island.pool{border-color:var(--gold)}
-  .gb-island.over{outline:2px dashed var(--red2);outline-offset:-4px}
-  .gb-island-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
-  .gb-island-head b{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase}
-  .gb-count{font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .gb-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 12px}
+  .gb-toolbar .btn{min-height:36px;padding:7px 13px;font-size:11.5px;white-space:nowrap}
+  .gb-toolbar .filter{min-height:36px;padding:6px 10px;font-size:12px}
+  .gb-toolbar #gbSearch{min-width:190px;flex:0 1 220px}
+  .gb-toolbar #gbFilter{max-width:210px}
+  .gb-toolbar .metaline{font-size:10px}
+  /* ── escenario del sorteo: bombo (izq) + grupos (der) ─────────────── */
+  .gb-board{margin-bottom:96px}
+  .gb-stage{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
+  .gb-col{display:flex;flex-direction:column;min-width:0;min-height:0;border:1px solid var(--line2);
+    border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--bg2));overflow:hidden}
+  .gb-colhead{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line2);
+    background:var(--raise);flex:none}
+  .gb-colhead-t{font-family:var(--disp);font-weight:800;font-style:italic;font-size:17px;letter-spacing:.05em;text-transform:uppercase}
+  .gb-colhead-n{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-right:auto}
+  .gb-scroll{flex:1;min-height:0;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:12px}
+  .gb-scroll>*{flex:0 0 auto}
+  .gb-scroll>.gb-island.pool{overflow:visible}
+  .gb-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:12px;align-items:start}
+  .gb-nogroups{grid-column:1/-1;color:var(--muted);font-size:13px;text-align:center;padding:34px 18px;
+    border:1px dashed var(--line2);border-radius:12px;text-wrap:pretty}
+  /* islas */
+  .gb-island{padding:0;display:flex;flex-direction:column;border-radius:12px;overflow:hidden}
+  .gb-island.pool{border:none;background:none}
+  .gb-island.pool>.gb-island-head{display:none}
+  .gb-island.pool>.gb-island-body{padding:0;gap:6px}
+  .gb-island.over{outline:2px dashed var(--red2);outline-offset:-3px}
+  .gb-island.pool.over{outline-offset:2px;border-radius:10px}
+  .gb-island-head{display:flex;align-items:center;gap:9px;padding:9px 11px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(221,59,44,.14),transparent)}
+  .gb-island-head b{font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.05em;text-transform:uppercase}
+  .gb-glyph{font-family:var(--disp);font-weight:800;font-style:italic;font-size:16px;line-height:1;color:#131318;
+    background:var(--red2);border-radius:7px;min-width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .gb-count{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.05em}
   .gb-count.warn{color:var(--gold)}
-  .gb-count.dim{color:var(--muted);opacity:.75}
+  .gb-count.dim{opacity:.75}
   .gb-tools{margin-left:auto;display:flex;gap:4px}
   .gb-ico{border:1px solid var(--line2);border-radius:6px;min-width:30px;min-height:30px;color:var(--muted);font-size:13px}
   .gb-ico:hover{color:var(--text);background:var(--raise)}
-  .gb-island-body{display:flex;flex-direction:column;gap:8px;padding:10px;max-height:420px;overflow-y:auto}
+  .gb-island-body{display:flex;flex-direction:column;gap:6px;padding:8px;counter-reset:slot}
   .gb-empty{color:var(--muted);font-size:12px;text-align:center;padding:14px 0}
+  /* plazas libres del grupo */
+  .gb-slot{display:flex;align-items:center;gap:10px;min-height:46px;padding:8px 10px;border:1px dashed var(--line2);
+    border-radius:8px;color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .gb-slot::before{counter-increment:slot;content:counter(slot);font-family:var(--disp);font-weight:800;font-size:13px;
+    color:var(--line2);min-width:20px;text-align:center}
   /* tarjetas */
-  .gb-card{display:flex;gap:10px;align-items:center;background:var(--raise);border:1px solid var(--line);
-    border-radius:8px;padding:8px 10px;cursor:grab}
-  .gb-card.drag{opacity:.5}
-  .gb-card.moved{border-color:var(--gold)}
+  .gb-card{display:flex;gap:9px;align-items:center;background:var(--raise);border:1px solid var(--line);
+    border-radius:8px;padding:7px 9px;cursor:grab;min-height:46px}
+  .gb-island:not(.pool) .gb-card::before{counter-increment:slot;content:counter(slot);font-family:var(--disp);
+    font-weight:800;font-size:13px;color:var(--gold);min-width:20px;text-align:center;flex:none}
+  .gb-card.drag{opacity:.45}
+  .gb-card.moved{border-color:var(--gold);box-shadow:inset 2px 0 0 var(--gold)}
   .gb-card.dim{opacity:.55;cursor:default}
-  .gb-logo{width:34px;height:34px;object-fit:contain;flex:none}
-  .gb-info{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
-  .gb-line1{display:flex;gap:6px;align-items:center}
-  .gb-line1 b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gb-logo{width:30px;height:30px;object-fit:contain;flex:none}
+  .gb-info{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+  .gb-line1{display:flex;gap:6px;align-items:center;min-width:0}
+  .gb-line1 b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gb-line1 a{color:inherit;text-decoration:none}
   .gb-line1 a:hover{text-decoration:underline;color:var(--gold)}
   .gb-played{color:var(--gold);font-size:10px}
-  .gb-line2{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gb-line2{font-family:var(--mono);font-size:9.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gb-badges{display:flex;gap:6px;flex-wrap:wrap}
+  /* en el escenario del sorteo solo importa lo excepcional: revisión */
+  .gb-badges .badge:not(.warn){display:none}
+  .gb-badges:not(:has(.warn)){display:none}
   .gb-menu{flex:none}
   /* nuevo grupo / no elegibles */
-  .gb-add{border:1px dashed var(--line2);border-radius:10px;min-height:80px;color:var(--muted);
-    font-family:var(--disp);font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase}
-  .gb-add:hover{color:var(--text);border-color:var(--red2)}
-  .gb-inel{grid-column:1/-1;border:1px solid var(--line);border-radius:10px;padding:6px 12px;color:var(--muted)}
-  .gb-inel summary{cursor:pointer;font-size:13px;padding:8px 0}
+  .gb-add{border:1px solid var(--line2);border-radius:8px;min-height:34px;padding:6px 12px;color:var(--muted);
+    font-family:var(--disp);font-weight:800;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;flex:none}
+  .gb-add:hover{color:var(--text);border-color:var(--red2);background:var(--raise)}
+  .gb-inel{border:1px solid var(--line);border-radius:10px;padding:2px 10px;color:var(--muted);flex:none}
+  .gb-inel summary{cursor:pointer;font-size:12px;padding:9px 0}
   .gb-inel .gb-card{filter:grayscale(1)}
+  .gb-inel .gb-island-body{padding:0 0 8px}
   /* barra inferior */
   .gb-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:linear-gradient(180deg,var(--panel),var(--bg2));
     border-top:1px solid var(--line2);display:none;gap:10px;align-items:center;padding:12px 26px;flex-wrap:wrap}
@@ -89,9 +133,17 @@
   .gb-table{width:100%;border-collapse:collapse;font-size:13px}
   .gb-table th,.gb-table td{padding:6px 8px;text-align:center;border-bottom:1px solid var(--line)}
   .gb-table th{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  /* tablet horizontal y escritorio: dos columnas fijas, scroll interno */
+  @media (min-width:900px){
+    /* el alto real lo ajusta fitStage() en group-board.js; esto es el respaldo */
+    .gb-stage{grid-template-columns:minmax(280px,330px) minmax(0,1fr);height:calc(100dvh - 216px);min-height:340px}
+    .gb-col{height:100%}
+  }
+  @media (min-width:1280px){
+    .gb-stage{grid-template-columns:minmax(320px,370px) minmax(0,1fr)}
+  }
   /* móvil: sin depender de drag & drop (el menú ⋯ siempre disponible) */
   @media (max-width:640px){
-    .gb-board{grid-template-columns:1fr}
     .gb-card{cursor:default}
     .gb-bar{padding:10px 14px}
   }
@@ -127,7 +179,7 @@
     <div class="head">
       <div>
         <h1>Tablero de <span class="r">grupos</span></h1>
-        <p>Herramienta oficial para replicar el sorteo físico (pelotas con papelitos). Arrastra participantes entre islas, usa el menú ⋯ o el panel «Registrar extracción». Nada se guarda hasta «Revisar y guardar cambios».</p>
+        <p>Replica el sorteo físico: arrastra del bombo (izquierda) al grupo extraído (derecha), o usa «Registrar extracción». Nada se guarda hasta «Revisar y guardar cambios».</p>
         <p class="metaline" id="gbPhase" aria-live="polite"></p>
       </div>
       <div class="nav-right" style="margin-left:auto;gap:10px;flex-wrap:wrap">
@@ -144,8 +196,9 @@
         <option value="ALL">Todos</option>
         <option value="REVIEW">Solo con revisión pendiente</option>
       </select>
-      <span class="metaline">Máximo recomendado por grupo: 4 (solo advertencia; se permiten grupos de cualquier tamaño).</span>
-      <button class="btn btn-ghost" id="gbExtractToggle" type="button" style="margin-left:auto">Registrar extracción</button>
+      <span class="metaline">Máx. recomendado por grupo: 4</span>
+      <button class="btn btn-ghost" id="gbWaBulk" type="button" style="margin-left:auto">Habilitar WhatsApp de agrupados</button>
+      <button class="btn btn-ghost" id="gbExtractToggle" type="button">Registrar extracción</button>
       <button class="btn btn-ghost" id="gbBallots" type="button">Preparar papeletas de grupos</button>
     </div>
 
@@ -209,6 +262,7 @@
 <script src="supabase/catalog.js"></script>
 <script src="supabase/auth.js"></script>
 <script src="supabase/admin.js"></script>
+<script src="supabase/admin-actions.js"></script>
 <script src="supabase/logo-resolver.js"></script>
 <script src="supabase/public-links.js"></script>
 <script src="supabase/ui.js"></script>
