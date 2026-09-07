@@ -1508,6 +1508,23 @@
   .gfoot{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px;padding-left:2px}
   .gfoot .lg{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.5px;color:var(--muted);text-transform:uppercase}
   .gfoot .sw{width:11px;height:11px;border-radius:3px}
+  .gp-report{margin-left:auto;position:relative;display:inline-flex;align-items:center;gap:14px;text-decoration:none;font-family:var(--disp);font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#fff6d2;background:transparent;border:none;padding:9px 20px 9px 14px;isolation:isolate;filter:drop-shadow(0 0 14px rgba(255,200,80,.18));transition:transform .18s var(--cut),filter .18s var(--cut)}
+  .gp-report::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(135deg,rgba(233,196,106,.22) 0%,rgba(155,109,30,.18) 60%,rgba(233,196,106,.12) 100%);border:1.5px solid rgba(233,196,106,.7);clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);box-shadow:0 0 0 1px rgba(233,196,106,.18) inset;transition:border-color .18s var(--cut),background .18s var(--cut)}
+  .gp-report:hover{color:#fff3c4;transform:translateY(-1px);filter:drop-shadow(0 0 22px rgba(255,200,80,.45))}
+  .gp-report:hover::before{border-color:rgba(255,215,120,.95);background:linear-gradient(135deg,rgba(255,220,130,.3) 0%,rgba(180,130,40,.22) 60%,rgba(255,220,130,.18) 100%)}
+  .gp-report .warn-wrap{position:relative;width:34px;height:29px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .gp-report .warn-wrap img{position:absolute;left:50%;top:50%;width:52px;height:52px;object-fit:contain;transform:translate(-50%,-52%);filter:drop-shadow(0 2px 6px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,200,80,.55));animation:warnGlow 2.4s ease-in-out infinite alternate}
+  @keyframes warnGlow{0%{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55)) drop-shadow(0 0 6px rgba(255,200,80,.45))}100%{filter:drop-shadow(0 2px 6px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(255,225,140,1))}}
+  @media(prefers-reduced-motion:reduce){.gp-report .warn-wrap img{animation:none}}
+  @media(max-width:640px){.gp-report{padding:7px 15px 7px 10px;font-size:11px;letter-spacing:.05em;gap:10px}.gp-report .warn-wrap{width:27px;height:23px}.gp-report .warn-wrap img{width:41px;height:41px}}
+  .gp-help{position:relative;display:inline-flex;flex:0 0 auto;margin-left:8px}
+  .gp-help-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;appearance:none;cursor:help;border-radius:50%;border:1.5px solid rgba(233,196,106,.5);background:rgba(233,196,106,.12);color:rgba(255,243,196,.9);transition:border-color .15s var(--cut),background .15s var(--cut),color .15s var(--cut)}
+  .gp-help-btn svg{display:block;width:12px;height:12px}
+  .gp-help-btn:hover,.gp-help-btn:focus-visible{border-color:rgba(255,215,120,.95);background:rgba(233,196,106,.26);color:#fff}
+  .gp-help-note{display:none;position:absolute;z-index:8;top:calc(100% + 8px);right:0;width:max-content;max-width:min(300px,72vw);padding:10px 13px;border:1px solid rgba(233,196,106,.45);border-radius:8px;background:#191410;box-shadow:0 10px 26px rgba(0,0,0,.55);font-family:var(--body);font-size:12px;line-height:1.5;letter-spacing:0;text-transform:none;font-weight:400;color:rgba(245,240,230,.9);text-wrap:pretty}
+  .gp-help-note b{color:var(--gold)}
+  .gp-help-btn:hover + .gp-help-note,.gp-help-btn:focus-visible + .gp-help-note{display:block}
+  @media(max-width:640px){.gp-help{margin-left:6px}.gp-help-note{max-width:min(260px,80vw)}}
   /* aviso de swipe (solo móvil; ver media query ≤640) */
   .group-hint{display:none}
   @media(max-width:640px){
@@ -1861,7 +1878,7 @@
     /* Móvil: compactar columna de posición + logos hacia la izquierda, más espacio para nombres */
     .ghead{grid-template-columns:58px 1fr 34px 34px 52px 40px;gap:6px;padding:9px 22px 9px 12px}
     .grow{grid-template-columns:58px 1fr 34px 34px 52px 40px;gap:6px;padding:15px 22px 15px 12px}
-    .grow .nm{font-size:20px;gap:16px;padding-left:14px}
+    .grow .nm{font-size:20px;gap:22px;padding-left:14px}
     .grow .st{font-size:15px}
     .grow .pt{font-size:25px}
     .grow .fac-wrap{width:38px;height:38px}
@@ -1961,6 +1978,9 @@
   .pool-info-close:hover{color:var(--text);background:rgba(255,255,255,0.06)}
   .prize-piggy .live-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;font-weight:700}
   .prize-piggy .live-dot{width:7px;height:7px;border-radius:50%;background:#3cf07e;box-shadow:0 0 8px #3cf07e}
+  .big-neto{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .big-neto b{font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:.02em;color:var(--gold);vertical-align:-1px}
+  .big-neto i{font-style:normal;color:var(--dim)}
 
   .piggy-body{display:grid;grid-template-columns:minmax(300px,0.8fr) minmax(0,1.45fr);gap:44px;align-items:center;padding:26px 28px 22px}
   /* overflow:clip — el halo decorativo mide 120% del contenedor y provocaba
@@ -2252,13 +2272,22 @@
     padding:12px 26px;border-radius:100px;background:rgba(8,8,10,0.6);border:1.5px solid rgba(255,255,255,0.75);
     -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:.16s var(--cut)}
   .promo-skip:hover{background:var(--red,#e11d1d);border-color:#fff;transform:translateX(-50%) scale(1.04)}
-  #promoLaunch{position:fixed;bottom:22px;left:22px;z-index:9000;display:flex;align-items:center;gap:10px;cursor:pointer;
+  #promoLaunchWrap{position:fixed;bottom:22px;left:22px;z-index:9000}
+  #promoLaunchWrap[hidden]{display:none}
+  .promo-launch-close{position:absolute;top:-11px;right:-11px;z-index:1;appearance:none;border:0;background:transparent;
+    padding:0;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#fff;
+    transition:transform .15s var(--cut),color .15s var(--cut)}
+  .promo-launch-close svg{display:block;width:22px;height:22px;fill:currentColor;filter:drop-shadow(1px 2px 0 rgba(0,0,0,0.6))}
+  .promo-launch-close:hover{transform:scale(1.15);color:var(--red2)}
+  .promo-launch-close:active{transform:scale(0.92)}
+  #promoLaunch{position:relative;display:flex;align-items:center;gap:10px;cursor:pointer;
     font-family:var(--disp,inherit);font-weight:800;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;color:#1a0f06;
     padding:12px 20px 12px 16px;border:none;border-radius:100px;background:linear-gradient(180deg,#f4cf6a,#dca62f);
     box-shadow:0 10px 28px -8px rgba(237,187,82,0.7),0 0 0 1px rgba(0,0,0,0.15);transition:.16s var(--cut)}
   #promoLaunch:hover{transform:translateY(-2px);filter:brightness(1.06)}
   #promoLaunch svg{width:20px;height:20px}
-  @media (max-width:520px){#promoLaunch{font-size:12px;padding:11px 16px 11px 13px;bottom:16px;left:16px}}
+  @media (max-width:520px){#promoLaunchWrap{bottom:16px;left:16px}#promoLaunch{font-size:12px;padding:11px 16px 11px 13px}
+    .promo-launch-close{top:-9px;right:-9px;width:26px;height:26px}.promo-launch-close svg{width:20px;height:20px}}
   @keyframes promoFade{from{opacity:0}to{opacity:1}}
   @media (max-width:520px){
     .promo-close{width:52px;height:52px}.promo-close svg{width:26px;height:26px}
@@ -2277,10 +2306,13 @@
     <button class="promo-skip" id="promoSkip" type="button">Saltar anuncio ✕</button>
   </div>
 </div>
-<button id="promoLaunch" type="button" title="Ver anuncio del torneo">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-  Ver anuncio
-</button>
+<div id="promoLaunchWrap">
+  <button id="promoLaunch" type="button" title="Ver anuncio del torneo">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    Ver anuncio
+  </button>
+  <button type="button" class="promo-launch-close" id="promoLaunchClose" aria-label="Cerrar aviso"><svg aria-hidden="true" focusable="false"><use href="#ico-x"></use></svg></button>
+</div>
 
 <!-- NAV -->
 <nav class="top">
@@ -2477,6 +2509,14 @@
         <div class="ph">
           <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0M16 5a3 3 0 010 6M21 20a5 5 0 00-4-4.9"/></svg></span>
           <h3>Fase de Grupos</h3>
+          <a class="gp-report" href="https://wa.me/525520308289?text=Hola%2C%20quiero%20reportar%20un%20tema%20de%20categor%C3%ADas%3A%20" target="_blank" rel="noopener noreferrer" aria-label="Reportar un problema de categorías por WhatsApp">
+            <span class="warn-wrap"><img src="assets/warning-sign.png" alt="" /></span>
+            Reportar
+          </a>
+          <span class="gp-help">
+            <button class="gp-help-btn" type="button" aria-label="¿Qué puedo reportar?"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 10h2v8h-2zM11 6h2v2.4h-2z" fill="currentColor"/></svg></button>
+            <span class="gp-help-note" role="tooltip">&iquest;Crees que <b>te toc&oacute; la categor&iacute;a equivocada</b>, que <b>alguien minti&oacute; sobre su nivel</b> para ganar m&aacute;s f&aacute;cil, o que alguien deber&iacute;a estar en otra? Av&iacute;same: lo reviso y hago el cambio. Te abre WhatsApp directo conmigo.</span>
+          </span>
         </div>
         <div class="sec-body">
         <div class="group-hint"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/></svg><span>Desliza &rarr; para ver m&aacute;s grupos &middot; &larr; para volver</span></div>
@@ -2492,7 +2532,7 @@
           <span class="lg"><span class="sw" style="background:color-mix(in oklab,var(--red2) 80%,#3d0f1e)"></span>Bombo 3</span>
           <span class="lg"><span class="sw" style="background:var(--dim)"></span>No entran al sorteo</span>
           </span>
-          <span class="lg" style="margin-left:auto;color:var(--dim)">3 pts por victoria · desempate por dif. de sets</span>
+          <span class="lg gfoot-note" style="color:var(--dim)">3 pts por victoria · desempate por dif. de sets</span>
         </div>
         </div>
       </section>
@@ -2715,6 +2755,7 @@
               <small class="big-lbl" style="font-family: &quot;Heading Now 8&quot;; font-size: 20px; letter-spacing: 2px">Apoyo acumulado</small>
               <div class="big-val-row"><b class="big-val" id="poolTotal">0</b><span class="big-cur">PTS</span></div>
               <small class="big-cuota" id="poolCuota">Aportación: <b>35 pts</b></small>
+              <small class="big-neto" id="poolNeto"></small>
             </div>
             <div class="pay-ring-block">
               <div class="pay-ring-wrap" id="payRingWrap" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-label="0 de 4 aportaciones confirmadas">
@@ -3611,6 +3652,23 @@
     // de principiantes.
     // Nada se pierde: la suma de las tres bolsas es igual al total recaudado.
     const CATS_ORDER = ['avanzado','intermedio','principiante'];
+    /* Gastos de organización que SÍ se descuentan del apoyo, repartidos en
+       partes iguales entre las tres categorías (en centavos para no perder
+       ni un peso por redondeo). */
+    const GASTOS = [
+      { label:'Copias',                 unit: 25,  qty: 1 },
+      { label:'Lonas',                  unit: 250, qty: 1 },
+      { label:'3 puerquitos (alcancías)', unit: 164, qty: 1 }
+    ];
+    const gastosTotalCents = () => GASTOS.reduce((s, g) => s + Math.round(g.unit * 100) * g.qty, 0);
+    // Reparto en partes iguales; el residuo de centavos cae en avanzados.
+    function gastosPorCat(){
+      const t = gastosTotalCents();
+      const base = Math.floor(t / CATS_ORDER.length);
+      const out = {}; CATS_ORDER.forEach(c => { out[c] = base; });
+      out.avanzado += t - base * CATS_ORDER.length;
+      return out;
+    }
     function cuotaFor(cat){
       const c = cfg.cuotas && cfg.cuotas[cat];
       return Math.max(0, +(c != null ? c : cfg.cuota) || 0);
@@ -3658,7 +3716,10 @@
       if (cfg.mode === 'manual'){
         const t = Math.round(Math.max(0, +cfg.manualTotal || 0) * 100);
         const b = splitPoolCents(t, cfg.pcts, CATS_ORDER);
-        return { rc, raisedC, premiosC: t, bolsas: b,
+        const gm = gastosPorCat(); const bn = {}; let netM = 0;
+        CATS_ORDER.forEach(c => { bn[c] = Math.max(0, b[c] - gm[c]); netM += bn[c]; });
+        return { rc, raisedC, premiosC: t, bolsas: bn, brutas: b, gastos: gm,
+                 gastosC: gastosTotalCents(), netoC: netM,
                  flows: { intToAv:0, priToAv:0 }, rates: aporteRates(), jerarquiaOk: true };
       }
 
@@ -3678,8 +3739,12 @@
       // redistribuye dinero automáticamente.
       const jerarquiaOk = av >= int && int >= pri;
 
-      return { rc, raisedC, premiosC: raisedC,
-               bolsas: { avanzado: av, intermedio: int, principiante: pri },
+      const brutas = { avanzado: av, intermedio: int, principiante: pri };
+      const gm = gastosPorCat(); const bolsas = {}; let netoC = 0;
+      CATS_ORDER.forEach(c => { bolsas[c] = Math.max(0, brutas[c] - gm[c]); netoC += bolsas[c]; });
+
+      return { rc, raisedC, premiosC: raisedC, bolsas, brutas, gastos: gm,
+               gastosC: gastosTotalCents(), netoC,
                flows: { intToAv, priToAv }, rates: rt, jerarquiaOk };
     }
     // Bolsa total publicada = todo lo recaudado.
@@ -3691,10 +3756,11 @@
     function splitAmountsCents(){
       const r = computeSplit();
       return { avanzado: r.bolsas.avanzado, intermedio: r.bolsas.intermedio,
-               principiante: r.bolsas.principiante, flows: r.flows, rates: r.rates,
+               principiante: r.bolsas.principiante, brutas: r.brutas, gastos: r.gastos,
+               gastosC: r.gastosC, netoC: r.netoC, flows: r.flows, rates: r.rates,
                jerarquiaOk: r.jerarquiaOk, raisedC: r.raisedC, rc: r.rc };
     }
-    window.PRIZE_POOL_MATH = { cuotaFor, raisedFor, computedRaised, computedTotal, computeSplit, splitAmountsCents, aporteRates };
+    window.PRIZE_POOL_MATH = { cuotaFor, raisedFor, computedRaised, computedTotal, computeSplit, splitAmountsCents, aporteRates, GASTOS, gastosTotalCents, gastosPorCat };
 
     // ── Relleno del puerquito según el dinero confirmado ──────────────────
     // 100% de llenado = imagen 100 = $1200 en el bote (FILL_FULL).
@@ -3828,8 +3894,9 @@
       // Texto explicativo: cambia según cómo esté configurado el reparto.
       const pReserva = document.getElementById('piReserva');
       if (pReserva){
-        pReserva.innerHTML = 'El <b>apoyo acumulado</b> que ves es todo lo reunido por las aportaciones: cada punto vuelve a los jugadores. ' +
-          'Los gastos de organización se cubren aparte y no se descuentan de este total.';
+        pReserva.innerHTML = 'El <b>apoyo acumulado</b> es todo lo reunido por las aportaciones. De ahí se descuentan los ' +
+          '<b>gastos de organización</b> (copias, lonas y los 3 puerquitos), repartidos en partes iguales entre las tres ' +
+          'categorías; lo que queda es el <b>premio total a repartir</b> y todo vuelve a los jugadores.';
       }
       const pCascada = document.getElementById('piCascada');
       if (pCascada){
@@ -3841,6 +3908,14 @@
       }
       // Desglose por categoría: recaudado → aporte → premio final.
       const rows = [];
+      const gm = (splitCents && splitCents.gastos) || gastosPorCat();
+      const brutas = (splitCents && splitCents.brutas) || splitCents;
+      rows.push(['— GASTOS DE ORGANIZACIÓN —', '', 'head']);
+      GASTOS.forEach(g => {
+        rows.push([g.label + (g.qty > 1 ? ' (' + g.qty + ' × ' + fmt(g.unit) + ')' : ''), '−' + fmt(g.unit * g.qty)]);
+      });
+      rows.push(['Total de gastos', '−' + fmt(gastosTotalCents() / 100), 'total']);
+      rows.push(['Se descuenta de cada categoría', '−' + fmt(gm.principiante / 100)]);
       const detalle = [
         ['avanzado',     null],
         ['intermedio',   f.intToAv],
@@ -3862,7 +3937,9 @@
         } else if (aporte){
           rows.push(['Aportación a avanzados (' + (cat === 'intermedio' ? pInt : pPri) + ')', '−' + fmt(aporte / 100)]);
         }
-        rows.push(['Apoyo asignado', fmt(splitCents[cat] / 100), 'total']);
+        rows.push(['Apoyo reunido y asignado', fmt(brutas[cat] / 100)]);
+        rows.push(['Gastos de organización', '−' + fmt(gm[cat] / 100)]);
+        rows.push(['Premio de la categoría', fmt(splitCents[cat] / 100), 'total']);
       });
       list.textContent = '';
       rows.forEach(([k, v, kind]) => {
@@ -3924,6 +4001,11 @@
           : ((rt.principiante || rt.intermedio)
               ? 'Cada categoría reúne su propio apoyo y crece con cada aportación · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
               : 'Cada categoría reúne su propio apoyo · Crece con cada aportación confirmada');
+      }
+      const netoEl = document.getElementById('poolNeto');
+      if (netoEl){
+        netoEl.innerHTML = 'Premio total a repartir: <b>' + fmt(splitCents.netoC / 100) + ' pts</b> ' +
+          '<i>· ya sin ' + fmt(splitCents.gastosC / 100) + ' pts de gastos</i>';
       }
       renderPoolInfo(splitCents);
       syncBelly(shares);
@@ -4240,6 +4322,14 @@
       avoidCountdown();
     });
   }
+  (function(){
+    var wrap=document.getElementById('promoLaunchWrap'), cl=document.getElementById('promoLaunchClose');
+    if(!wrap||!cl) return;
+    cl.addEventListener('click', function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      wrap.hidden=true;
+    });
+  })();
   el.querySelector('.wa-pop-close').addEventListener('click', function(e){
     e.preventDefault();
     el.classList.remove('show');
