@@ -382,6 +382,8 @@
   .hero-countdown .cd-done{display:none;font-family:var(--disp);font-weight:800;font-style:italic;font-size:22px;
     text-transform:uppercase;color:#fff;letter-spacing:0.03em}
   .hero-countdown.is-done .cd-done{display:block}
+  /* el atributo hidden debe ganarle al display:flex de la clase */
+  .hero-countdown[hidden]{display:none!important}
   @media (max-width:760px){
     .hero-countdown{right:14px;bottom:14px;padding:9px 13px 10px;gap:5px}
     .hero-countdown .cd-clock{gap:8px}
