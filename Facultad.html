@@ -423,30 +423,33 @@
   /* panel derecho — MISMO bloque de estadísticas que el perfil de competidor
      (.pjx-ringrow / .pjx-ring-* / .pjx-statrow de css/perfil-jugador.css);
      aquí solo se cambia la gama de color de verde a dorado. */
-  .fac-ap-right{position:relative;z-index:1;min-height:0;overflow:visible;padding:24px 62px 34px 78px;
+  .fac-ap-right{position:relative;z-index:1;min-height:0;overflow:visible;
+    padding:clamp(14px,2.2vh,24px) 62px clamp(16px,2.8vh,34px) 78px;
     display:flex;flex-direction:column}
   .fac-ap-right::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
     background:linear-gradient(160deg,#54401a 0%,#372a10 100%);
     clip-path:polygon(96px 0,100% 0,calc(100% - 96px) 100%,0 100%)}
-  #facApBody{order:2;margin:38px 26px 0 22px;display:flex;flex-direction:column-reverse}
-  #facApBody .pjx-ringrow{margin:22px 0 0;padding:18px 28px 22px 12px;gap:8px}
+  /* Los espacios verticales del panel derecho ceden con la altura de la
+     ventana para que la franja de categoría nunca quede fuera de la tarjeta. */
+  #facApBody{order:2;margin:clamp(10px,3vh,38px) 26px 0 22px;min-height:0;display:flex;flex-direction:column-reverse}
+  #facApBody .pjx-ringrow{margin:clamp(8px,2vh,22px) 0 0;padding:clamp(10px,1.8vh,18px) 28px clamp(12px,2.2vh,22px) 12px;gap:8px}
   .fac-ap-right .pjx-ring-side{width:104px;min-width:104px;padding:10px 0 12px}
   .fac-ap-right .pjx-ring-side b{font-size:54px}
   .fac-ap-right .pjx-ring-side span{font-size:12.5px;letter-spacing:0.06em}
   .fac-ap-right > *{flex:0 0 auto;position:relative;z-index:1}
-  .fac-ap-right .pjx-hr-head{order:1;margin:auto 0 12px;padding-left:38px;transform:translateY(10px)}
+  .fac-ap-right .pjx-hr-head{order:1;flex:0 0 auto;margin:auto 0 12px;padding-left:38px;transform:translateY(10px)}
   .fac-ap-right .pjx-hr-tag{font-size:clamp(24px,6.4vw,39px)}
-  .fac-ap-who{order:3;align-self:stretch;font-family:'Burbank Regular Bold',sans-serif;font-weight:700;
+  .fac-ap-who{order:3;flex:0 0 auto;align-self:stretch;font-family:'Burbank Regular Bold',sans-serif;font-weight:700;
     font-size:24px;line-height:1;letter-spacing:0.02em;color:#f5f0e6;
     background:#1d1d20;box-shadow:10px 12px 0 rgba(23,19,13,0.45);
-    margin:auto -20px 0 -80px;padding:12px 26px 13px 72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    margin:auto -20px 0 -80px;padding:clamp(9px,1.5vh,12px) 26px clamp(10px,1.6vh,13px) 72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     position:relative;z-index:1}
   body.pjx[data-fj-theme="neutral"] .fac-ap-who{color:#f5f0e6}
   /* franja de categoría: mismo lenguaje que la del nombre, color por categoría */
-  .fac-ap-cat{order:4;align-self:stretch;font-family:'Burbank Regular Bold',sans-serif;font-weight:700;
+  .fac-ap-cat{order:4;flex:0 0 auto;align-self:stretch;font-family:'Burbank Regular Bold',sans-serif;font-weight:700;
     font-size:24px;line-height:1;letter-spacing:0.02em;text-transform:uppercase;color:#f5f0e6;background:#8a6a1e;
     box-shadow:10px 12px 0 rgba(23,19,13,0.45);
-    margin:14px -20px 0 -54px;padding:12px 26px 13px 72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    margin:clamp(8px,1.4vh,14px) -20px 0 -54px;padding:clamp(9px,1.5vh,12px) 26px clamp(10px,1.6vh,13px) 72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     position:relative;z-index:1}
   .fac-ap-cat.cat-avanzado{background:#d9412c}
   .fac-ap-cat.cat-intermedio{background:#3a63f0}

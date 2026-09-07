@@ -40,9 +40,13 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
+<<<<<<< HEAD
 const CACHE = 'torneo-fi-v247';
 // v247 · Contador del hero configurable desde el modo admin (activar/ocultar,
 // fecha objetivo, textos) y tablero de grupos que ya no se redibuja solo.
+=======
+const CACHE = 'torneo-fi-v246';
+>>>>>>> 760a55184b95025fb95c9b016594c911d17440bf
 // v246 · Modal «Ranking completo»: los espacios del panel derecho ceden con la
 // altura de la ventana, así la franja de CATEGORÍA del jugador ya no se corta
 // fuera de la tarjeta (Facultad.html y Categoria2.html).

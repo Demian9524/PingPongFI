@@ -213,7 +213,70 @@
     openModal('Papeletas del sorteo físico — ' + catName, body);
   }
 
+  // ── habilitar WhatsApp público en bloque (ya agrupados y ya inscritos) ──
+  // Solo toca inscripciones GUARDADAS con group_id real de la edición activa;
+  // el borrador del sorteo no cuenta. Usa admin_set_public_contact (auditada).
+  function waCandidates(){
+    return st().rows.filter(r =>
+      r.group_id &&
+      C().eligible(r) &&
+      String(r.phone_normalized || '').trim() &&
+      !r.consent_public_contact_at);
+  }
+  function openWaBulkDialog(){
+    const ed = st().edition;
+    const cands = waCandidates();
+    const already = st().rows.filter(r => r.group_id && r.consent_public_contact_at).length;
+    const noPhone = st().rows.filter(r => r.group_id && C().eligible(r) && !String(r.phone_normalized || '').trim()).length;
+    const body = el('div');
+    body.appendChild(el('p', 'gb-modal-sub', 'Activa el WhatsApp público de todos los inscritos confirmados que ya tienen grupo guardado en ' +
+      ((ed && (ed.name || ed.slug)) || 'la edición activa') + '. Se aplica de inmediato (no es borrador) y queda en la auditoría.'));
+    const sum = el('div', 'gb-move-list');
+    sum.appendChild(el('p', 'gb-modal-sub', '· Por habilitar: ' + cands.length));
+    sum.appendChild(el('p', 'gb-modal-sub', '· Ya habilitados: ' + already));
+    if (noPhone) sum.appendChild(el('p', 'gb-modal-sub', '· Sin teléfono registrado (no se pueden habilitar): ' + noPhone));
+    body.appendChild(sum);
+    if (C().hasChanges()) body.appendChild(el('p', 'gb-warn-line', 'Tienes cambios de sorteo sin guardar: los participantes que aún no estén guardados en su grupo no se incluyen.'));
+    const reason = document.createElement('textarea');
+    reason.className = 'filter'; reason.rows = 2; reason.style.width = '100%';
+    reason.value = 'Alta de contacto público para participantes con grupo asignado en ' + ((ed && (ed.name || ed.slug)) || 'la edición activa') + '.';
+    body.appendChild(labeled('Motivo (queda registrado)', reason));
+    const prog = el('p', 'metaline', '');
+    body.appendChild(prog);
+    const act = el('div', 'mact');
+    const cancel = el('button', 'btn btn-ghost', 'Cancelar'); cancel.type = 'button';
+    cancel.addEventListener('click', closeModal);
+    const ok = el('button', 'btn btn-main', 'Habilitar ' + cands.length + ' WhatsApp'); ok.type = 'button';
+    ok.disabled = !cands.length;
+    if (!cands.length) prog.textContent = 'No hay nadie pendiente: todos los agrupados con teléfono ya tienen WhatsApp habilitado.';
+    ok.addEventListener('click', async () => {
+      if (!reason.value.trim()){ reason.style.borderColor = 'var(--red2)'; reason.focus(); return; }
+      ok.disabled = true; cancel.disabled = true;
+      let done = 0; const failed = [];
+      for (const r of cands){
+        prog.textContent = 'Habilitando… ' + (done + failed.length + 1) + ' de ' + cands.length;
+        try {
+          await window.SB_ADMIN_ACTIONS.setPublicContact(r.registration_id, true, reason.value.trim());
+          done++;
+        } catch(e){
+          window.SB_LOG && window.SB_LOG.error('GB-WA', e);
+          failed.push((r.nickname_snapshot || r.registration_id) + ': ' + (e.userMessage || e.message || 'error'));
+        }
+      }
+      closeModal();
+      UI().toast('WhatsApp habilitado para ' + done + ' participante' + (done === 1 ? '' : 's') +
+        (failed.length ? ' · ' + failed.length + ' con error' : ''), failed.length ? 'warn' : 'ok');
+      if (failed.length) window.SB_LOG && window.SB_LOG.error('GB-WA-LIST', new Error(failed.join(' | ')));
+      try { await C().load(); renderAll(); } catch(e){}
+    });
+    act.appendChild(cancel); act.appendChild(ok);
+    body.appendChild(act);
+    openModal('Habilitar WhatsApp de los agrupados', body);
+  }
+
   function wireExtract(){
+    const wa = $('#gbWaBulk');
+    if (wa) wa.addEventListener('click', openWaBulkDialog);
     const toggle = $('#gbExtractToggle');
     if (!toggle) return;
     toggle.addEventListener('click', () => {
@@ -278,19 +341,41 @@
     $('#edName').textContent = (st().edition.name || st().edition.slug);
   }
 
+  // Escenario del sorteo: izquierda = bombo de participantes, derecha = grupos
+  // como van quedando (inspirado en el tablero del sorteo mundialista).
   function renderBoard(){
     const wrap = $('#gbBoard');
     wrap.textContent = '';
     if (!activeEdcat){ wrap.appendChild(el('div', 'state', 'Sin categorías.')); return; }
+    const stage = el('div', 'gb-stage');
 
-    // isla "Sin grupo"
-    wrap.appendChild(renderIsland({ key: null, label: 'Sin grupo', real: false, isPool: true },
-      ungrouped(activeEdcat)));
+    // ── columna izquierda: participantes por sortear ───────────────────
+    const left = el('div', 'gb-col');
+    const pool = ungrouped(activeEdcat);
+    const lh = el('header', 'gb-colhead');
+    lh.appendChild(el('span', 'gb-colhead-t', 'Bombo'));
+    lh.appendChild(el('span', 'gb-colhead-n', pool.length + (pool.length === 1 ? ' por sortear' : ' por sortear')));
+    left.appendChild(lh);
+    const lscroll = el('div', 'gb-scroll');
+    lscroll.appendChild(renderIsland({ key: null, label: 'Sin grupo', real: false, isPool: true }, pool));
 
-    // islas de grupos
-    islandsFor(activeEdcat).forEach(g => wrap.appendChild(renderIsland(g, membersOf(activeEdcat, g.key))));
+    const inel = ineligibles(activeEdcat);
+    const det = el('details', 'gb-inel');
+    det.appendChild(el('summary', null, 'No elegibles (' + inel.length + ') — sin inscripción o pago confirmado'));
+    const list = el('div', 'gb-island-body');
+    inel.filter(matchesFilter).forEach(r => list.appendChild(renderCard(r, false)));
+    if (!inel.length) list.appendChild(el('div', 'gb-empty', 'Ninguno.'));
+    det.appendChild(list);
+    lscroll.appendChild(det);
+    left.appendChild(lscroll);
 
-    // + nuevo grupo
+    // ── columna derecha: grupos ────────────────────────────────────────
+    const right = el('div', 'gb-col');
+    const isles = islandsFor(activeEdcat);
+    const placed = isles.reduce((a, g) => a + membersOf(activeEdcat, g.key).length, 0);
+    const rh = el('header', 'gb-colhead');
+    rh.appendChild(el('span', 'gb-colhead-t', 'Grupos'));
+    rh.appendChild(el('span', 'gb-colhead-n', isles.length + (isles.length === 1 ? ' grupo · ' : ' grupos · ') + placed + ' asignados'));
     const add = el('button', 'gb-add', '+ Nuevo grupo');
     add.type = 'button';
     add.addEventListener('click', () => {
@@ -299,19 +384,35 @@
       C().addGroup(activeEdcat, label.trim());
       renderAll();
     });
-    wrap.appendChild(add);
+    rh.appendChild(add);
+    right.appendChild(rh);
+    const rscroll = el('div', 'gb-scroll');
+    const grid = el('div', 'gb-groups');
+    isles.forEach(g => grid.appendChild(renderIsland(g, membersOf(activeEdcat, g.key))));
+    if (!isles.length) grid.appendChild(el('div', 'gb-nogroups', 'Todavía no hay grupos en esta categoría. Créalos con «+ Nuevo grupo» y arrastra a cada participante extraído.'));
+    rscroll.appendChild(grid);
+    right.appendChild(rscroll);
 
-    // no elegibles (plegable, informativa)
-    const inel = ineligibles(activeEdcat);
-    const det = el('details', 'gb-inel');
-    const sum = el('summary', null, 'No elegibles (' + inel.length + ') — sin inscripción o pago confirmado; no se pueden asignar');
-    det.appendChild(sum);
-    const list = el('div', 'gb-island-body');
-    inel.filter(matchesFilter).forEach(r => list.appendChild(renderCard(r, false)));
-    if (!inel.length) list.appendChild(el('div', 'gb-empty', 'Ninguno.'));
-    det.appendChild(list);
-    wrap.appendChild(det);
+    stage.appendChild(left);
+    stage.appendChild(right);
+    wrap.appendChild(stage);
+    fitStage();
   }
+
+  // El escenario ocupa exactamente el alto disponible bajo la cabecera, así
+  // ambas columnas hacen scroll interno y siempre se ven completas (sin que la
+  // lista del bombo quede cortada por debajo del viewport).
+  function fitStage(){
+    const stage = document.querySelector('.gb-stage');
+    if (!stage) return;
+    if (window.innerWidth < 900 || window.innerHeight < 520){ stage.style.height = ''; return; }
+    const top = stage.getBoundingClientRect().top;
+    const bar = $('#gbBar');
+    const barH = bar && bar.style.display !== 'none' ? bar.offsetHeight + 12 : 0;
+    stage.style.height = Math.max(340, window.innerHeight - top - barH - 18) + 'px';
+  }
+  window.addEventListener('resize', fitStage);
+  window.addEventListener('orientationchange', () => setTimeout(fitStage, 120));
 
   function sizeNote(n){
     if (n > 4) return { txt: n + ' integrantes — supera el máximo recomendado', cls: 'warn' };
@@ -324,6 +425,7 @@
     isle.dataset.groupKey = g.key == null ? '' : g.key;
 
     const head = el('header', 'gb-island-head');
+    if (!g.isPool) head.appendChild(el('span', 'gb-glyph', String(g.label).replace(' (nuevo)', '').trim().slice(0, 2)));
     head.appendChild(el('b', null, g.isPool ? 'Sin grupo' : 'Grupo ' + g.label));
     const note = g.isPool
       ? { txt: members.length + (members.length === 1 ? ' esperando grupo' : ' esperando grupo'), cls: '' }
@@ -367,7 +469,12 @@
       if (rid) requestMove(rid, g.key == null ? null : (g.real ? Number(g.key) : g.key));
     });
     members.filter(matchesFilter).forEach(r => body.appendChild(renderCard(r, true)));
-    if (!members.length) body.appendChild(el('div', 'gb-empty', g.isPool ? 'Nadie sin grupo.' : 'Sin integrantes.'));
+    if (g.isPool){
+      if (!members.length) body.appendChild(el('div', 'gb-empty', 'Bombo vacío: todos están asignados.'));
+    } else {
+      // plazas vacías visibles (como los huecos del tablero del sorteo)
+      for (let i = members.length; i < 4; i++) body.appendChild(el('div', 'gb-slot', 'Plaza libre'));
+    }
     isle.appendChild(body);
     return isle;
   }
@@ -631,6 +738,7 @@
     bar.style.display = n ? 'flex' : 'none';
     $('#gbBarMsg').textContent = n === 1 ? '● 1 cambio sin guardar' : '● ' + n + ' cambios sin guardar';
     $('#btnUndo').disabled = !st().undoStack.length;
+    fitStage();
   }
 
   // ── modal genérico ───────────────────────────────────────────────────

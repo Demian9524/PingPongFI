@@ -858,36 +858,15 @@
 <div class="ov" id="overlay" role="dialog" aria-modal="true">
   <div class="ov-stack">
   <div class="hud hud-red pay-reminder">
-    <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Cómo pagar tu entrada</h4>
-    <div class="pr-grid">
-      <div class="pr-cut pr-ticket">
-        <b><span class="pr-amt" id="prAmt">$35</span><span class="pr-mxn">MXN</span></b>
-        <span class="pr-cap" id="prCap">Costo de entrada · cualquier categoría</span>
-      </div>
-      <div class="pr-methods">
-        <div class="pr-cut pr-presencial">
-          <span class="pr-lbl">Presencial</span><span class="pr-lbl-bar"></span>
-          <p>En las pimponeras, con <b>Demian</b>.</p>
-        </div>
-        <div class="pr-cut pr-transferencia">
-          <span class="pr-lbl">Transferencia</span>
-          <div class="pr-lbl-bar-row">
-            <span class="pr-lbl-bar"></span>
-            <img class="mp-badge-sm" src="assets/mercadopago-logo.png" alt="Mercado Pago" />
-          </div>
-          <span class="pr-clabe"><code>722969010457609861</code><button type="button" class="pr-copy" aria-label="Copiar número de cuenta" onclick="navigator.clipboard.writeText('722969010457609861');this.classList.add('copied');setTimeout(()=&gt;this.classList.remove('copied'),1600)"><svg class="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg><svg class="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></button></span>
-          <span class="pr-name">Cuenta a nombre de <b>Demian</b></span>
-        </div>
-      </div>
-    </div>
+    <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v13H8l-4 4z"/><path d="M8 8h8M8 12h5"/></svg>Último paso: preséntate en el grupo</h4>
     <div class="pay-note">
       <div class="pn-row">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v13H8l-4 4z"/><path d="M8 8h8M8 12h5"/></svg>
-        <p>Si pagas por transferencia, envía tu <b>comprobante de pago con tu nombre</b> al momento del registro por WhatsApp. También puedes escribirle a <b>Demian</b> por ahí para coordinar tu pago o cualquier duda.</p>
+        <p>Entra al <b>grupo de WhatsApp del torneo</b> y escribe tu <b>nombre y folio</b>. Ahí la organización te confirma tu lugar y te avisa de los horarios, el sorteo y cualquier cambio.</p>
       </div>
       <div class="pn-cta">
-        <span>¿Dudas o ya pagaste?</span>
-        <a class="pn-wa" href="https://wa.me/525520308289" target="_blank" rel="noopener noreferrer" aria-label="Enviar comprobante de pago por WhatsApp">
+        <span>Escribe en el grupo</span>
+        <a class="pn-wa" id="waGroup" href="https://chat.whatsapp.com/KlF6bCXvd9VLAqaO8bJBBU" target="_blank" rel="noopener noreferrer" aria-label="Entrar al grupo de WhatsApp del torneo">
           <img src="assets/whatsapp-icon.png?v=2" alt="" />
           WhatsApp
         </a>
@@ -898,7 +877,7 @@
     <div class="top">
       <div class="badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 6"/></svg></div>
       <h2>Preinscripción registrada</h2>
-      <p id="okMsg">Tu lugar quedará confirmado después de realizar el pago y recibir la confirmación de la organización. La categoría podrá ajustarse antes del sorteo.</p>
+      <p id="okMsg">Tu lugar quedará confirmado cuando la organización lo confirme en el grupo de WhatsApp. La categoría podrá ajustarse antes del sorteo.</p>
     </div>
     <div class="stub">
       <div class="s"><small>Participante</small><b id="tkName">—</b></div>
