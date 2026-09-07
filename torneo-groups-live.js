@@ -20,6 +20,14 @@
       ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
   }
 
+  // Reloj compartido del giro facultad↔carrera: sobrevive a los re-render.
+  function flipDelay(){
+    const w = window;
+    if (!w.__facFlipEpoch) w.__facFlipEpoch = Date.now();
+    return '-' + (((Date.now() - w.__facFlipEpoch) % 30000) / 1000).toFixed(2) + 's';
+  }
+  window.FAC_FLIP_DELAY = flipDelay;
+
   // ── ítem flotante (specs existentes). Devuelve un placeholder que luego se
   // reemplaza por el logo clicable compartido (SB_LINKS.makeAcademicLogoLink),
   // cuyo destino depende de la cara visible (facultad ↔ carrera) en FI.
@@ -30,7 +38,10 @@
     }
     if (m && m.faculty_code === FI_CODE && m.career_code && window.SB_LOGOS){
       const back = window.SB_LOGOS.careerLogo(m.career_code);
-      return '<span class="fac-wrap"><span class="fac-flip">' +
+      // La vista se re-renderiza cada 20 s (refresco en vivo). Sin este delay
+      // negativo cada tarjeta nueva reiniciaba el giro en 0 y la vuelta de
+      // regreso (carrera → facultad, al segundo 27) nunca alcanzaba a verse.
+      return '<span class="fac-wrap"><span class="fac-flip" style="animation-delay:' + flipDelay() + '">' +
         '<img class="fac-face fac-front" src="assets/escudo-fi.svg" alt="" aria-hidden="true">' +
         '<img class="fac-face fac-back" src="' + esc(back) + '" alt="" aria-hidden="true" onerror="this.src=\'' + fall + '\';this.onerror=null">' +
         '</span></span>';
@@ -172,11 +183,24 @@
   // sacaba al visitante del grupo que estaba viendo. Solo se reinicia el
   // scroll cuando la categoría CAMBIA.
   let lastRenderedKey = null;
+  let lastRenderedSig = null;
+  // Huella de lo que la vista realmente dibuja. El refresco de 20 s casi
+  // siempre trae los MISMOS datos: si no cambió nada no se reconstruye el DOM,
+  // así el carrusel no "se mueve solo" y el giro facultad↔carrera no se corta.
+  function catSignature(cat){
+    if (!cat || !cat.groups) return 'empty';
+    return cat.groups.map(g => g.label + '#' + (g.players || []).map(p =>
+      [p.nickname, p.pj, p.pg, p.sf, p.sc, p.faculty_code, p.career_code, p.bombo].join('~')
+    ).join('|')).join('//') + '@' + cat.nGroups + ':' + cat.nPlayers;
+  }
   function renderLiveGroups(key){
     const cat = live.byKey[key];
     const slider = $('#slider');
     if (!slider) return;
     const sameCat = lastRenderedKey === key;
+    const sig = catSignature(cat);
+    if (sameCat && sig === lastRenderedSig && slider.querySelector('.gcard')) return;
+    lastRenderedSig = sig;
     // Se guarda el ÍNDICE de la tarjeta activa (no el scrollLeft en píxeles):
     // el ajuste de zoom (Ajuste proporcional) cambia el ancho de las tarjetas
     // en cada refresco, así que un scrollLeft en píxeles queda desalineado y

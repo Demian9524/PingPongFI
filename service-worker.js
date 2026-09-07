@@ -40,7 +40,17 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v242';
+const CACHE = 'torneo-fi-v247';
+// v247 · Contador del hero configurable desde el modo admin (activar/ocultar,
+// fecha objetivo, textos) y tablero de grupos que ya no se redibuja solo.
+// v246 · Modal «Ranking completo»: los espacios del panel derecho ceden con la
+// altura de la ventana, así la franja de CATEGORÍA del jugador ya no se corta
+// fuera de la tarjeta (Facultad.html y Categoria2.html).
+// v245 · Hero: nuevo slide 9 «Vagón FI» (assets/hero-vagon.png), solo fondo,
+// paneo horizontal + zoom leve propios. hero-config.js ?v=4.
+// v243 · Hero: nuevo slide 8 «Entrada FI · día» (assets/hero-entrada.png), solo
+// fondo (show:'bg', sin persona), con paneo diagonal + zoom propios.
+// Premios: rediseño de jerarquía y ajustes móviles. hero-config.js ?v=2.
 // v242 · Categoría: el hero usa el nombre canónico en PLURAL («Intermedios»),
 // no el de la BD que puede venir en singular. academic-page.js ?v=103.
 // v241 · PerfilJugador: el podio de categoría incluye a los jugadores ASCENDIDOS
@@ -61,6 +71,7 @@ const STATIC = [
   'Resultados.html', 'Bracket.html', 'PerfilJugador.html', 'Facultad.html',
   'Admin.html', 'Diagnostico.html', 'RestablecerPassword.html', 'offline.html',
   'ControlTorneo.html', 'FaseEliminatoria.html', 'TableroGrupos.html', 'ResultadosAdmin.html', 'BracketAdmin.html', 'PreparacionEliminatoria.html', 'PapeletasSorteo.html',
+  'assets/fonts/HeadingNow-86BoldItalic.otf', 'assets/fonts/BurbankBigCondensed-Bold.otf', 'assets/fonts/BurbankBigRegular-Bold.otf',
   'css/supabase-pages.css', 'css/design-system.css', 'css/perfil-jugador.css', 'css/directorio.css?v=9', 'directorio.js?v=12', 'supabase/player-card.js?v=99', 'css/bracket-final.css', 'css/bracket-fortnite.css?v=204', 'css/reglas-torneo.css', 'css/pre-group-print.css?v=121', 'css/pre-group-draw-capture.css?v=116', 'manifest.webmanifest',
   'reglas-torneo.js', 'registro-config.js', 'registro-storage.js', 'registro-scoring.js', 'registro.js',
   'supabase/registration.js', 'supabase/registro-bridge.js',
