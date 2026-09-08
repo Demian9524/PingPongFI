@@ -3434,9 +3434,10 @@
     if (avail <= 0) return;
     // Sin cambios de ancho ni de n\u00famero de tarjetas no se toca el zoom: medir
     // (poner zoom:'' y volver a leer) provoca reflow y mueve el scroll.
+    // La huella incluye si las tarjetas YA traen zoom: tras un re-render son
+    // nuevas y hay que volver a ajustarlas aunque el ancho no haya cambiado.
     var sig = avail + 'x' + cards.length;
     if (sig === lastFit) return;
-    lastFit = sig;
     for (var i = 0; i < cards.length; i++){
       var c = cards[i];
       c.style.zoom = '';                  // medir ancho natural del breakpoint
@@ -3445,11 +3446,13 @@
       var f = avail / natural;
       c.style.zoom = f < 0.999 ? f : '';  // sólo reducir, nunca agrandar
     }
+    lastFit = sig;                        // solo tras aplicar el zoom
     if (typeof updateArrows === 'function') updateArrows();
   }
   function schedule(){ if (!raf) raf = requestAnimationFrame(fit); }
   window.__fitGroupSlider = fit; // permite a torneo-groups-live.js ajustar ANTES de restaurar el scroll
-  new MutationObserver(schedule).observe(slider, { childList: true });
+  // Tarjetas nuevas (refresco en vivo) invalidan la huella: hay que remedirlas.
+  new MutationObserver(function(){ lastFit = ''; schedule(); }).observe(slider, { childList: true });
   window.addEventListener('resize', schedule);
   window.addEventListener('orientationchange', schedule);
   window.addEventListener('load', schedule);
