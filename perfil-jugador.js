@@ -421,7 +421,9 @@
       // por ascensos/descensos, igual que el plantel de Categoria2.html.
       const roster = all.filter(r => catKeyOf(r.category_code || r.category_name) === want);
       if (!roster.length) return { place: 0, total: 0 };
-      return await rankInRoster(roster, registrationId);
+      // Igual que Categoria2.html: solo cuentan los partidos jugados EN esta
+      // categoría, para todos los jugadores del padrón.
+      return await rankInRoster(roster, registrationId, want);
     } catch(e){
       window.SB_LOG && window.SB_LOG.error('PJ-PODIUM-CAT', e);
       return { place: 0, total: 0 };
@@ -441,26 +443,23 @@
     return p;
   }
   // Ranking ponderado sobre cualquier padrón (facultad o categoría).
-  // IMPORTANTE: el puntaje, el mínimo de partidos y TODOS los desempates son
-  // los mismos que en supabase/academic-page.js (rankOf), para que la medalla
-  // del perfil coincida siempre con la lista de «Ranking completo».
-  async function rankInRoster(roster, registrationId){
+  // IMPORTANTE: replica EXACTAMENTE rankOf/msFor de supabase/academic-page.js:
+  //   · padrón de facultad → cuentan TODOS los partidos oficiales;
+  //   · padrón de categoría → cuentan solo los partidos jugados EN esa
+  //     categoría (catKey), igual que la lista de «Ranking completo»;
+  //   · mismo puntaje, mismo mínimo de partidos y mismos desempates;
+  //   · una fila por jugador (el padrón ya viene deduplicado en el servidor):
+  //     no se vuelve a deduplicar aquí, porque eso desplazaba posiciones.
+  async function rankInRoster(roster, registrationId, catKey){
     {
       const matchesByReg = new Map();
       await Promise.all(roster.map(async r => {
         matchesByReg.set(r.registration_id, await matchesOf(r.registration_id));
       }));
-      const seenFp = new Set();
-      const dedupedRegIds = new Set();
-      roster.forEach(r => {
-        const ms = matchesByReg.get(r.registration_id) || [];
-        const fp = fingerprintOfMatches(ms);
-        if (ms.length){
-          if (seenFp.has(fp)) return;
-          seenFp.add(fp);
-        }
-        dedupedRegIds.add(r.registration_id);
-      });
+      function msFor(regId){
+        const all = matchesByReg.get(regId) || [];
+        return catKey ? all.filter(m => catKeyOf(m.category_code || m.category_name) === catKey) : all;
+      }
       function statsFromMatches(ms){
         const official = (ms || []).filter(m => m.is_official);
         let wins = 0, losses = 0, weighted = 0, winsAdv = 0, winsInt = 0, setsWon = 0, setsLost = 0;
@@ -481,9 +480,8 @@
       }
       const MIN_MATCHES_FOR_PODIUM = 2;
       const ranked = roster
-        .filter(r => dedupedRegIds.has(r.registration_id))
         .map(r => {
-          const s = statsFromMatches(matchesByReg.get(r.registration_id));
+          const s = statsFromMatches(msFor(r.registration_id));
           const puntaje = ((s.weighted + 5) / (s.mp + 10)) * 100;
           return { r, mp: s.mp, wins: s.wins, win_pct: s.win_pct, winsAdv: s.winsAdv,
             winsInt: s.winsInt, setDiff: s.setDiff, puntaje };
@@ -504,21 +502,17 @@
       // "N Jugadores" en Facultad.html / Categoria2.html), no solo los
       // elegibles al podio.
       const total = roster.length;
-      const myFp = fingerprintOfMatches(matchesByReg.get(registrationId));
-      if (!myFp){
-        // El registration_id del perfil puede no coincidir literalmente con
-        // ninguna fila del roster (otro estado de inscripción, etc.) —
-        // pedimos sus partidos directamente en vez de asumir que ya están
-        // en matchesByReg.
+      // La posición se busca por registration_id (igual que la lista). Solo si
+      // el id del perfil no está en el padrón (otro estado de inscripción del
+      // mismo jugador) se cae a comparar por el conjunto de partidos.
+      let idx = ranked.findIndex(p => p.r.registration_id === registrationId);
+      if (idx < 0){
         try {
-          const ownMs = await matchesOf(registrationId);
-          const ownFp = fingerprintOfMatches(ownMs);
+          const ownFp = fingerprintOfMatches(await matchesOf(registrationId));
           if (!ownFp) return { place: 0, total };
-          const idx2 = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === ownFp);
-          return { place: (idx2 >= 0 && idx2 < 3) ? idx2 + 1 : 0, total };
+          idx = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === ownFp);
         } catch(e){ return { place: 0, total }; }
       }
-      const idx = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === myFp);
       return { place: (idx >= 0 && idx < 3) ? idx + 1 : 0, total };
     }
   }

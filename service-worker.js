@@ -40,7 +40,13 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v250';
+const CACHE = 'torneo-fi-v252';
+// v252 · Medalla de podio de CATEGORÍA: cuenta solo los partidos jugados en
+// esa categoría (como la lista de «Ranking completo») y la posición se busca
+// por registration_id, sin la deduplicación que desplazaba lugares.
+// v251 · Centro de control: interruptores para ocultar la fila de botones
+// rápidos del hero y para cerrar el formulario de inscripción (Registro.html
+// queda inaccesible incluso por URL; registro-gate.js).
 // v250 · Las medallas de podio del perfil usan EXACTAMENTE el mismo ranking
 // (puntaje, mínimo de partidos y desempates) que las listas de «Ranking
 // completo» de facultad y categoría, y se calculan en paralelo para aparecer
@@ -86,8 +92,8 @@ const STATIC = [
   'supabase/registration.js', 'supabase/registro-bridge.js',
   'torneo-bracket-render.js', 'torneo-bracket-dust.js?v=226', 'bracket-admin-ui.js?v=202', 'bracket-admin-slot.js', 'supabase/bracket-config.js',
   'supabase/pre-group-roster.js?v=106', 'supabase/pre-group-admin.js?v=93', 'supabase/pre-group-print.js?v=121', 'supabase/pre-group-draw-capture.js?v=116', 'supabase/format-engine.js?v=124', 'supabase/format-advisor.js?v=125', 'supabase/public-sections-admin.js?v=128', 'supabase/control-torneo-v2.js?v=119', 'torneo-groups-live.js?v=123', 'torneo-bombos-live.js?v=123',
-  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=105', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=121',
-  'assets/logo-fi-vector.svg?v=116', 'assets/logo-torneo-27-1-print.png?v=121'
+  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=105', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=122',
+  'registro-gate.js?v=1', 'assets/logo-fi-vector.svg?v=116', 'assets/logo-torneo-27-1-print.png?v=121'
 ];
 // v186 · Los cuadros guardados con la geometria anterior (nodo 196 px) se
 // reescalan solos al abrirlos: se conserva el hueco entre columnas y entre
