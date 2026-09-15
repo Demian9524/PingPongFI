@@ -3302,13 +3302,17 @@
       msg:'La campaña «Restauremos las Mesas» aún no ha sido publicada.' },
     // Los botones del hero que bajan a estos dos bloques se ocultan junto con
     // ellos (extra): un atajo que lleva a una sección oculta no lleva a nada.
-    { id:'entrada', sel:'#entrada-pagos', auto:false, extra:'.cta-precio',
+    { id:'entrada', sel:'#entrada-pagos', auto:false,
       msg:'La información de entrada y aportaciones aún no ha sido publicada.' },
-    { id:'donaciones', sel:'#premios', auto:false, extra:'.cta-bolsa',
+    { id:'donaciones', sel:'#premios', auto:false,
       msg:'Las donaciones voluntarias aún no han sido publicadas.' },
-    // Fila de accesos rápidos del hero (Entrada · Premios · Apoyo · Reglas).
-    // Solo tiene dos estados útiles: visible u oculta.
-    { id:'herobtns', sel:'.cta-prizes-row', auto:false, msg:'' }
+    // Cada botón del hero se enciende y apaga por separado. `needs` ata el
+    // botón a su bloque: si el bloque está oculto, el atajo no lleva a nada,
+    // así que se oculta aunque su propio interruptor esté en visible.
+    { id:'btn_entrada', sel:'.cta-precio', auto:false, msg:'', needs:'entrada' },
+    { id:'btn_premios', sel:'.cta-premio', auto:false, msg:'' },
+    { id:'btn_apoyo',   sel:'.cta-bolsa',  auto:false, msg:'', needs:'donaciones' },
+    { id:'btn_reglas',  sel:'.cta-reglas', auto:false, msg:'' }
   ];
   function stateOf(cfg, id){
     var v = cfg[id];
@@ -3344,9 +3348,10 @@
       var el = document.querySelector(s.sel);
       if (!el) return;
       var st = stateOf(cfg, s.id);
-      // Secciones sin aviso propio (p. ej. la fila de botones del hero) solo
-      // admiten visible u oculta: un «vacía» se trata como oculta.
+      // Secciones sin aviso propio (p. ej. los botones del hero) solo admiten
+      // visible u oculta: un «vacía» se trata como oculta.
       if (st === 'empty' && !s.msg) st = 'off';
+      if (s.needs && stateOf(cfg, s.needs) === 'off') st = 'off';
       var show = st !== 'off';
       var blank = st === 'empty' || (st === 'on' && s.auto && !hasContent(s.id, el));
       if (show){
@@ -4660,7 +4665,7 @@
   if (document.readyState === 'complete') run(); else window.addEventListener('load', run);
 })();
 </script>
-<script src="registro-gate.js?v=1"></script>
+<script src="registro-gate.js?v=2"></script>
 </body>
 </html>
 

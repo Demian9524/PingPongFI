@@ -11,7 +11,8 @@
 (function(global){
   'use strict';
   var KEY = 'torneo_sections_cfg_v1';
-  var CTA_SEL = 'a[href^="Registro.html"],a[href*="/Registro.html"],[data-reg-cta]';
+  var CTA_SEL = 'a[href^="Registro.html"],a[href^="./Registro.html"],a[href*="/Registro.html"],' +
+    'a[href^="Registro.html?"],.nav-inscribirse,[data-reg-cta]';
   var resolved = false;
 
   function cfg(){
@@ -27,14 +28,26 @@
   function isOpen(){ return stateOf() === 'on'; }
   function isRegPage(){ return /(^|\/)Registro\.html$/i.test(location.pathname); }
 
+  // El atributo `hidden` NO basta: cualquier regla de autor con `display`
+  // (.btn{display:inline-flex}, .fi-nav a{display:flex}…) le gana. Se marca
+  // con data-reg-hidden y se apaga con !important.
   function applyCtas(){
+    injectStyle();
     var off = !isOpen();
     var list = document.querySelectorAll(CTA_SEL);
     for (var i = 0; i < list.length; i++){
       var a = list[i];
-      if (a.hidden !== off) a.hidden = off;
-      if (off) a.setAttribute('aria-hidden', 'true');
-      else a.removeAttribute('aria-hidden');
+      if (off){
+        a.setAttribute('data-reg-hidden', '1');
+        a.setAttribute('aria-hidden', 'true');
+        a.hidden = true;
+        a.tabIndex = -1;
+      } else {
+        a.removeAttribute('data-reg-hidden');
+        a.removeAttribute('aria-hidden');
+        a.hidden = false;
+        a.removeAttribute('tabindex');
+      }
     }
   }
 
@@ -42,7 +55,8 @@
     if (document.getElementById('regGateCss')) return;
     var st = document.createElement('style');
     st.id = 'regGateCss';
-    st.textContent = '.reg-closed{max-width:620px;margin:0 auto;padding:44px 28px;text-align:center}' +
+    st.textContent = '[data-reg-hidden]{display:none!important}' +
+      '.reg-closed{max-width:620px;margin:0 auto;padding:44px 28px;text-align:center}' +
       '.reg-closed h1{font-size:26px;letter-spacing:-0.01em;margin:0 0 14px}' +
       '.reg-closed p{margin:0 0 22px;line-height:1.6;opacity:.85}' +
       '.reg-closed-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;' +

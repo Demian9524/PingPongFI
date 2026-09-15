@@ -38,8 +38,14 @@
       hint:'Burbuja flotante en la esquina que invita a unirse al grupo de WhatsApp del torneo.' },
     { id:'rtpopup', label:'Pop-up Arreglemos las Mesas',
       hint:'Burbuja flotante que invita a apoyar la restauración de las mesas de ping pong.' },
-    { id:'herobtns', label:'Botones rápidos del hero', only:['on','off'],
-      hint:'Fila de accesos del hero en la página principal: Entrada, Premios, Apoyo y Reglas.' },
+    { id:'btn_entrada', label:'Botón del hero · Entrada', only:['on','off'],
+      hint:'Botón «35 pts entrada» del hero. Si el bloque «Entrada y aportes voluntarios» está oculto, el botón se oculta de todos modos.' },
+    { id:'btn_premios', label:'Botón del hero · Premios', only:['on','off'],
+      hint:'Botón «Premios» del hero (baja al detalle de premios).' },
+    { id:'btn_apoyo', label:'Botón del hero · Apoyo', only:['on','off'],
+      hint:'Botón «Apoyo» del hero. Si el bloque «Donaciones voluntarias» está oculto, el botón se oculta de todos modos.' },
+    { id:'btn_reglas', label:'Botón del hero · Reglas', only:['on','off'],
+      hint:'Botón «Reglas» del hero, que abre el reglamento en un pop-up.' },
     { id:'registro', label:'Formulario de inscripción', only:['on','off'],
       hint:'Al ocultarlo desaparecen todos los botones «Inscribirse» y Registro.html queda inaccesible, incluso escribiendo la URL a mano.' }
   ];
@@ -48,7 +54,7 @@
     { id:'empty', label:'Vacía',   title:'Se muestra el bloque, pero con el aviso «aún no se publica».' },
     { id:'off',   label:'Oculta',  title:'El bloque no aparece en la página.' }
   ];
-  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', entrada:'on', donaciones:'on', restauracion:'on', whatsapp:'on', rtpopup:'on', herobtns:'on', registro:'on' };
+  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', entrada:'on', donaciones:'on', restauracion:'on', whatsapp:'on', rtpopup:'on', btn_entrada:'on', btn_premios:'on', btn_apoyo:'on', btn_reglas:'on', registro:'on' };
 
   // Compatibilidad con la versión anterior, que guardaba booleanos.
   function norm(v){
