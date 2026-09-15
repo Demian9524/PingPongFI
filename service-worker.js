@@ -40,7 +40,10 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v255';
+const CACHE = 'torneo-fi-v256';
+// v256 · Los botones del hero se apagan con data-sec-hidden (display:none
+// !important): antes el atributo hidden perdía contra .cta-precio/.cta-bolsa y
+// no se ocultaba nada. Al ser display:none la fila flex cierra el hueco.
 // v255 · registro-gate.js ?v=2: los botones «Inscribirse» se apagan con
 // data-reg-hidden + display:none!important (el atributo hidden perdía contra
 // .btn{display:inline-flex}) y el selector cubre la navbar y el menú móvil.

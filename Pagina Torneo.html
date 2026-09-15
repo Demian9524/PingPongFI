@@ -3274,6 +3274,11 @@
     font-family:var(--mono);font-size:12px;letter-spacing:1.4px;line-height:1.6;text-transform:uppercase;color:var(--muted)}
   section.is-unpub > *:not(.sec-head):not(.ph):not(.sec-unpub){display:none}
   section.is-unpub > .sec-unpub{border:0;background:none}
+  /* Los interruptores del Centro de control apagan con este atributo: el
+     atributo `hidden` solo no basta porque .cta-precio/.cta-bolsa y las
+     secciones ya declaran `display`. Al ser display:none, la fila flex del
+     hero cierra el hueco y los botones que quedan ocupan el espacio. */
+  [data-sec-hidden]{display:none!important}
 </style>
 <script>
 /* ── Visibilidad de secciones (interruptores del Centro de control) ───
@@ -3356,9 +3361,11 @@
       var blank = st === 'empty' || (st === 'on' && s.auto && !hasContent(s.id, el));
       if (show){
         if (el.hidden) el.hidden = false;
+        el.removeAttribute('data-sec-hidden');
         if (el.getAttribute('aria-hidden') !== null) el.removeAttribute('aria-hidden');
       } else {
         if (!el.hidden) el.hidden = true;
+        el.setAttribute('data-sec-hidden', '1');
         if (el.getAttribute('aria-hidden') !== 'true') el.setAttribute('aria-hidden', 'true');
       }
       if (blank) notice(el, s.msg);
@@ -3367,6 +3374,8 @@
       if (s.extra){
         document.querySelectorAll(s.extra).forEach(function(x){
           if (x.hidden !== !show) x.hidden = !show;
+          if (show) x.removeAttribute('data-sec-hidden');
+          else x.setAttribute('data-sec-hidden', '1');
         });
       }
     });
