@@ -37,14 +37,18 @@
     { id:'whatsapp', label:'Pop-up de comunidad WhatsApp',
       hint:'Burbuja flotante en la esquina que invita a unirse al grupo de WhatsApp del torneo.' },
     { id:'rtpopup', label:'Pop-up Arreglemos las Mesas',
-      hint:'Burbuja flotante que invita a apoyar la restauración de las mesas de ping pong.' }
+      hint:'Burbuja flotante que invita a apoyar la restauración de las mesas de ping pong.' },
+    { id:'herobtns', label:'Botones rápidos del hero', only:['on','off'],
+      hint:'Fila de accesos del hero en la página principal: Entrada, Premios, Apoyo y Reglas.' },
+    { id:'registro', label:'Formulario de inscripción', only:['on','off'],
+      hint:'Al ocultarlo desaparecen todos los botones «Inscribirse» y Registro.html queda inaccesible, incluso escribiendo la URL a mano.' }
   ];
   const STATES = [
     { id:'on',    label:'Visible', title:'Se muestra con su contenido real.' },
     { id:'empty', label:'Vacía',   title:'Se muestra el bloque, pero con el aviso «aún no se publica».' },
     { id:'off',   label:'Oculta',  title:'El bloque no aparece en la página.' }
   ];
-  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', entrada:'on', donaciones:'on', restauracion:'on', whatsapp:'on', rtpopup:'on' };
+  const DEFAULTS = { categoria:'on', participantes:'on', grupos:'on', bombos:'on', bracket:'on', terceros:'on', entrada:'on', donaciones:'on', restauracion:'on', whatsapp:'on', rtpopup:'on', herobtns:'on', registro:'on' };
 
   // Compatibilidad con la versión anterior, que guardaba booleanos.
   function norm(v){
@@ -94,11 +98,12 @@
     const cfg = read();
     host.textContent = '';
     SECTIONS.forEach(sec => {
+      const states = sec.only ? STATES.filter(s => sec.only.indexOf(s.id) >= 0) : STATES;
       const row = document.createElement('div');
       row.className = 'svrow';
       row.innerHTML = '<div class="svtx"><b>' + sec.label + '</b><small>' + sec.hint + '</small></div>' +
         '<div class="svseg" role="group" aria-label="Estado de ' + sec.label + '">' +
-        STATES.map(st => '<button type="button" data-st="' + st.id + '" title="' + st.title + '"' +
+        states.map(st => '<button type="button" data-st="' + st.id + '" title="' + st.title + '"' +
           (cfg[sec.id] === st.id ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') +
           '>' + st.label + '</button>').join('') +
         '</div>' +
@@ -118,9 +123,10 @@
           const st = document.getElementById('sv-st-' + sec.id);
           if (st) st.textContent = stateLabel(val);
           if (global.SB_UI) global.SB_UI.toast(sec.label + ' → ' +
-            (val === 'on' ? 'visible en la página pública.'
+            (val === 'on' ? (sec.id === 'registro' ? 'inscripciones abiertas.' : 'visible en la página pública.')
               : val === 'empty' ? 'visible pero vacía (aviso «aún no se publica»).'
-              : 'oculta en la página pública.'), 'ok');
+              : (sec.id === 'registro' ? 'inscripciones cerradas: Registro.html queda inaccesible.'
+                : 'oculta en la página pública.')), 'ok');
         });
       });
     });

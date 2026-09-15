@@ -40,7 +40,9 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v252';
+const CACHE = 'torneo-fi-v253';
+// v253 · public-sections-admin.js ?v=130: filas nuevas «Botones rápidos del
+// hero» y «Formulario de inscripción» en el Centro de control.
 // v252 · Medalla de podio de CATEGORÍA: cuenta solo los partidos jugados en
 // esa categoría (como la lista de «Ranking completo») y la posición se busca
 // por registration_id, sin la deduplicación que desplazaba lugares.
