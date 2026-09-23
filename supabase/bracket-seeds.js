@@ -47,8 +47,10 @@
     const groups = await groupsOf(id);
     const per = [];
     for (const g of groups){
-      const rows = await standings(g.id);
-      if (rows.length) per.push({ group:g, rows, effective: rows.length });
+      const all = await standings(g.id);
+      // Menos de 2 partidos jugados = eliminado por default (no entra a bombos).
+      const rows = all.filter(r => Number(r.matches_played || 0) >= 2);
+      if (all.length) per.push({ group:g, rows, effective: all.length });
     }
     let out;
     if (!per.length) out = await fallback(id, groups);

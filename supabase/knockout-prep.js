@@ -110,6 +110,7 @@
     return { pj, wins:Number(s.wins || 0), setsWon:sw, setsLost:sl,
              setDiff: sw - sl, setPct: Number(s.set_pct || (sw + sl ? sw / (sw + sl) : 0)) };
   }
+  const MIN_PJ = 2;
   const ridOf = (row, group, pos) => row.registration_id || (group.id + ':' + pos);
   function roundName(size){ return { 32:'DIECISEISAVOS', 16:'OCTAVOS', 8:'CUARTOS', 4:'SEMIFINAL', 2:'FINAL' }[size] || 'RONDA'; }
   function roundCode(size){ return { 32:'R32', 16:'OF', 8:'QF', 4:'SF', 2:'F' }[size] || 'R'; }
@@ -120,11 +121,15 @@
     if (!groups.length) return null;
     const perGroup = [];
     for (const g of groups){
-      const rows = await standingsFor(g.id);
+      const all = await standingsFor(g.id);
+      // Menos de MIN_PJ partidos jugados = eliminado por default: no entra a
+      // ninguna posición clasificatoria y los demás suben un lugar.
+      const rows = all.filter(r => Number(r.matches_played || 0) >= MIN_PJ);
+      const out = all.filter(r => Number(r.matches_played || 0) < MIN_PJ);
       const ov = effOverride[g.id];
-      const declared = rows.length;
+      const declared = all.length;
       const effective = ov && ov.size ? Number(ov.size) : declared;
-      perGroup.push({ group:g, rows, declared, effective, reason: (ov && ov.reason) || 'AUTO' });
+      perGroup.push({ group:g, rows, out, declared, effective, reason: (ov && ov.reason) || 'AUTO' });
     }
     const G = perGroup.length;
     const effSizes = perGroup.map(x => x.effective);
@@ -164,6 +169,8 @@
                          : pots['1'].length + pots['2'].length + pots['3'].length;
     const warn = [];
     perGroup.forEach(x => {
+      if (x.out.length) warn.push('Grupo ' + x.group.label + ': eliminado' + (x.out.length === 1 ? '' : 's') +
+        ' por jugar menos de ' + MIN_PJ + ' partidos → ' + x.out.map(r => (r.nickname || '—') + ' (PJ ' + Number(r.matches_played || 0) + ')').join(', ') + '.');
       if (x.rows.length < 2) warn.push('El grupo ' + x.group.label + ' no tiene segundo lugar calculable (' + x.rows.length + ' integrante' + (x.rows.length === 1 ? '' : 's') + ').');
       if (x.effective !== x.declared) warn.push('Grupo ' + x.group.label + ': tamaño efectivo declarado ' + x.effective +
         ' en lugar de ' + x.declared + ' (' + reasonLabel(x.reason) + ').');
