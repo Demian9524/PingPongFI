@@ -382,6 +382,8 @@
   .hero-countdown .cd-done{display:none;font-family:var(--disp);font-weight:800;font-style:italic;font-size:22px;
     text-transform:uppercase;color:#fff;letter-spacing:0.03em}
   .hero-countdown.is-done .cd-done{display:block}
+  /* el atributo hidden debe ganarle al display:flex de la clase */
+  .hero-countdown[hidden]{display:none!important}
   @media (max-width:760px){
     .hero-countdown{right:14px;bottom:14px;padding:9px 13px 10px;gap:5px}
     .hero-countdown .cd-clock{gap:8px}
@@ -951,7 +953,12 @@
 
   /* ── GROUP SLIDER ────────────────────────────── */
   .slider-wrap{position:relative}
-  .slider{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px;scrollbar-width:none;overflow-anchor:none}
+  /* `proximity` (no `mandatory`) + recorte del desborde: el giro 3D de los
+     escudos extiende el área desplazable unos píxeles en cada fotograma y con
+     snap obligatorio el navegador re-encajaba el carrusel solo, corriendo los
+     grupos hacia la derecha sin que nadie lo tocara. */
+  .slider{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px;scrollbar-width:none;overflow-anchor:none}
+  .slider > .gcard{overflow:clip}
   .slider::-webkit-scrollbar{display:none}
   .empty-pick{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;
     min-height:120px;padding:28px 24px;width:100%;border-radius:14px;
@@ -1007,12 +1014,17 @@
   .fac-back{transform:rotateY(180deg);
     filter:brightness(1.15) drop-shadow(0 0 1px rgba(255,255,255,0.45)) drop-shadow(0 2px 3px rgba(0,0,0,0.55))}
   @keyframes mcBob{0%,100%{transform:translateY(2.5px)}50%{transform:translateY(-3px)}}
+  /* Las dos vueltas llevan la MISMA curva de entrada/salida: antes ambas eran
+     lineales y la segunda (carrera → facultad) se sentía un corte seco. */
+  /* Ida: gira 0 -> 180 (facultad -> carrera). Regreso: gira de vuelta
+     180 -> 0, en sentido contrario, para que la vuelta de carrera a facultad
+     SIEMPRE se anime (antes seguía a 360 y el ciclo la comia). */
   @keyframes mcSpin{
     0%{transform:rotateY(0deg)}
-    40%{transform:rotateY(0deg)}      /* cara frontal fija 12s */
-    50%{transform:rotateY(180deg)}    /* vuelta ~3s */
-    90%{transform:rotateY(180deg)}    /* cara trasera fija 12s */
-    100%{transform:rotateY(360deg)}   /* vuelta ~3s */
+    40%{transform:rotateY(0deg)}
+    50%{transform:rotateY(180deg)}
+    90%{transform:rotateY(180deg)}
+    100%{transform:rotateY(0deg)}
   }
   @media(prefers-reduced-motion:reduce){.fac-wrap,.fac-flip{animation:none}}
   .grow .st{font-family:var(--mono);font-size:14px;color:var(--muted);text-align:center}
@@ -2093,6 +2105,8 @@
   .cat-card .cc-meta i{font-style:normal;font-weight:700;font-size:9.5px;letter-spacing:0.6px;
     text-transform:uppercase;color:var(--text)}
   .cc-meta-row{display:flex;align-items:baseline;gap:4px;min-width:0}
+  /* Conteos de pagos/registrados ocultos al público */
+  .pay-ring-block,.cat-card .cc-meta{display:none!important}
   .pay-ring-block{position:relative;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
   .pay-ring-wrap{position:relative;width:92px;height:92px;filter:drop-shadow(0 0 10px rgba(237,187,82,0.25))}
   .pay-ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -2244,6 +2258,19 @@
 <!-- Piel «leaderboard» del bracket (solo estilos; va después del CSS de la página) -->
 <link rel="stylesheet" href="css/bracket-fortnite.css?v=204">
 <link rel="manifest" href="manifest.webmanifest">
+<script>/* Pre-pintado de visibilidad: aplica el último valor conocido de los
+interruptores ANTES de que el navegador pinte, para que al recargar no se
+alcance a ver un botón que está oculto. El valor real se confirma después
+en registro-gate.js / applySectionVisibility. */
+(function(){try{var c=JSON.parse(localStorage.getItem('torneo_sections_cfg_v1')||'{}')||{};
+var o=function(k){var v=c[k];return v===false?'off':(v===true||v==null)?'on':v};var s=[];
+if(o('registro')!=='on')s.push('a[href^="Registro.html"]','a[href^="./Registro.html"]','a[href*="/Registro.html"]','.nav-inscribirse','[data-reg-cta]');
+var m={btn_entrada:'.cta-precio',btn_premios:'.cta-premio',btn_apoyo:'.cta-bolsa',btn_reglas:'.cta-reglas'};
+for(var k in m){if(o(k)!=='on')s.push(m[k])}
+if(o('entrada')==='off')s.push('.cta-precio');if(o('donaciones')==='off')s.push('.cta-bolsa');
+if(!s.length)return;var st=document.createElement('style');st.id='secPrepaint';
+st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(st);}catch(e){}})();
+</script>
 </head>
 <body data-cat="neutral">
 <svg class="ui-sprite" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="ico-x" viewBox="0 0 128 128"><path fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round" transform="matrix(1 0 -.1228 1 7.86 0)" d="M21 26h24l19 26 19-26h24L78 64l29 38H83L64 76l-19 26H21l29-38-29-38Z"></path></symbol><symbol id="ico-i" viewBox="0 0 128 128"><path fill="currentColor" d="M60 18h32l-6 23H54l6-23ZM53 48h32L72 95h19l-4 15H27l4-15h18l9-32H43l4-15h6Z"></path></symbol></defs></svg>
@@ -3070,15 +3097,15 @@
       <div class="pool-info-box">
         <button type="button" class="pool-info-close" aria-label="Cerrar" onclick="document.getElementById('poolInfoOv').classList.remove('show')">×</button>
         <h4>Cómo se forma el apoyo de cada categoría</h4>
-        <p>Cada categoría reúne <b>sus propios puntos de apoyo</b>: los que suman las aportaciones confirmadas de sus jugadores.</p>
+        <p>Cada categoría reúne <b>sus propios puntos de apoyo</b>: los que suman las entradas de sus jugadores.</p>
         <p id="piReserva"></p>
         <p id="piCascada" style="display:none"></p>
         <ul class="pool-info-list" id="piBreakdown"></ul>
         <p>Todo el apoyo reunido se queda en el torneo y llega a los jugadores: nada se va para afuera.</p>
         <h4>Gastos del torneo</h4>
-        <p>Lo que ves en cada categoría es el apoyo <b>bruto</b> reunido por sus aportaciones.</p>
-        <p>De ahí salen primero los <b>gastos operativos del torneo</b>: la promoción y publicidad para convocar jugadores, y las pelotas usadas en el sorteo físico de grupos.</p>
-        <p>El apoyo final por categoría puede ajustarse una vez cubiertos esos gastos.</p>
+        <p>Todos los gastos del torneo se fueron únicamente en cuatro cosas:</p>
+        <p>· Las <b>copias de publicidad</b> para convocar jugadores.<br>· Las <b>tres lonas</b> que se colgaron.<br>· Los <b>cerditos</b> que se van a dar de premio.<br>· Las <b>pelotitas</b> que se usaron para los sorteos.</p>
+        <p>Las pelotitas de los sorteos se pagaron con las 4 entradas extemporáneas de intermedios, así que no se descuentan del premio.</p>
       </div>
     </div>
 
@@ -3262,6 +3289,11 @@
     font-family:var(--mono);font-size:12px;letter-spacing:1.4px;line-height:1.6;text-transform:uppercase;color:var(--muted)}
   section.is-unpub > *:not(.sec-head):not(.ph):not(.sec-unpub){display:none}
   section.is-unpub > .sec-unpub{border:0;background:none}
+  /* Los interruptores del Centro de control apagan con este atributo: el
+     atributo `hidden` solo no basta porque .cta-precio/.cta-bolsa y las
+     secciones ya declaran `display`. Al ser display:none, la fila flex del
+     hero cierra el hueco y los botones que quedan ocupan el espacio. */
+  [data-sec-hidden]{display:none!important}
 </style>
 <script>
 /* ── Visibilidad de secciones (interruptores del Centro de control) ───
@@ -3290,10 +3322,17 @@
       msg:'La campaña «Restauremos las Mesas» aún no ha sido publicada.' },
     // Los botones del hero que bajan a estos dos bloques se ocultan junto con
     // ellos (extra): un atajo que lleva a una sección oculta no lleva a nada.
-    { id:'entrada', sel:'#entrada-pagos', auto:false, extra:'.cta-precio',
+    { id:'entrada', sel:'#entrada-pagos', auto:false,
       msg:'La información de entrada y aportaciones aún no ha sido publicada.' },
-    { id:'donaciones', sel:'#premios', auto:false, extra:'.cta-bolsa',
-      msg:'Las donaciones voluntarias aún no han sido publicadas.' }
+    { id:'donaciones', sel:'#premios', auto:false,
+      msg:'Las donaciones voluntarias aún no han sido publicadas.' },
+    // Cada botón del hero se enciende y apaga por separado. `needs` ata el
+    // botón a su bloque: si el bloque está oculto, el atajo no lleva a nada,
+    // así que se oculta aunque su propio interruptor esté en visible.
+    { id:'btn_entrada', sel:'.cta-precio', auto:false, msg:'', needs:'entrada' },
+    { id:'btn_premios', sel:'.cta-premio', auto:false, msg:'' },
+    { id:'btn_apoyo',   sel:'.cta-bolsa',  auto:false, msg:'', needs:'donaciones' },
+    { id:'btn_reglas',  sel:'.cta-reglas', auto:false, msg:'' }
   ];
   function stateOf(cfg, id){
     var v = cfg[id];
@@ -3329,13 +3368,19 @@
       var el = document.querySelector(s.sel);
       if (!el) return;
       var st = stateOf(cfg, s.id);
+      // Secciones sin aviso propio (p. ej. los botones del hero) solo admiten
+      // visible u oculta: un «vacía» se trata como oculta.
+      if (st === 'empty' && !s.msg) st = 'off';
+      if (s.needs && stateOf(cfg, s.needs) === 'off') st = 'off';
       var show = st !== 'off';
       var blank = st === 'empty' || (st === 'on' && s.auto && !hasContent(s.id, el));
       if (show){
         if (el.hidden) el.hidden = false;
+        el.removeAttribute('data-sec-hidden');
         if (el.getAttribute('aria-hidden') !== null) el.removeAttribute('aria-hidden');
       } else {
         if (!el.hidden) el.hidden = true;
+        el.setAttribute('data-sec-hidden', '1');
         if (el.getAttribute('aria-hidden') !== 'true') el.setAttribute('aria-hidden', 'true');
       }
       if (blank) notice(el, s.msg);
@@ -3344,6 +3389,8 @@
       if (s.extra){
         document.querySelectorAll(s.extra).forEach(function(x){
           if (x.hidden !== !show) x.hidden = !show;
+          if (show) x.removeAttribute('data-sec-hidden');
+          else x.setAttribute('data-sec-hidden', '1');
         });
       }
     });
@@ -3411,6 +3458,7 @@
   var slider = document.getElementById('slider');
   if (!slider) return;
   var raf = 0;
+  var lastFit = '';
   function fit(){
     raf = 0;
     var cards = slider.querySelectorAll('.gcard');
@@ -3419,6 +3467,12 @@
     var padX = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
     var avail = slider.clientWidth - padX;
     if (avail <= 0) return;
+    // Sin cambios de ancho ni de n\u00famero de tarjetas no se toca el zoom: medir
+    // (poner zoom:'' y volver a leer) provoca reflow y mueve el scroll.
+    // La huella incluye si las tarjetas YA traen zoom: tras un re-render son
+    // nuevas y hay que volver a ajustarlas aunque el ancho no haya cambiado.
+    var sig = avail + 'x' + cards.length;
+    if (sig === lastFit) return;
     for (var i = 0; i < cards.length; i++){
       var c = cards[i];
       c.style.zoom = '';                  // medir ancho natural del breakpoint
@@ -3427,11 +3481,13 @@
       var f = avail / natural;
       c.style.zoom = f < 0.999 ? f : '';  // sólo reducir, nunca agrandar
     }
+    lastFit = sig;                        // solo tras aplicar el zoom
     if (typeof updateArrows === 'function') updateArrows();
   }
   function schedule(){ if (!raf) raf = requestAnimationFrame(fit); }
   window.__fitGroupSlider = fit; // permite a torneo-groups-live.js ajustar ANTES de restaurar el scroll
-  new MutationObserver(schedule).observe(slider, { childList: true });
+  // Tarjetas nuevas (refresco en vivo) invalidan la huella: hay que remedirlas.
+  new MutationObserver(function(){ lastFit = ''; schedule(); }).observe(slider, { childList: true });
   window.addEventListener('resize', schedule);
   window.addEventListener('orientationchange', schedule);
   window.addEventListener('load', schedule);
@@ -3529,6 +3585,12 @@
       mode:   'auto',        // 'auto' = bolsa por categoría | 'manual' = bolsa fija repartida por pcts
       manualTotal: 16600     // usado solo en modo 'manual'
     };
+    // Pagos que cuentan para el premio (cifras definitivas de la organización).
+    // Pisan cualquier conteo en vivo o config guardada.
+    const PAGOS_FIJOS = { avanzado: 13, intermedio: 20, principiante: 13 };
+    // Entradas que no suman al premio: se usaron para un gasto del torneo.
+    const EXTEMPORANEAS = { intermedio: { n: 4, destino: 'las pelotitas de los sorteos' } };
+    window.PRIZE_PAGOS_FIJOS = PAGOS_FIJOS;
     const STORAGE_KEY = 'torneo_prize_cfg_v1';
     function load(){
       try {
@@ -3656,9 +3718,9 @@
        partes iguales entre las tres categorías (en centavos para no perder
        ni un peso por redondeo). */
     const GASTOS = [
-      { label:'Copias',                 unit: 25,  qty: 1 },
-      { label:'Lonas',                  unit: 250, qty: 1 },
-      { label:'3 puerquitos (alcancías)', unit: 164, qty: 1 }
+      { label:'Copias de publicidad',   unit: 25,  qty: 1 },
+      { label:'3 lonas colgadas',       unit: 250, qty: 1 },
+      { label:'Cerditos de premio',     unit: 164, qty: 1 }
     ];
     const gastosTotalCents = () => GASTOS.reduce((s, g) => s + Math.round(g.unit * 100) * g.qty, 0);
     // Reparto en partes iguales; el residuo de centavos cae en avanzados.
@@ -3894,8 +3956,8 @@
       // Texto explicativo: cambia según cómo esté configurado el reparto.
       const pReserva = document.getElementById('piReserva');
       if (pReserva){
-        pReserva.innerHTML = 'El <b>apoyo acumulado</b> es todo lo reunido por las aportaciones. De ahí se descuentan los ' +
-          '<b>gastos de organización</b> (copias, lonas y los 3 puerquitos), repartidos en partes iguales entre las tres ' +
+        pReserva.innerHTML = 'El <b>apoyo acumulado</b> es todo lo reunido por las entradas. De ahí se descuentan los ' +
+          '<b>gastos de organización</b> (copias de publicidad, las tres lonas que se colgaron y los cerditos que se van a dar de premio; las pelotitas de los sorteos se pagaron con las 4 entradas extemporáneas de intermedios), repartidos en partes iguales entre las tres ' +
           'categorías; lo que queda es el <b>premio total a repartir</b> y todo vuelve a los jugadores.';
       }
       const pCascada = document.getElementById('piCascada');
@@ -3914,6 +3976,7 @@
       GASTOS.forEach(g => {
         rows.push([g.label + (g.qty > 1 ? ' (' + g.qty + ' × ' + fmt(g.unit) + ')' : ''), '−' + fmt(g.unit * g.qty)]);
       });
+      rows.push(['Pelotitas de los sorteos (pagadas con 4 entradas extemporáneas de intermedios)', '140']);
       rows.push(['Total de gastos', '−' + fmt(gastosTotalCents() / 100), 'total']);
       rows.push(['Se descuenta de cada categoría', '−' + fmt(gm.principiante / 100)]);
       const detalle = [
@@ -3923,19 +3986,24 @@
       ];
       detalle.forEach(([cat, aporte]) => {
         rows.push(['— ' + CAT_LBL[cat].toUpperCase() + ' —', '', 'head']);
-        rows.push(['Puntos reunidos por la categoría', fmt(raisedFor(cat))]);
-        // Aportaciones especiales (jugadores que pagaron distinto a su cuota).
-        const esp = aportesOf(cat).slice(0, Math.max(0, +cfg.paid[cat] || 0));
+        const nPaid = Math.max(0, +cfg.paid[cat] || 0);
+        rows.push(['Puntos reunidos (' + nPaid + ' entradas × ' + fmt(cuotaFor(cat)) + ')', fmt(nPaid * cuotaFor(cat))]);
+        // Entradas dobles (jugadores que pagaron distinto a su cuota).
+        const esp = aportesOf(cat).slice(0, nPaid);
         if (esp.length){
           const extra = esp.reduce((s, x) => s + (Math.max(0, +x.monto || 0) - cuotaFor(cat)), 0);
-          rows.push([esp.length + (esp.length > 1 ? ' aportaciones especiales incluidas' : ' aportación especial incluida'),
+          rows.push([esp.length + (esp.length > 1 ? ' entradas dobles' : ' entrada doble') + ' (' + fmt(esp[0].monto) + ' pts)',
             (extra >= 0 ? '+' : '−') + fmt(Math.abs(extra))]);
         }
+        const ext = EXTEMPORANEAS[cat];
+        if (ext && ext.n){
+          rows.push([ext.n + ' entradas extemporáneas (' + fmt(ext.n * cuotaFor(cat)) + ' pts): cubrieron el costo de ' + ext.destino + '; no suman al premio', '0']);
+        }
         if (cat === 'avanzado'){
-          if (f.priToAv) rows.push(['Aportación de principiantes (' + pPri + ')', '+' + fmt(f.priToAv / 100)]);
-          if (f.intToAv) rows.push(['Aportación de intermedios (' + pInt + ')', '+' + fmt(f.intToAv / 100)]);
+          if (f.priToAv) rows.push(['Apoyo de principiantes (' + pPri + ')', '+' + fmt(f.priToAv / 100)]);
+          if (f.intToAv) rows.push(['Apoyo de intermedios (' + pInt + ')', '+' + fmt(f.intToAv / 100)]);
         } else if (aporte){
-          rows.push(['Aportación a avanzados (' + (cat === 'intermedio' ? pInt : pPri) + ')', '−' + fmt(aporte / 100)]);
+          rows.push(['Apoyo a avanzados (' + (cat === 'intermedio' ? pInt : pPri) + ')', '−' + fmt(aporte / 100)]);
         }
         rows.push(['Apoyo reunido y asignado', fmt(brutas[cat] / 100)]);
         rows.push(['Gastos de organización', '−' + fmt(gm[cat] / 100)]);
@@ -3956,6 +4024,7 @@
     }
 
     function render(){
+      Object.assign(cfg.paid, PAGOS_FIJOS);
       const totalPaid = cfg.paid.avanzado + cfg.paid.intermedio + cfg.paid.principiante;
       const totalPool = computedTotal();
       const totalPlayers = cfg.totals.avanzado + cfg.totals.intermedio + cfg.totals.principiante;
@@ -3970,7 +4039,7 @@
           ? fmt(ca) + ' pts'
           : '<b>' + fmt(Math.max(ci, cp)) + ' pts</b> <span class="cuota-pri">Principiantes</span> e <span class="cuota-int">Intermedios</span>' +
             '<span class="cuota-sep"> · </span><b>' + fmt(ca) + ' pts</b> <span class="cuota-av">Avanzados</span>';
-        cuotaEl.innerHTML = 'Aportación: ' + base + (nEsp ? ' · +' + nEsp + (nEsp > 1 ? ' especiales' : ' especial') : '');
+        cuotaEl.innerHTML = 'Entrada: ' + base;
       }
       renderPayRing(totalPaid, totalPlayers);
       const order = CATS_ORDER;
@@ -3999,8 +4068,8 @@
         foot.textContent = cfg.mode === 'manual'
           ? 'Apoyo fijo repartido por categoría · Lo define la organización'
           : ((rt.principiante || rt.intermedio)
-              ? 'Cada categoría reúne su propio apoyo y crece con cada aportación · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
-              : 'Cada categoría reúne su propio apoyo · Crece con cada aportación confirmada');
+              ? 'Cada categoría reúne su propio apoyo · ' + pctTx(rt.principiante) + ' de principiantes y ' + pctTx(rt.intermedio) + ' de intermedios apoyan a avanzados'
+              : 'Cada categoría reúne su propio apoyo');
       }
       const netoEl = document.getElementById('poolNeto');
       if (netoEl){
@@ -4633,6 +4702,7 @@
   if (document.readyState === 'complete') run(); else window.addEventListener('load', run);
 })();
 </script>
+<script src="registro-gate.js?v=2"></script>
 </body>
 </html>
 

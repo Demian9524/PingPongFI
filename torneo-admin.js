@@ -166,7 +166,10 @@
     grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start}
   .admin-inline .adm-foot{border-top:1px solid rgba(255,240,220,0.09);justify-content:flex-end}
   .admin-inline .adm-btn{flex:0 0 auto;min-width:140px}
+  #adm-cd-target{font-size:14px}
+  #adm-cd-label,#adm-cd-done{font-size:13px}
   .admin-inline .adm-input{width:110px}
+  .admin-inline .adm-input.wide{width:100%}
   `;
   const style = document.createElement('style');
   style.textContent = css;
@@ -299,6 +302,27 @@
       </div>
 
       <div class="admin-sec">
+        <span class="sec-t">Contador del hero</span>
+        <div class="seg-tog" id="adm-cd-on">
+          <button data-cd="off">Oculto</button>
+          <button data-cd="on">Activo</button>
+        </div>
+        <div class="adm-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <span class="rl" style="flex:none">Fecha y hora objetivo <span style="color:#71614b;font-weight:400">(CDMX)</span></span>
+          <input class="adm-input wide" id="adm-cd-target" type="datetime-local">
+        </div>
+        <div class="adm-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <span class="rl" style="flex:none">Texto de arriba</span>
+          <input class="adm-input wide" id="adm-cd-label" type="text" style="font-size:13px" placeholder="Arranca el 8 de septiembre">
+        </div>
+        <div class="adm-row" style="flex-direction:column;align-items:stretch;gap:7px">
+          <span class="rl" style="flex:none">Mensaje al llegar a cero</span>
+          <input class="adm-input wide" id="adm-cd-done" type="text" style="font-size:13px" placeholder="¡El torneo ha comenzado!">
+        </div>
+        <p class="adm-hint" id="adm-cd-msg" aria-live="polite"></p>
+      </div>
+
+      <div class="admin-sec">
         <span class="sec-t">Privacidad</span>
         <div class="seg-tog" id="adm-phone-vis">
           <button data-vis="hide">Ocultos</button>
@@ -369,7 +393,7 @@
       modeloV: 4,
       totals: Object.assign({}, d.totals, (s && s.totals) || {}),
       pcts:   Object.assign({}, d.pcts,   (s && s.pcts)   || {}),
-      paid:   Object.assign({}, d.paid,   (s && s.paid)   || {}),
+      paid:   Object.assign({}, d.paid,   (s && s.paid)   || {}, window.PRIZE_PAGOS_FIJOS || {}),
       mode:   (s && s.mode) || d.mode,
       manualTotal: (s && s.manualTotal != null) ? s.manualTotal : d.manualTotal
     };
@@ -615,7 +639,57 @@
     setMode(c.mode || 'auto', false);
     refreshDerived();
     setPhoneVis(window.PHONE_VISIBILITY ? window.PHONE_VISIBILITY.show : false, false);
+    fillCountdown();
   }
+
+  // ── Contador del hero ──────────────────────────────────────────────
+  // Vive en su propia llave (torneo_countdown_v1) que lee torneo-countdown.js.
+  function cdCfg(){ return window.COUNTDOWN_CFG; }
+  function fillCountdown(){
+    const cd = cdCfg();
+    const sec = $('adm-cd-on') && $('adm-cd-on').closest('.admin-sec');
+    if (!cd){ if (sec) sec.style.display = 'none'; return; }
+    if (sec) sec.style.display = '';
+    const t = $('adm-cd-target'), l = $('adm-cd-label'), d = $('adm-cd-done');
+    if (t) t.value = cd.target || '';
+    if (l) l.value = cd.label || '';
+    if (d) d.value = cd.doneText || '';
+    document.querySelectorAll('#adm-cd-on button').forEach(b =>
+      b.classList.toggle('on', (b.dataset.cd === 'on') === (cd.enabled !== false)));
+    cdMsg();
+  }
+  function cdMsg(){
+    const box = $('adm-cd-msg'), cd = cdCfg(), API = window.TORNEO_COUNTDOWN;
+    if (!box || !cd || !API) return;
+    if (cd.enabled === false){ box.textContent = 'El contador no se muestra en la página.'; return; }
+    const r = API.remaining(Date.now(), API.parseTarget(cd.target));
+    box.textContent = r.done
+      ? 'La fecha ya pasó: el contador muestra «' + (cd.doneText || '') + '».'
+      : 'Faltan ' + r.days + 'd ' + API.pad(r.hours) + ':' + API.pad(r.mins) + ':' + API.pad(r.secs) + '.';
+  }
+  function cdCommit(){
+    const cd = cdCfg(); if (!cd) return;
+    const t = $('adm-cd-target'), l = $('adm-cd-label'), d = $('adm-cd-done');
+    if (t && t.value) cd.target = t.value;
+    if (l) cd.label = l.value;
+    if (d) cd.doneText = d.value;
+    if (window.COUNTDOWN_SAVE) window.COUNTDOWN_SAVE();
+    cdMsg();
+    flashSaved();
+  }
+  ['adm-cd-target','adm-cd-label','adm-cd-done'].forEach(id => {
+    const e = $(id); if (e) e.addEventListener('change', cdCommit);
+  });
+  document.querySelectorAll('#adm-cd-on button').forEach(b => {
+    b.onclick = () => {
+      const cd = cdCfg(); if (!cd) return;
+      cd.enabled = b.dataset.cd === 'on';
+      if (window.COUNTDOWN_SAVE) window.COUNTDOWN_SAVE();
+      fillCountdown();
+      flashSaved();
+    };
+  });
+  setInterval(cdMsg, 1000);
 
   function setPhoneVis(show, apply){
     document.querySelectorAll('#adm-phone-vis button').forEach(b => b.classList.toggle('on', (b.dataset.vis === 'show') === !!show));
