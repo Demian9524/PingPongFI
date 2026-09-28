@@ -406,7 +406,8 @@
   }
   // Podio histórico de la CATEGORÍA: no existe RPC propia, se arma con los
   // padrones de facultad (mismo método que supabase/academic-page.js) y se
-  // filtra por código de categoría. Los partidos se reutilizan del caché.
+  // filtra por la categoría VIGENTE del jugador. Los partidos se reutilizan
+  // del caché. Debe dar EXACTAMENTE el mismo orden que Categoria2.html.
   async function computeCategoryPodiumPlace(categoryKey, registrationId){
     if (!categoryKey || !registrationId || !window.SB_PARTICIPANTS || !window.SB_CATALOG) return { place: 0, total: 0 };
     try {
@@ -416,22 +417,12 @@
       const lists = await Promise.all((facs || []).map(f =>
         window.SB_PARTICIPANTS.fetchAcademicRoster('faculty', f.code).catch(() => [])));
       const all = [].concat.apply([], lists);
+      // Un jugador pertenece a UNA sola categoría (la vigente): sin backfill
+      // por ascensos/descensos, igual que el plantel de Categoria2.html.
       const roster = all.filter(r => catKeyOf(r.category_code || r.category_name) === want);
-      // Ascensos: quien hoy está en una categoría MÁS ALTA pudo haber jugado su
-      // historia en ésta. Se revisan esos padrones y se suman los que tengan
-      // partidos oficiales aquí, para que el podio no se recorra al faltarles.
-      const HIGHER = { principiante: ['intermedio','avanzado'], intermedio: ['avanzado'], avanzado: [] };
-      const above = all.filter(r => (HIGHER[want] || []).indexOf(catKeyOf(r.category_code || r.category_name)) >= 0);
-      const promoted = await Promise.all(above.map(async r => {
-        const ms = await matchesOf(r.registration_id);
-        return (ms || []).some(m => m.is_official && catKeyOf(m.category_code || m.category_name) === want) ? r : null;
-      }));
-      promoted.forEach(r => { if (r) roster.push(r); });
-      if (!roster.some(r => r.registration_id === registrationId)){
-        const own = all.find(r => r.registration_id === registrationId);
-        if (own) roster.push(own);
-      }
       if (!roster.length) return { place: 0, total: 0 };
+      // Igual que Categoria2.html: solo cuentan los partidos jugados EN esta
+      // categoría, para todos los jugadores del padrón.
       return await rankInRoster(roster, registrationId, want);
     } catch(e){
       window.SB_LOG && window.SB_LOG.error('PJ-PODIUM-CAT', e);
@@ -441,72 +432,87 @@
   const pjMatchCache = new Map();
   async function matchesOf(regId){
     if (pjMatchCache.has(regId)) return pjMatchCache.get(regId);
-    let ms = [];
-    try { ms = (await window.SB_PARTICIPANTS.fetchPlayerMatches(regId, 200, null)) || []; } catch(e){ ms = []; }
-    pjMatchCache.set(regId, ms);
-    return ms;
+    // Se guarda la PROMESA, no el resultado: si dos podios piden el mismo
+    // jugador a la vez (facultad y categoría corren en paralelo) se hace una
+    // sola llamada en vez de dos.
+    const p = (async () => {
+      try { return (await window.SB_PARTICIPANTS.fetchPlayerMatches(regId, 200, null)) || []; }
+      catch(e){ return []; }
+    })();
+    pjMatchCache.set(regId, p);
+    return p;
   }
   // Ranking ponderado sobre cualquier padrón (facultad o categoría).
+  // IMPORTANTE: replica EXACTAMENTE rankOf/msFor de supabase/academic-page.js:
+  //   · padrón de facultad → cuentan TODOS los partidos oficiales;
+  //   · padrón de categoría → cuentan solo los partidos jugados EN esa
+  //     categoría (catKey), igual que la lista de «Ranking completo»;
+  //   · mismo puntaje, mismo mínimo de partidos y mismos desempates;
+  //   · una fila por jugador (el padrón ya viene deduplicado en el servidor):
+  //     no se vuelve a deduplicar aquí, porque eso desplazaba posiciones.
   async function rankInRoster(roster, registrationId, catKey){
     {
       const matchesByReg = new Map();
       await Promise.all(roster.map(async r => {
         matchesByReg.set(r.registration_id, await matchesOf(r.registration_id));
       }));
-      const seenFp = new Set();
-      const dedupedRegIds = new Set();
-      roster.forEach(r => {
-        const ms = matchesByReg.get(r.registration_id) || [];
-        const fp = fingerprintOfMatches(ms);
-        if (ms.length){
-          if (seenFp.has(fp)) return;
-          seenFp.add(fp);
-        }
-        dedupedRegIds.add(r.registration_id);
-      });
+      function msFor(regId){
+        const all = matchesByReg.get(regId) || [];
+        return catKey ? all.filter(m => catKeyOf(m.category_code || m.category_name) === catKey) : all;
+      }
       function statsFromMatches(ms){
-        // Con catKey solo cuentan los partidos JUGADOS en esa categoría: quien
-        // llegó ahí por ascenso no arrastra su historial de otra categoría.
-        const official = (ms || []).filter(m => m.is_official &&
-          (!catKey || catKeyOf(m.category_code || m.category_name) === catKey));
-        let wins = 0, losses = 0, weighted = 0;
+        const official = (ms || []).filter(m => m.is_official);
+        let wins = 0, losses = 0, weighted = 0, winsAdv = 0, winsInt = 0, setsWon = 0, setsLost = 0;
         official.forEach(m => {
-          if (m.result === 'WON'){ wins++; weighted += winWeightOf(m); }
-          else if (m.result === 'LOST') losses++;
+          if (m.result === 'WON'){
+            wins++;
+            const w = winWeightOf(m);
+            weighted += w;
+            if (w === 1.30) winsAdv++; else if (w === 1.15) winsInt++;
+          } else if (m.result === 'LOST'){
+            losses++;
+          }
+          if (typeof m.my_sets === 'number') setsWon += m.my_sets;
+          if (typeof m.opp_sets === 'number') setsLost += m.opp_sets;
         });
         const mp = wins + losses;
-        return { mp, wins, losses, weighted, win_pct: mp ? wins / mp : 0 };
+        return { mp, wins, losses, weighted, winsAdv, winsInt, setDiff: setsWon - setsLost, win_pct: mp ? wins / mp : 0 };
       }
-      const MIN_MATCHES_FOR_PODIUM = 3;
+      const MIN_MATCHES_FOR_PODIUM = 2;
       const ranked = roster
-        .filter(r => dedupedRegIds.has(r.registration_id))
         .map(r => {
-          const s = statsFromMatches(matchesByReg.get(r.registration_id));
+          const s = statsFromMatches(msFor(r.registration_id));
           const puntaje = ((s.weighted + 5) / (s.mp + 10)) * 100;
-          return { r, mp: s.mp, wins: s.wins, win_pct: s.win_pct, puntaje };
+          return { r, mp: s.mp, wins: s.wins, win_pct: s.win_pct, winsAdv: s.winsAdv,
+            winsInt: s.winsInt, setDiff: s.setDiff, puntaje };
         })
         .filter(p => p.mp >= MIN_MATCHES_FOR_PODIUM)
-        .sort((a, b) => (b.puntaje - a.puntaje) || (b.win_pct - a.win_pct) || (b.wins - a.wins));
+        .sort((a, b) =>
+          (b.puntaje - a.puntaje) ||
+          (b.win_pct - a.win_pct) ||
+          (b.winsAdv - a.winsAdv) ||
+          (b.winsInt - a.winsInt) ||
+          (b.wins - a.wins) ||
+          (b.mp - a.mp) ||
+          (b.setDiff - a.setDiff) ||
+          String(a.r.nickname || '').localeCompare(String(b.r.nickname || ''))
+        );
 
       // "DE N": total de jugadores históricos del padrón (mismo número que
       // "N Jugadores" en Facultad.html / Categoria2.html), no solo los
       // elegibles al podio.
       const total = roster.length;
-      const myFp = fingerprintOfMatches(matchesByReg.get(registrationId));
-      if (!myFp){
-        // El registration_id del perfil puede no coincidir literalmente con
-        // ninguna fila del roster (otro estado de inscripción, etc.) —
-        // pedimos sus partidos directamente en vez de asumir que ya están
-        // en matchesByReg.
+      // La posición se busca por registration_id (igual que la lista). Solo si
+      // el id del perfil no está en el padrón (otro estado de inscripción del
+      // mismo jugador) se cae a comparar por el conjunto de partidos.
+      let idx = ranked.findIndex(p => p.r.registration_id === registrationId);
+      if (idx < 0){
         try {
-          const ownMs = await matchesOf(registrationId);
-          const ownFp = fingerprintOfMatches(ownMs);
+          const ownFp = fingerprintOfMatches(await matchesOf(registrationId));
           if (!ownFp) return { place: 0, total };
-          const idx2 = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === ownFp);
-          return { place: (idx2 >= 0 && idx2 < 3) ? idx2 + 1 : 0, total };
+          idx = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === ownFp);
         } catch(e){ return { place: 0, total }; }
       }
-      const idx = ranked.findIndex(p => fingerprintOfMatches(matchesByReg.get(p.r.registration_id)) === myFp);
       return { place: (idx >= 0 && idx < 3) ? idx + 1 : 0, total };
     }
   }
@@ -970,18 +976,24 @@
       ? window.SB_PARTICIPANTS.fetchOwnStanding(current.registration_id, current.group_id)
       : Promise.resolve(null);
 
+    // Los podios arrancan YA, sin esperar a las estadísticas/partidos del
+    // panel: así la medalla aparece en cuanto el padrón responde.
+    const curCat = catKeyOf(current.category_code || current.category_name);
+    const podiumsP = Promise.all([
+      computeFacultyPodiumPlace(acad.facultyCode, current.registration_id),
+      computeCategoryPodiumPlace(curCat, current.registration_id)
+    ]);
     const [standing] = await Promise.all([groupStandingP, refreshFilteredData()]);
-    const podium = await computeFacultyPodiumPlace(acad.facultyCode, current.registration_id);
-    const podiumPlace = podium.place;
     const slot = document.getElementById('pjRankSlot');
     // Los dos podios son INDEPENDIENTES: un jugador puede estar en el top 3 de
     // su categoría sin estarlo en el de toda la facultad (y viceversa). Se
     // evalúa cada uno por separado y se apilan las marcas que apliquen.
-    // El podio de categoría se evalúa en la categoría donde el jugador
-    // realmente jugó (histórica), no en la que tiene asignada hoy.
-    const histCat = (await historicCategoryKey(current.registration_id))
-      || catKeyOf(current.category_code || current.category_name);
-    const catPodium = await computeCategoryPodiumPlace(histCat, current.registration_id);
+    // El podio de categoría usa la categoría VIGENTE del jugador: es la misma
+    // que lista Categoria2.html, así que la medalla y la lista coinciden.
+    // Ambos se calculan EN PARALELO (antes iban en cadena y la medalla tardaba
+    // el doble en aparecer; los partidos se comparten vía pjMatchCache).
+    const [podium, catPodium] = await podiumsP;
+    const podiumPlace = podium.place;
     const facTop = podiumPlace >= 1 && podiumPlace <= 3;
     const catTop = catPodium.place >= 1 && catPodium.place <= 3;
     if (slot) slot.textContent = '';
@@ -1004,11 +1016,11 @@
     if (slot && catTop){
       const CAT_CODE = { avanzado:'AVANZADO_OPEN', intermedio:'INTERMEDIO', principiante:'PRINCIPIANTE' };
       const CAT_NAME = { avanzado:'Avanzados', intermedio:'Intermedios', principiante:'Principiantes' };
-      const useCode = CAT_CODE[histCat] || current.category_code;
-      const useName = CAT_NAME[histCat] || current.category_name;
+      const useCode = CAT_CODE[curCat] || current.category_code;
+      const useName = CAT_NAME[curCat] || current.category_name;
       const tone = categoryTone(useCode, useName);
       const accent = categoryBrandColor(useCode, useName) || tone.fg;
-      const label = normalizeMetaText(CAT_NAME[histCat] || categoryLabel(current) || current.category_name || current.category_code);
+      const label = normalizeMetaText(CAT_NAME[curCat] || categoryLabel(current) || current.category_name || current.category_code);
       const catLine = rankLine('#' + catPodium.place, 'DE ' + catPodium.total,
         label, 'PODIO HISTÓRICO', accent);
       paintPlace(catLine, catPodium.place);

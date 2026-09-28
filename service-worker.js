@@ -40,7 +40,34 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v246';
+const CACHE = 'torneo-fi-v256';
+// v256 · Los botones del hero se apagan con data-sec-hidden (display:none
+// !important): antes el atributo hidden perdía contra .cta-precio/.cta-bolsa y
+// no se ocultaba nada. Al ser display:none la fila flex cierra el hueco.
+// v255 · registro-gate.js ?v=2: los botones «Inscribirse» se apagan con
+// data-reg-hidden + display:none!important (el atributo hidden perdía contra
+// .btn{display:inline-flex}) y el selector cubre la navbar y el menú móvil.
+// v254 · Los cuatro botones del hero (Entrada · Premios · Apoyo · Reglas) se
+// ocultan uno por uno desde el Centro de control, no en bloque.
+// v253 · public-sections-admin.js ?v=130: filas nuevas «Botones rápidos del
+// hero» y «Formulario de inscripción» en el Centro de control.
+// v252 · Medalla de podio de CATEGORÍA: cuenta solo los partidos jugados en
+// esa categoría (como la lista de «Ranking completo») y la posición se busca
+// por registration_id, sin la deduplicación que desplazaba lugares.
+// v251 · Centro de control: interruptores para ocultar la fila de botones
+// rápidos del hero y para cerrar el formulario de inscripción (Registro.html
+// queda inaccesible incluso por URL; registro-gate.js).
+// v250 · Las medallas de podio del perfil usan EXACTAMENTE el mismo ranking
+// (puntaje, mínimo de partidos y desempates) que las listas de «Ranking
+// completo» de facultad y categoría, y se calculan en paralelo para aparecer
+// más rápido al abrir un perfil.
+// v249 · «Mejor defensa» exige mín. 2 partidos, 4 sets disputados y haber
+// perdido menos de la mitad de los sets; el criterio se muestra en el widget.
+// v248 · Las páginas de categoría listan SOLO a los jugadores cuya categoría
+// vigente es esa: se elimina el backfill histórico que duplicaba a quien cambió
+// de nivel entre ediciones (Wicho, Colo).
+// v247 · Contador del hero configurable desde el modo admin (activar/ocultar,
+// fecha objetivo, textos) y tablero de grupos que ya no se redibuja solo.
 // v246 · Modal «Ranking completo»: los espacios del panel derecho ceden con la
 // altura de la ventana, así la franja de CATEGORÍA del jugador ya no se corta
 // fuera de la tarjeta (Facultad.html y Categoria2.html).
@@ -75,8 +102,8 @@ const STATIC = [
   'supabase/registration.js', 'supabase/registro-bridge.js',
   'torneo-bracket-render.js', 'torneo-bracket-dust.js?v=226', 'bracket-admin-ui.js?v=202', 'bracket-admin-slot.js', 'supabase/bracket-config.js',
   'supabase/pre-group-roster.js?v=106', 'supabase/pre-group-admin.js?v=93', 'supabase/pre-group-print.js?v=121', 'supabase/pre-group-draw-capture.js?v=116', 'supabase/format-engine.js?v=124', 'supabase/format-advisor.js?v=125', 'supabase/public-sections-admin.js?v=128', 'supabase/control-torneo-v2.js?v=119', 'torneo-groups-live.js?v=123', 'torneo-bombos-live.js?v=123',
-  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=103', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=120',
-  'assets/logo-fi-vector.svg?v=116', 'assets/logo-torneo-27-1-print.png?v=121'
+  'supabase/knockout-print.js?v=167', 'supabase/player-card.js?v=99', 'supabase/academic-page.js?v=105', 'supabase/academic-titles.js?v=109', 'perfil-jugador.js?v=122',
+  'registro-gate.js?v=2', 'assets/logo-fi-vector.svg?v=116', 'assets/logo-torneo-27-1-print.png?v=121'
 ];
 // v186 · Los cuadros guardados con la geometria anterior (nodo 196 px) se
 // reescalan solos al abrirlos: se conserva el hueco entre columnas y entre

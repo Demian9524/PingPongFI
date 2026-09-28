@@ -119,6 +119,9 @@
   .gb-ul li{border-left:2px solid var(--line2);padding-left:10px}
   .gb-rematch{display:flex;flex-direction:column;gap:6px;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px;font-size:13px}
   .gb-warn-line{color:var(--gold);font-size:12px;margin-bottom:8px}
+  .gb-wa-switch{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.45;color:var(--text);
+    border:1px solid var(--line2);border-radius:8px;padding:10px 12px;margin:10px 0 4px;cursor:pointer}
+  .gb-wa-switch input{margin:2px 0 0;flex:none;width:16px;height:16px;accent-color:var(--red2)}
   /* Bloque de bloqueo: va ARRIBA del modal de impacto para que se vea sin scroll.
      Antes los errores bloqueantes solo vivían al final de la lista y el botón
      deshabilitado no explicaba por qué. */
@@ -259,6 +262,7 @@
 <script src="supabase/logger.js"></script>
 <script src="supabase/validation.js"></script>
 <script src="supabase/client.js"></script>
+<script src="phone-visibility.js"></script>
 <script src="supabase/catalog.js"></script>
 <script src="supabase/auth.js"></script>
 <script src="supabase/admin.js"></script>
@@ -319,5 +323,6 @@
 .qc-summary{margin:0;padding-left:18px;font-size:13px;line-height:1.7}
 @media (max-width:640px){.qc-zone .qc-zrow{align-items:stretch}.qc-color{width:64px;height:48px}}
 </style>
+<script src="registro-gate.js?v=2"></script>
 </body>
 </html>

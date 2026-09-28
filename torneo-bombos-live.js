@@ -109,8 +109,15 @@
     } catch(e){ return null; }
   }
 
+  // Mínimo de partidos jugados para clasificar: quien tenga menos queda
+  // ELIMINADO por default y se manda al fondo de su grupo (nunca entra a bombos).
+  const MIN_PJ = 2;
+  const pjOk = p => Number(p.pj || 0) >= MIN_PJ;
   function blocksOf(cat){
-    const groups = (cat.groups || []).filter(g => g.players && g.players.length);
+    const groups = (cat.groups || []).filter(g => g.players && g.players.length).map(g => {
+      const ok = g.players.filter(pjOk), ko = g.players.filter(p => !pjOk(p));
+      return Object.assign({}, g, { players: ok.concat(ko), eligible: ok.length });
+    });
     if (!groups.length) return [];
     const E = window.FI_FORMAT;
     const ov = prepView(cat);
@@ -124,7 +131,7 @@
 
     // Bombo 1 y Bombo 2: por grupo, SIN orden por rendimiento.
     const pick = pos => groups
-      .filter(g => g.players.length > pos)
+      .filter(g => g.eligible > pos)
       .map(g => {
         const p = g.players[pos];
         const base = baseStats(g, p.nickname);
@@ -155,7 +162,7 @@
     }
     const rest = [];
     groups.forEach(g => g.players.forEach((p, i) => {
-      if (i >= 3) rest.push({ nickname:p.nickname, registration_id:p.registration_id, member:p.member,
+      if (i >= 3 || i >= g.eligible) rest.push({ minPj: !pjOk(p), nickname:p.nickname, registration_id:p.registration_id, member:p.member,
         grp:g.label, pos:i + 1, size:g.players.length, pj:p.pj, pg:p.pg, sw:p.sw, sl:p.sl,
         dif:p.sw - p.sl, wpct: p.pj ? p.pg / p.pj : 0,
         spct: (p.sw + p.sl) ? p.sw / (p.sw + p.sl) : 0 });
