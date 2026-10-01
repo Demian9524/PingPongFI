@@ -5,6 +5,9 @@
 // v234 · La imagen descargada del cuadro ya no puede llevar logos de
 // carrera: las tarjetas que alternan 50/50 entre logo de facultad y de
 // carrera se fuerzan al de facultad justo antes de capturar.
+// v258 · «Descargar imagen» del cuadro: captura con tope de tiempo, reintento
+// sin fuentes externas, PNG por blob y vista para guardar si el navegador
+// bloquea la descarga (iOS / vista embebida).
 // v232 · bracket-canvas-editor.js tenía una comilla sin cerrar en el tooltip
 // de «Descargar imagen» (v230): era un error de sintaxis, así que el archivo
 // ENTERO no cargaba y el editor de llaves quedaba roto (no solo la descarga).
@@ -40,7 +43,11 @@
 // NUNCA cachea: llamadas a Supabase (/rest, /auth, /rpc), tokens ni datos
 // privados. Las peticiones a Supabase van network-only.
 
-const CACHE = 'torneo-fi-v256';
+const CACHE = 'torneo-fi-v261';
+// v261 · Semifinales y final al mejor de 5: la captura de resultados toma
+// rounds.best_of (o el round_type) y ofrece 3-0/3-1/3-2; grupos siguen 2-0/2-1.
+// v257 · Pre-pintado en <head>: al recargar ya no se alcanza a ver por un
+// instante un botón oculto (Inscribirse, Entrada, Premios, Apoyo, Reglas).
 // v256 · Los botones del hero se apagan con data-sec-hidden (display:none
 // !important): antes el atributo hidden perdía contra .cta-precio/.cta-bolsa y
 // no se ocultaba nada. Al ser display:none la fila flex cierra el hueco.

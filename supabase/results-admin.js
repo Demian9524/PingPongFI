@@ -10,8 +10,19 @@
   const ACT = window.SB_ADMIN_ACTIONS;
   let edition = null, edcats = [], matches = [], loadedAt = null, bracketWarn = '';
   const filters = { cat: '', status: '', q: '', phase: '' };
-  // Marcadores válidos de grupos (mejor de 3): ganador 2 sets, perdedor 0 o 1.
-  const VALID_SCORES = [[2,0],[2,1]];
+  // Grupos y rondas previas: mejor de 3. Semifinales y final: mejor de 5.
+  // Se usa rounds.best_of si viene; si no, se deduce del round_type.
+  const BO5_TYPES = { SEMIFINAL: 1, FINAL: 1 };
+  function bestOfFor(m){
+    const bo = Number(m.best_of);
+    if (bo && bo % 2 === 1) return bo;
+    return BO5_TYPES[String(m.round_type || '').toUpperCase()] ? 5 : 3;
+  }
+  function validScores(bo){
+    const need = Math.floor(bo / 2) + 1, out = [];
+    for (let l = 0; l < need; l++) out.push([need, l]);
+    return out;
+  }
 
   function el(tag, cls, text){
     const n = document.createElement(tag);
@@ -93,7 +104,7 @@
   async function fetchBracketFromTables(edcatIds){
     const t0 = performance.now();
     const sel = 'id,status,bracket_position,registration_a_id,registration_b_id,' +
-      'rounds!inner(code,round_type,display_name,edition_category_id),' +
+      'rounds!inner(code,round_type,display_name,edition_category_id,best_of),' +
       'a:registrations!registration_a_id(nickname_snapshot),' +
       'b:registrations!registration_b_id(nickname_snapshot),' +
       'w:registrations!winner_registration_id(nickname_snapshot),' +
@@ -115,6 +126,7 @@
         category_name: ci.name,
         round_code: r.code,
         round_type: r.round_type,
+        best_of: r.best_of == null ? null : r.best_of,
         round_name: r.display_name || r.code || 'Bracket',
         group_label: r.display_name || r.code || 'Bracket',
         bracket_position: row.bracket_position,
@@ -384,7 +396,7 @@
   function captureModal(m, editMode){
     const M = makeModal(editMode ? 'Editar marcador' : 'Capturar marcador');
     M.body.appendChild(el('p', 'rm-players', (m.player_a || 'A') + '  vs  ' + (m.player_b || 'B')));
-    M.body.appendChild(el('p', 'metaline', (m.category_name || '') + ' · ' + phaseLoc(m) + ' · Mejor de 3 sets'));
+    M.body.appendChild(el('p', 'metaline', (m.category_name || '') + ' · ' + phaseLoc(m) + ' · Mejor de ' + bestOfFor(m) + ' sets'));
     if (editMode){
       M.body.appendChild(el('p', 'metaline', 'Marcador actual: ' + scoreText(m) + ' · Ganador: ' + (m.winner || '—')));
       M.body.appendChild(el('p', 'rm-warn', '⚠ Cambiar este resultado recalculará las posiciones del grupo.'));
@@ -409,7 +421,7 @@
       M.body.appendChild(wrap);
     }
     radioGroup('Ganador', [['A', m.player_a || 'Jugador A'], ['B', m.player_b || 'Jugador B']], v => { state.winner = v; refresh(); });
-    radioGroup('Marcador (sets del ganador)', VALID_SCORES.map(s => [s.join('-'), s[0] + ' – ' + s[1]]), v => { state.score = v; refresh(); });
+    radioGroup('Marcador (sets del ganador)', validScores(bestOfFor(m)).map(s => [s.join('-'), s[0] + ' – ' + s[1]]), v => { state.score = v; refresh(); });
     const summary = el('p', 'rm-summary', '');
     M.body.appendChild(summary);
     let reasonTa = null;

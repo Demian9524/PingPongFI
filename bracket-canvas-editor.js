@@ -818,48 +818,149 @@
     })));
     return { ready, restore: () => changed.forEach((img, i) => img.setAttribute('src', originals[i])) };
   }
+  // Nunca dejar el botón «colgado»: cualquier espera tiene tope.
+  const withTimeout = (p, ms, label) => Promise.race([p,
+    new Promise((_, rej) => setTimeout(() => rej(new Error(label || 'tiempo agotado')), ms))]);
+  const soft = (p, ms) => withTimeout(p, ms).catch(() => {});
+  const PX1 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+  // Entrega del PNG: descarga normal; si el navegador no la permite (iOS,
+  // vista embebida) se abre la imagen a pantalla completa para guardarla.
+  function deliver(blob, name){
+    const url = URL.createObjectURL(blob);
+    let ok = false;
+    try {
+      const a = document.createElement('a');
+      a.href = url; a.download = name; a.rel = 'noopener'; a.style.display = 'none';
+      document.body.appendChild(a); a.click(); a.remove(); ok = true;
+    } catch(e){}
+    const iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (!ok || iOS || window.self !== window.top) showShot(url, name);
+    else setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+  function showShot(url, name){
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:rgba(10,6,4,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px';
+    ov.innerHTML = '<img alt="Cuadro" style="max-width:100%;max-height:78vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.6)">' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">' +
+      '<a class="bkc-shot-dl" style="padding:10px 16px;border-radius:999px;background:#f0b429;color:#2a1a12;font-weight:700;text-decoration:none;font-family:sans-serif">Descargar PNG</a>' +
+      '<button type="button" style="padding:10px 16px;border-radius:999px;border:1px solid #fff5;background:transparent;color:#fff;font-family:sans-serif;cursor:pointer">Cerrar</button></div>' +
+      '<p style="margin:0;color:#fffc;font:13px sans-serif;text-align:center">Si no se descarga, mantén presionada la imagen (o clic derecho) y elige «Guardar imagen».</p>';
+    ov.querySelector('img').src = url;
+    const dl = ov.querySelector('.bkc-shot-dl'); dl.href = url; dl.download = name; dl.target = '_blank';
+    const close = () => { ov.remove(); URL.revokeObjectURL(url); };
+    ov.querySelector('button').onclick = close;
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
+    document.body.appendChild(ov);
+  }
   // stageArg: opcional — el lienzo a capturar (permite exportar también la
   // vista publicada del admin, donde el editor no está montado).
+  let shooting = false;
   async function exportImage(stageArg){
+    const say = (m, k) => { try { toast(m, k); } catch(e){ if (k === 'err') alert(m); } };
+    if (shooting) return;
     const stage = stageArg || (host() && host().querySelector('.bkc-stage'));
-    if (!stage){ toast('No hay cuadro que exportar todavía.', 'err'); return; }
-    const ready = await ensureHtmlToImage();
-    if (!ready){ toast('No se pudo exportar: falta el generador de imagen (revisa tu conexión).', 'err'); return; }
+    if (!stage){ say('No hay cuadro que exportar todavía.', 'err'); return; }
+    shooting = true;
+    say('Preparando imagen del cuadro…');
+    const ready = await withTimeout(ensureHtmlToImage(), 15000).catch(() => false);
+    if (!ready){ shooting = false; say('No se pudo exportar: falta el generador de imagen (revisa tu conexión).', 'err'); return; }
     if (!stageArg){ S.sel.clear(); S.selEdges.clear(); S.selBands.clear(); renderBar(); }
-    const box = stage.classList.contains('bkc-stage') ? contentBox(stage)
-      : { x:0, y:0, w:stage.offsetWidth, h:stage.offsetHeight };
-    const wrap = stage.closest('.bkc-wrap') || stage.parentElement;
-    const skin = stage.closest('.bkc-box') || wrap || stage;
+    const isCanvas = stage.classList.contains('bkc-stage');
+    let box = isCanvas ? contentBox(stage) : { x:0, y:0, w:stage.scrollWidth || stage.offsetWidth, h:stage.scrollHeight || stage.offsetHeight };
+    if (!isFinite(box.w) || !isFinite(box.h) || box.w < 2 || box.h < 2)
+      box = { x:0, y:0, w:stage.scrollWidth || stage.offsetWidth, h:stage.scrollHeight || stage.offsetHeight };
+    const W = Math.round(box.w), H = Math.round(box.h);
+    // El cuadro se captura EN SU LUGAR (transparente) y luego se compone sobre
+    // un fondo pintado en canvas con las mismas zonas y haces del editor: el
+    // generador de imagen no reproduce bien color-mix / clip-path del marco.
+    const frame = stage.closest('.bkc-box') || stage.closest('.bkc-wrap') || stage.parentElement;
     const hadGrid = stage.classList.contains('grid');
     const prevTransform = stage.style.transform;
-    if (wrap) wrap.classList.add('bkc-shoot');
+    frame.classList.add('bkc-shoot');
+    const wrap0 = stage.closest('.bkc-wrap'); if (wrap0) wrap0.classList.add('bkc-shoot');
     if (hadGrid) stage.classList.remove('grid');
     stage.style.transform = 'none';
-    await Promise.all(Array.from(stage.querySelectorAll('.bkc-piggy img')).map(resetGifFrame));
+    await soft(Promise.all(Array.from(stage.querySelectorAll('.bkc-piggy img')).map(resetGifFrame)), 3000);
     const facSwap = freezeFacLogos(stage);
-    await facSwap.ready;
+    await soft(facSwap.ready, 3000);
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
-      const bgOf = el => { const c = el && getComputedStyle(el).backgroundColor; return c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent' ? c : null; };
-      const bg = bgOf(skin) || bgOf(wrap) || '#2a1a12';
-      const ratio = Math.max(1, Math.min(2, SHOT_MAX_W / box.w));
-      const dataUrl = await window.htmlToImage.toPng(stage, {
-        backgroundColor: bg, pixelRatio: ratio,
-        width: Math.round(box.w), height: Math.round(box.h),
-        style: { transform: 'translate(' + (-Math.round(box.x)) + 'px,' + (-Math.round(box.y)) + 'px)', transformOrigin: '0 0' }
-      });
-      const a = document.createElement('a');
-      a.href = dataUrl; a.download = shotName();
-      document.body.appendChild(a); a.click(); a.remove();
-      toast('Imagen del cuadro descargada.', 'ok');
+      let ratio = Math.max(1, Math.min(2, SHOT_MAX_W / W));
+      ratio = Math.min(ratio, 16000 / W, 16000 / H, Math.sqrt(16e6 / (W * H)));
+      ratio = Math.max(0.25, ratio);
+      const base = {
+        pixelRatio: ratio, width: W, height: H, cacheBust: true, imagePlaceholder: PX1,
+        filter: n => !(n.classList && (n.classList.contains('bkc-toast') || n.classList.contains('bkc-handle') || n.classList.contains('fac-back'))),
+        style: { transform: 'translate(' + (-Math.round(box.x)) + 'px,' + (-Math.round(box.y)) + 'px)', transformOrigin: '0 0', background: 'transparent' }
+      };
+      let url = null, lastErr = null;
+      for (const extra of [{}, { skipFonts: true }]){
+        try {
+          url = await withTimeout(window.htmlToImage.toPng(stage, Object.assign({}, base, extra)), 25000, 'la captura tardó demasiado');
+          if (url && url.length > 300) break;
+          url = null;
+        } catch(e){ lastErr = e; url = null; }
+      }
+      if (!url) throw lastErr || new Error('la imagen salió vacía');
+      const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('no se pudo leer la captura')); i.src = url; });
+      const cv = document.createElement('canvas');
+      cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+      const ctx = cv.getContext('2d');
+      paintBracketBg(ctx, cv.width, cv.height, frame);
+      ctx.drawImage(img, 0, 0, cv.width, cv.height);
+      const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+      if (!blob) throw new Error('la imagen salió vacía');
+      deliver(blob, shotName());
+      say('Imagen del cuadro lista.', 'ok');
     } catch(e){
-      toast('No se pudo exportar la imagen (' + (e && e.message || e) + ').', 'err');
+      console.error('[bracket] exportImage', e);
+      say('No se pudo exportar la imagen (' + (e && e.message || e) + ').', 'err');
     } finally {
       facSwap.restore();
       stage.style.transform = prevTransform;
       if (hadGrid) stage.classList.add('grid');
-      if (wrap) wrap.classList.remove('bkc-shoot');
+      frame.classList.remove('bkc-shoot');
+      if (wrap0) wrap0.classList.remove('bkc-shoot');
+      shooting = false;
     }
+  }
+  // Resuelve una variable CSS de color (con color-mix) a [r,g,b,a] 0-255.
+  function cssRGBA(ctxEl, expr){
+    const p = document.createElement('span');
+    p.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;color:' + expr;
+    ctxEl.appendChild(p);
+    const c = getComputedStyle(p).color; p.remove();
+    const t = document.createElement('canvas'); t.width = t.height = 1;
+    const x = t.getContext('2d'); x.fillStyle = '#000'; x.fillStyle = c; x.fillRect(0, 0, 1, 1);
+    return Array.from(x.getImageData(0, 0, 1, 1).data);
+  }
+  const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (a == null ? c[3] / 255 : a) + ')';
+  const mix = (c1, c2, t) => c1.map((v, i) => Math.round(v * t + c2[i] * (1 - t)));
+  // Mismo suelo que .bkc-wrap / .bkc-view (css/bracket-fortnite.css).
+  function paintBracketBg(ctx, w, h, el){
+    const side = cssRGBA(el, 'var(--zone-side, #1f5a34)');
+    const mid  = cssRGBA(el, 'var(--zone-mid, #14402a)');
+    const deep = cssRGBA(el, 'var(--zone-deep, #0b2416)');
+    const acc  = cssRGBA(el, 'var(--red2, #3fbf6a)');
+    let g = ctx.createLinearGradient(0, 0, w, 0);
+    [[0, side], [.36, mid], [.5, deep], [.64, mid], [1, side]].forEach(([o, c]) => g.addColorStop(o, rgba(c, 1)));
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    const ellipse = (rx, ry, stops) => {
+      ctx.save(); ctx.translate(w / 2, h / 2); ctx.scale(rx, ry);
+      const r = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+      stops.forEach(([o, c]) => r.addColorStop(o, c));
+      ctx.fillStyle = r; ctx.fillRect(-w / 2 / rx, -h / 2 / ry, w / rx, h / ry); ctx.restore();
+    };
+    ellipse(.32 * w, 1.24 * h, [[0, rgba(deep, 1)], [.58, rgba(mix(deep, mid, .58), 1)], [.86, rgba(deep, 0)], [1, rgba(deep, 0)]]);
+    ellipse(1.18 * w, 1.06 * h, [[0, 'rgba(0,0,0,0)'], [.46, 'rgba(0,0,0,0)'], [.76, 'rgba(0,0,0,.16)'], [1, 'rgba(0,0,0,.3)']]);
+    const beam = (pts, x0, x1) => {
+      const lg = ctx.createLinearGradient(x0, 0, x1, 0);
+      lg.addColorStop(0, rgba(acc, .3)); lg.addColorStop(.82, rgba(acc, .08)); lg.addColorStop(1, rgba(acc, 0));
+      ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x * w, y * h) : ctx.moveTo(x * w, y * h)); ctx.closePath();
+      ctx.fillStyle = lg; ctx.fill();
+    };
+    beam([[0, 0], [.33, 0], [.17, 1], [0, 1]], 0, w);
+    beam([[.67, 0], [1, 0], [1, 1], [.83, 1]], w, 0);
   }
 
   // ── API pública del editor ────────────────────────────────────────────

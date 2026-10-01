@@ -296,7 +296,7 @@
     ['Reglas de juego', `
       <span class="rt-badge red">Al mejor de 3 sets · Semifinales y finales al mejor de 5</span>
       <ul>
-        <li>Todos los partidos se juegan <b>al mejor de 3 sets</b>, en <b>todas las categorías</b>.</li>
+        <li>Grupos y rondas previas se juegan <b>al mejor de 3 sets</b> (gana quien llega a 2), en <b>todas las categorías</b>.</li>
         <li>En <b>semifinales y finales</b> de todas las categorías se juega <b>al mejor de 5 sets</b>.</li>
         <li>Cada set se juega <b>a 11 puntos</b>.</li>
         <li>En caso de <b>empate 10–10</b>, el set <b>sube</b>: se sigue jugando hasta que alguien saque <b>2 puntos de ventaja</b>.</li>

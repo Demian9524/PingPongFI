@@ -347,14 +347,14 @@
       ? document.querySelector('#baCanvas .bkc-stage')
       : (document.querySelector('#bracket-cols .bkc-stage') || document.querySelector('#bracket-cols .mbk-in'));
     if (!stage){
-      alert('Todavía no hay cuadro en pantalla para descargar.');
+      alert('Todavía no hay cuadro en pantalla para descargar. Abre una categoría con llave.');
       return;
     }
     if (!window.BKC_ED || !window.BKC_ED.exportImage){
       alert('No se pudo preparar la imagen: falta el módulo del lienzo.');
       return;
     }
-    window.BKC_ED.exportImage(stage);
+    Promise.resolve(window.BKC_ED.exportImage(stage)).catch(e => alert('No se pudo descargar la imagen: ' + (e && e.message || e)));
   };
 
   const valBtn = $('#baValidate');

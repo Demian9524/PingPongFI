@@ -393,7 +393,7 @@
       modeloV: 4,
       totals: Object.assign({}, d.totals, (s && s.totals) || {}),
       pcts:   Object.assign({}, d.pcts,   (s && s.pcts)   || {}),
-      paid:   Object.assign({}, d.paid,   (s && s.paid)   || {}),
+      paid:   Object.assign({}, d.paid,   (s && s.paid)   || {}, window.PRIZE_PAGOS_FIJOS || {}),
       mode:   (s && s.mode) || d.mode,
       manualTotal: (s && s.manualTotal != null) ? s.manualTotal : d.manualTotal
     };

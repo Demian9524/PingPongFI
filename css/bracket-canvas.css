@@ -254,3 +254,5 @@ body.bkc-full-on{overflow:hidden}
 .bkc-shoot .bkc-stage.grid{background-image:none!important}
 /* Íconos de facultad congelados en su pose base (sin bob ni giro) al exportar */
 .bkc-shoot .fac-wrap,.bkc-shoot .fac-flip{animation:none!important;transform:none!important}
+.bkc-shoot .fac-back{display:none!important}
+.bkc-shoot .fac-front{transform:none!important;opacity:1!important}
