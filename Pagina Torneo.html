@@ -3575,6 +3575,7 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
       // que esa misma categoría recaudó.
       pisoAvanzado: true,
       modeloV: 4,
+      descuentos: { avanzado: 0, intermedio: 0, principiante: 0 },
       // Registros por categoría: los publica el panel de control con los datos
       // reales de la base (no son cupos ni cifras inventadas).
       totals: { avanzado: 0, intermedio: 0, principiante: 0 },
@@ -3610,6 +3611,7 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
             aportePct:    saved.modeloV === 4 ? { ...DEFAULTS.aportePct, ...(saved.aportePct||{}) } : { ...DEFAULTS.aportePct },
             pisoAvanzado: saved.pisoAvanzado ?? DEFAULTS.pisoAvanzado,
             modeloV: 4,
+            descuentos: { ...DEFAULTS.descuentos, ...(saved.descuentos || {}) },
             totals: { ...DEFAULTS.totals, ...(saved.totals||{}) },
             pcts:   { ...DEFAULTS.pcts,   ...(saved.pcts||{}) },
             paid:   { ...DEFAULTS.paid,   ...(saved.paid||{}) },
@@ -3770,7 +3772,14 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
             principiantes. Los porcentajes viven en cfg.aportePct.
          3. Piso de avanzados: se cumple solo con este modelo, pero queda como
             salvaguarda explícita. */
+    function descuentosPorCat(){
+      const out = {};
+      CATS_ORDER.forEach(c => { out[c] = Math.round(Math.max(0, Number(cfg.descuentos && cfg.descuentos[c]) || 0) * 100); });
+      return out;
+    }
     function computeSplit(){
+      const descuentos = descuentosPorCat();
+      const descuentosC = CATS_ORDER.reduce((s, c) => s + descuentos[c], 0);
       const rc = {};
       CATS_ORDER.forEach(c => { rc[c] = Math.round(raisedFor(c) * 100); });
       const raisedC = rc.avanzado + rc.intermedio + rc.principiante;
@@ -3779,8 +3788,8 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
         const t = Math.round(Math.max(0, +cfg.manualTotal || 0) * 100);
         const b = splitPoolCents(t, cfg.pcts, CATS_ORDER);
         const gm = gastosPorCat(); const bn = {}; let netM = 0;
-        CATS_ORDER.forEach(c => { bn[c] = Math.max(0, b[c] - gm[c]); netM += bn[c]; });
-        return { rc, raisedC, premiosC: t, bolsas: bn, brutas: b, gastos: gm,
+        CATS_ORDER.forEach(c => { bn[c] = Math.max(0, b[c] - gm[c] - descuentos[c]); netM += bn[c]; });
+        return { rc, raisedC, premiosC: t, bolsas: bn, brutas: b, gastos: gm, descuentos, descuentosC,
                  gastosC: gastosTotalCents(), netoC: netM,
                  flows: { intToAv:0, priToAv:0 }, rates: aporteRates(), jerarquiaOk: true };
       }
@@ -3803,9 +3812,9 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
 
       const brutas = { avanzado: av, intermedio: int, principiante: pri };
       const gm = gastosPorCat(); const bolsas = {}; let netoC = 0;
-      CATS_ORDER.forEach(c => { bolsas[c] = Math.max(0, brutas[c] - gm[c]); netoC += bolsas[c]; });
+      CATS_ORDER.forEach(c => { bolsas[c] = Math.max(0, brutas[c] - gm[c] - descuentos[c]); netoC += bolsas[c]; });
 
-      return { rc, raisedC, premiosC: raisedC, bolsas, brutas, gastos: gm,
+      return { rc, raisedC, premiosC: raisedC, bolsas, brutas, gastos: gm, descuentos, descuentosC,
                gastosC: gastosTotalCents(), netoC,
                flows: { intToAv, priToAv }, rates: rt, jerarquiaOk };
     }
@@ -3819,7 +3828,7 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
       const r = computeSplit();
       return { avanzado: r.bolsas.avanzado, intermedio: r.bolsas.intermedio,
                principiante: r.bolsas.principiante, brutas: r.brutas, gastos: r.gastos,
-               gastosC: r.gastosC, netoC: r.netoC, flows: r.flows, rates: r.rates,
+               gastosC: r.gastosC, netoC: r.netoC, descuentos: r.descuentos, descuentosC: r.descuentosC, flows: r.flows, rates: r.rates,
                jerarquiaOk: r.jerarquiaOk, raisedC: r.raisedC, rc: r.rc };
     }
     window.PRIZE_POOL_MATH = { cuotaFor, raisedFor, computedRaised, computedTotal, computeSplit, splitAmountsCents, aporteRates, GASTOS, gastosTotalCents, gastosPorCat };
@@ -4007,6 +4016,8 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
         }
         rows.push(['Apoyo reunido y asignado', fmt(brutas[cat] / 100)]);
         rows.push(['Gastos de organización', '−' + fmt(gm[cat] / 100)]);
+        const descuento = splitCents.descuentos && splitCents.descuentos[cat];
+        if (descuento) rows.push(['Descuento al bote por decisión de la organización', '−' + fmt(descuento / 100)]);
         rows.push(['Premio de la categoría', fmt(splitCents[cat] / 100), 'total']);
       });
       list.textContent = '';
@@ -4074,7 +4085,8 @@ st.textContent=s.join(',')+'{display:none!important}';document.head.appendChild(
       const netoEl = document.getElementById('poolNeto');
       if (netoEl){
         netoEl.innerHTML = 'Premio total a repartir: <b>' + fmt(splitCents.netoC / 100) + ' pts</b> ' +
-          '<i>· ya sin ' + fmt(splitCents.gastosC / 100) + ' pts de gastos</i>';
+          '<i>· ya sin ' + fmt(splitCents.gastosC / 100) + ' pts de gastos' +
+          (splitCents.descuentosC ? ' y ' + fmt(splitCents.descuentosC / 100) + ' pts de descuentos' : '') + '</i>';
       }
       renderPoolInfo(splitCents);
       syncBelly(shares);
