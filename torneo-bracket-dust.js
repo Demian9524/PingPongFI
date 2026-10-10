@@ -1,9 +1,5 @@
-// ── Polvo del bracket ────────────────────────────────────────────────────
-// MISMO sistema y configuración de partículas que el hero de PerfilJugador.html
-// (motas de polvo en un rayo de luz, tres capas de profundidad, ráfagas y
-// parpadeo), con una sola diferencia: aquí SUBEN — de abajo del bracket hacia
-// arriba — en vez de cruzar de izquierda a derecha. Sustituye a los destellos
-// fijos («estrellas») que se veían estáticos de lado a lado.
+// Atmósfera del bracket: polvo, destellos y serpentinas de celebración.
+// Ambos renderers públicos usan attach(), en cualquier edición y categoría.
 (function(global){
   'use strict';
 
@@ -15,6 +11,7 @@
     { w:0.32, r:[0.9,1.9],  v:[0.15,0.40], s:[0.05,0.18], a:[0.08,0.20] },
     { w:0.13, r:[1.7,3.2],  v:[0.35,0.85], s:[0.10,0.28], a:[0.16,0.34] }
   ];
+  var RIBBON_COLORS = ['255,210,91', '255,122,167', '111,220,255', '159,237,168', '195,160,255'];
   function pickLayer(){
     var r = Math.random(), acc = 0;
     for (var i = 0; i < LAYERS.length; i++){ acc += LAYERS[i].w; if (r <= acc) return LAYERS[i]; }
@@ -34,11 +31,14 @@
       host.insertBefore(canvas, host.firstChild);
     }
     if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
-    host.__dust = true;
-
     var ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    host.__dust = true;
     var W = 0, H = 0, parts = [], N = 0, raf = 0, stars = [], SN = 0, t0 = 0;
+    var ribbons = [], RN = 0, stopped = false, ro = null;
     var tint = opts.tint || '243,233,210';
+    // Solo la sección pública celebra; otros usos del polvo conservan su efecto.
+    var celebrate = !!host.closest('#bracket');
 
     function count(){
       // El doble de la densidad del perfil (150 motas en su hero) por área.
@@ -46,6 +46,41 @@
     }
     function starCount(){
       return Math.max(7, Math.min(26, Math.round(W * H / 30000)));
+    }
+    function ribbonCount(){
+      return celebrate ? Math.max(18, Math.min(54, Math.round(W * H / 22000))) : 0;
+    }
+    function spawnRibbon(p, initial){
+      p.x = Math.random() * W;
+      p.length = 28 + Math.random() * 42;
+      p.y = initial ? Math.random() * (H + p.length) - p.length : -p.length - Math.random() * 90;
+      p.speed = 45 + Math.random() * 55; // píxeles/segundo: siempre hacia abajo
+      p.drift = (Math.random() - 0.5) * 16;
+      p.width = 2.8 + Math.random() * 2.2;
+      p.curl = 4 + Math.random() * 7;
+      p.phase = Math.random() * Math.PI * 2;
+      p.spin = 1.8 + Math.random() * 1.8;
+      p.tilt = (Math.random() - 0.5) * 0.6;
+      p.color = RIBBON_COLORS[Math.floor(Math.random() * RIBBON_COLORS.length)];
+      return p;
+    }
+    function drawRibbon(p){
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.tilt + Math.sin(p.phase * 0.6) * 0.16);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = p.width;
+      ctx.strokeStyle = 'rgba(' + p.color + ',0.78)';
+      ctx.beginPath();
+      for (var k = 0; k <= 14; k++){
+        var u = k / 14;
+        var x = Math.sin(u * Math.PI * 2.8 + p.phase) * p.curl;
+        var y = u * p.length;
+        if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
     }
     // Estrellas/destellos: NO se distingue su forma — un núcleo difuso con
     // halo y dos trazos cruzados apenas insinuados. Destellos BREVES (1.4–3 s
@@ -108,17 +143,24 @@
       var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
       if (w === W && h === H) return;
       W = canvas.width = w; H = canvas.height = h;
-      N = count(); SN = starCount();
+      N = count(); SN = starCount(); RN = ribbonCount();
       while (parts.length > N) parts.pop();
       while (parts.length < N) parts.push(spawn({}, true));
       parts.forEach(function(p){ if (p.x > W || p.y > H) spawn(p, true); });
       while (stars.length > SN) stars.pop();
       while (stars.length < SN) stars.push(spawnStar({}, true));
       stars.forEach(function(s){ if (s.x > W - 20 || s.y > H - 20) spawnStar(s, true); });
+      while (ribbons.length > RN) ribbons.pop();
+      while (ribbons.length < RN) ribbons.push(spawnRibbon({}, true));
+      ribbons.forEach(function(p){ if (p.x > W || p.y > H) spawnRibbon(p, true); });
     }
     function tick(ts){
+      if (stopped) return;
+      // Al cambiar de categoría/edición, el renderer reemplaza el contenedor.
+      if (host.isConnected === false){ stop(); return; }
       raf = requestAnimationFrame(tick);
-      if (W < 2 || H < 2){ resize(); return; }
+      if (document.hidden){ t0 = 0; return; }
+      if (W < 2 || H < 2){ resize(); t0 = 0; return; }
       var dt = t0 ? Math.min(64, ts - t0) : 16; t0 = ts;
       ctx.clearRect(0, 0, W, H);
       for (var j = 0; j < stars.length; j++){
@@ -144,17 +186,33 @@
         ctx.fillStyle = 'rgba(' + tint + ',' + (p.a * tw).toFixed(3) + ')';
         ctx.fill();
       }
+      for (var n = 0; n < ribbons.length; n++){
+        var ribbon = ribbons[n];
+        ribbon.phase += ribbon.spin * dt / 1000;
+        ribbon.y += ribbon.speed * dt / 1000;
+        ribbon.x += (ribbon.drift + Math.sin(ribbon.phase) * 10) * dt / 1000;
+        if (ribbon.y > H + ribbon.length || ribbon.x < -30 || ribbon.x > W + 30) spawnRibbon(ribbon, false);
+        drawRibbon(ribbon);
+      }
+    }
+    function stop(){
+      if (stopped) return;
+      stopped = true;
+      cancelAnimationFrame(raf);
+      if (ro) ro.disconnect(); else global.removeEventListener('resize', resize);
+      delete host.__dust;
     }
     resize();
     if (global.ResizeObserver){
-      var ro = new ResizeObserver(function(){ resize(); });
+      ro = new ResizeObserver(function(){ resize(); });
       ro.observe(host);
     } else {
       global.addEventListener('resize', resize);
     }
     raf = requestAnimationFrame(tick);
-    return { canvas: canvas, resize: resize, stop: function(){ cancelAnimationFrame(raf); } };
+    return { canvas: canvas, resize: resize, stop: stop };
   }
 
   global.TORNEO_DUST = { attach: attach };
 })(typeof window !== 'undefined' ? window : globalThis);
+
